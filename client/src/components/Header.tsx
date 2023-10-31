@@ -7,7 +7,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import jemsLogo from "../JEMS.svg";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { geoJsonConvert, readFileContent, handleKml, handleZip} from "../utils/geojson-convert";
+import { geoJsonConvert, handleKml, handleZip} from "../utils/geojson-convert";
 
 const style = {
   position: "absolute" as "absolute",

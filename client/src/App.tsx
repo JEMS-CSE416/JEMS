@@ -1,7 +1,6 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Canvas from "./components/Canvas";
 import Header from "./components/Header";
 import { FileInfo, initialFileInfo } from "./utils/global_utils";

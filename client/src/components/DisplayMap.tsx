@@ -1,5 +1,5 @@
 import React from "react";
-import { GeoJSON, MapContainer, TileLayer, Popup } from "react-leaflet";
+import { GeoJSON, MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import ReactLeafletKml from "react-leaflet-kml"; // react-leaflet-kml must be loaded AFTER react-leaflet
 import { FileInfo } from "../utils/global_utils";
@@ -10,7 +10,7 @@ interface DisplayMapProps {
 }
 
 const DisplayMap: React.FC<DisplayMapProps> = ({ fileInfo }) => {
-  if (fileInfo.fileType == "json") {
+  if (fileInfo.fileType === "json") {
     if (fileInfo.fileContent) {
       console.log(JSON.parse(fileInfo.fileContent));
     }

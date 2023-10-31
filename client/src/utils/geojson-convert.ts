@@ -1,6 +1,5 @@
 import { read } from "shapefile";
 import { GeoJSON } from "geojson";
-import * as fs from 'fs';
 import * as toGeoJSON from '@tmcw/togeojson';
 import JSZip from "jszip";
 
