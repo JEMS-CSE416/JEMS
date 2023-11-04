@@ -14,8 +14,6 @@ jobs:
           script: |
             cd JEMS
             git pull
-            killall node
-            touch test.ts
 
   Deploy-Backend:
     needs: Setup
@@ -29,6 +27,5 @@ jobs:
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           script: |
             cd JEMS/server
-            touch test2.ts
-            npm install
-            node server.ts
+            npm run clean
+            npm run deploy
