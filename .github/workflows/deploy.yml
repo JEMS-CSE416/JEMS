@@ -7,12 +7,9 @@ jobs:
     steps:
 
 
-      - name: Install SSH key of bastion
-        uses: shimataro/ssh-key-action@v2
+      - uses: webfactory/ssh-agent@v0.8.0
         with:
-          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          name: github-actions
-          known_hosts: ${{ secrets.DIGITALOCEAN_SSH_HOST }}
+            ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.DIGITALOCEAN_SSH_HOST }} >> ~/.ssh/known_hosts
