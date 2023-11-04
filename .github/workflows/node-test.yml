@@ -53,12 +53,11 @@ jobs:
       run: npm ci
     - name: Run build
       run: npm run build --if-present
-    - name: Run start
-      run: npm start
 
     - name: Cypress run
       uses: cypress-io/github-action@v6
       with:
         install: false
         project: ./client/
+        start: npm start
         browser: chrome
