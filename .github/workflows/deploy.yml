@@ -31,4 +31,4 @@ jobs:
             cd JEMS/server
             touch test2.ts
             npm install
-            node run server.ts
+            node server.ts
