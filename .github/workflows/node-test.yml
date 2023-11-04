@@ -55,6 +55,7 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v6
       with:
+        install: false
         project: ./client/
         build: npm run build
         start: npm start
