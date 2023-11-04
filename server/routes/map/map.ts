@@ -1,10 +1,21 @@
-const express = require('express')
-const router = express.Router()
+import express, { Router } from "express";
+import {
+  queryMaps,
+  getMap,
+  createMap,
+  updateMap,
+  deleteMap,
+} from "./controller/MapController";
 
-// define the home page route
-router.get('/', (req, res) => {
-  res.send('Map base router')
-})
+const mapRouter = Router();
+const MapController = require("./controller");
+
+mapRouter.get("/", queryMaps);
+
+mapRouter.get("/:id", getMap);
+
+mapRouter.post("/:id",)
 
 
-module.exports = router
+
+export default mapRouter;
