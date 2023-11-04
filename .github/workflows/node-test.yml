@@ -1,0 +1,31 @@
+name: Node.js CI
+
+on: [push]
+
+jobs:
+  TestBackend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Move to correct directory
+      run: cd server
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: npm Clean Install
+      run: npm ci
+    - name: Run build
+      run: npm run build --if-present
+
+    - name: Run Tests
+      run: npm run test
