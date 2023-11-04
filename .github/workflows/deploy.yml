@@ -15,7 +15,7 @@ jobs:
           known_hosts: ${{ secrets.DIGITALOCEAN_SSH_HOST }}
 
       - name: ssh into jems-droplet
-        run: ssh root@${{ secrets.DIGTALOCEAN_SSH_HOST }}
+        run: ssh root@${{ secrets.DIGITALOCEAN_SSH_HOST }}
 
       - name: navigate to directory
         run: cd JEMS/server
