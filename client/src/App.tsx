@@ -12,7 +12,7 @@ import DiscoverMaps from "./components/browsing/DiscoverMaps";
 import SelectedCardPage from "./components/selectedcard/SelectedCardPage";
 
 function App() {
-  const [fileInfo, setFileInfo] = useState<FileInfo>(initialFileInfo);
+  //const [fileInfo, setFileInfo] = useState<FileInfo>(initialFileInfo);
 
 /*
   const handleFileUpload = (file: string, content: string) => {
