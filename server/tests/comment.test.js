@@ -2,35 +2,42 @@ const request = require("supertest");
 
 // Test the map routes
 describe("testing the comment routes", () => {
-
   describe("GET /comments", () => {
-    describe("given user is logged in", () => {
-      describe("given map id", () => {
-        it("should return status code 201", async () => {
-
-        });
+    describe("when user is authenticated", () => {
+      test("with a map ID, it should return status code 201", async () => {
+        // Test logic for a request with a map ID
       });
-      describe("given no map id", () => {
-        it("should return status code 201", async () => {});
+
+      test("without a map ID, it should return status code 201", async () => {
+        // Test logic for a request without a map ID
       });
     });
-    describe("given user is not logged in", () => {
-      it("should return status code 401", async () => {})
+
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        // Test logic for an unauthenticated user
+      });
     });
   });
 
   describe("POST /comment", () => {
-    describe("given user is logged in", () => {
-      describe("given a comment", () => {
-        it("should return 201", async () => {});
+    describe("when user is authenticated", () => {
+      test("with a comment, it should return status code 201", async () => {
+        // Test logic for a request with a comment
       });
-      describe("given no comment", () => {
-        it("should return 400", async () => {});
+
+      test("without a comment, it should return status code 400", async () => {
+        // Test logic for a request without a comment
       });
     });
-    describe("given user is not logged in", () => {
-      it("should return status code 401", async () => {});
+
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        // Test logic for an unauthenticated user
+      });
     });
   });
 });
+
+
 
