@@ -1,9 +1,13 @@
 import React from "react";
 import "./App.css";
 import { useState } from "react";
-import Canvas from "./components/Canvas";
-import Header from "./components/Header";
+// import Canvas from "./components/Canvas";
+// import Header from "./components/Header";
 import { FileInfo, initialFileInfo } from "./utils/global_utils";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Browser } from "leaflet";
+import SplashScreen from "./components/common/SplashScreen";
+import HomeScreen from "./components/common/HomeScreen";
 
 function App() {
   const [fileInfo, setFileInfo] = useState<FileInfo>(initialFileInfo);
@@ -19,9 +23,12 @@ function App() {
 
   return (
     <div className="App">
-      <Header onFileUploadSetInfo={handleFileUpload} />
-      <Canvas 
-        fileInfo={fileInfo}/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SplashScreen/>} />
+          <Route path="/home" element={<HomeScreen/>} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
