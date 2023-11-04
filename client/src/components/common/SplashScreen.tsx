@@ -18,7 +18,6 @@ const SplashScreen = () => {
                         <Text c="black">
                             <Flex
                                 mih={50}
-                                // bg="rgba(0, 0, 0, .3)"
                                 gap="xl"
                                 justify="center"
                                 align="center"
@@ -35,7 +34,7 @@ const SplashScreen = () => {
                                             />
                                             <h1>Premium Map Creation/Editing Software that’s really good</h1>
                                             <Link to="/home">
-                                                <Button>Get Started</Button>
+                                                <Button id='splash-button'>Get Started</Button>
                                             </Link>
                                         </Box>
                                     </Center>
@@ -52,26 +51,7 @@ const SplashScreen = () => {
 
                                 </Box>
                             </Flex>
-                            {/* <Grid style={{ margin: "50px" }}>
-                                <Grid.Col span={6}>
-                                    <Image
-                                        radius="md"
-                                        src={jemsLogo}
-                                        style={{ width: "80%" }}
-                                    />
-                                    <h1>Premium Map Creation/Editing Software that’s really good</h1>
-                                    <Button>Get Started</Button>
-                                </Grid.Col>
-                                <Grid.Col span={6}>
-                                    <Image
-                                        radius="md"
-                                        src={landingPic}
-                                        style={{ width: "80%" }}
-                                    />
-                                </Grid.Col>
-                            </Grid> */}
                         </Text>
-
                     </Center>
                 </BackgroundImage>
             </Box>
