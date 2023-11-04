@@ -1,0 +1,27 @@
+name: JEMS Github Actions Deploy CICD
+run-name: Deploying main.
+on: [push]
+jobs:
+  Setup-and-ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: ssh into jems-droplet
+        run: doctl compute ssh jems-droplet
+
+      - name: navigate to directory
+        run: cd JEMS/server
+
+      - name: testing repo
+        run: touch test.ts
+
+  Build:
+    needs: Setup-and-ssh
+    runs-on: ubuntu-latest
+    steps:
+      - name: testing position and place
+        run: touch test2.ts
