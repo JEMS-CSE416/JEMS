@@ -21,10 +21,10 @@ describe("testing the map routes", () => {
 
   describe("PUT map routes", () => {
     describe("given user is logged in", () => {
-      describe("given file content of map", () => {
+      describe("given file content of map in json form", () => {
         it("should return 201", async () => {});
       });
-      describe("given no file content of a map", () => {
+      describe("given no file content of a map in json form", () => {
         it("should return status code 400", async () => {});
       });
     });
