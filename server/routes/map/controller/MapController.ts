@@ -19,6 +19,14 @@ const queryMaps = async (req: Request, res: Response) => {};
 const getMap = async (req: Request, res: Response) => {};
 
 /**
+ * Duplicates an existing map into the database
+ * @param req 
+ * @param res 
+ * @returns a map
+ */
+const duplicateMap = async (req: Request, res: Response) => {};
+
+/**
  * Adds a new map into the database
  * @param req 
  * @param res 
@@ -46,6 +54,7 @@ export {
   queryMaps,
   getMap,
   createMap,
+  duplicateMap,
   updateMap,
   deleteMap,
 };

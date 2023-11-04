@@ -3,19 +3,23 @@ import {
   queryMaps,
   getMap,
   createMap,
+  duplicateMap,
   updateMap,
   deleteMap,
 } from "./controller/MapController";
 
 const mapRouter = Router();
-const MapController = require("./controller");
 
 mapRouter.get("/", queryMaps);
 
 mapRouter.get("/:id", getMap);
 
-mapRouter.post("/:id",)
+mapRouter.post("/:id", updateMap);
 
+mapRouter.post("/duplicate", duplicateMap);
 
+mapRouter.put("/", createMap);
+
+mapRouter.post("/:id", deleteMap);
 
 export default mapRouter;
