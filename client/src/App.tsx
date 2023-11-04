@@ -1,9 +1,9 @@
-import React from "react";
+//import React from "react";
 import "./App.css";
-import { useState } from "react";
+//import { useState } from "react";
 // import Canvas from "./components/Canvas";
 // import Header from "./components/Header";
-import { FileInfo, initialFileInfo } from "./utils/global_utils";
+//import { FileInfo, initialFileInfo } from "./utils/global_utils";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import { Browser } from "leaflet";
 import SplashScreen from "./components/common/SplashScreen";
