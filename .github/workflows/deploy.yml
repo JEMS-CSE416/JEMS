@@ -13,6 +13,7 @@ jobs:
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           script: |
             cd JEMS
+            git restore .
             git pull
 
   Deploy-Backend:
