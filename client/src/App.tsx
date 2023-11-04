@@ -5,7 +5,7 @@ import { useState } from "react";
 // import Header from "./components/Header";
 import { FileInfo, initialFileInfo } from "./utils/global_utils";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Browser } from "leaflet";
+// import { Browser } from "leaflet";
 import SplashScreen from "./components/common/SplashScreen";
 import HomeScreen from "./components/common/HomeScreen";
 import DiscoverMaps from "./components/browsing/DiscoverMaps";
@@ -14,6 +14,7 @@ import SelectedCardPage from "./components/selectedcard/SelectedCardPage";
 function App() {
   const [fileInfo, setFileInfo] = useState<FileInfo>(initialFileInfo);
 
+/*
   const handleFileUpload = (file: string, content: string) => {
     // Create a new object with the updated values and set it as the new state
     setFileInfo({
@@ -22,6 +23,7 @@ function App() {
       fileContent: content
     });
   };
+  */
 
   return (
     <div className="App">
