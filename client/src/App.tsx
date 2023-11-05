@@ -4,7 +4,7 @@ import SplashScreen from "./components/common/SplashScreen";
 import HomeScreen from "./components/common/HomeScreen";
 import Discover from "./components/browsing/Discover";
 import SelectedCardPage from "./components/selectedcard/SelectedCardPage";
-import CreateMapModal from "./components/common/CreateMapModal";
+import Comments from "./components/selectedcard/Comments";
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
           <Route path="/selected" element={<SelectedCardPage />} />
         </Routes>
       </BrowserRouter>
-      <CreateMapModal/>
+      <Comments />
     </div>
   );
 }
