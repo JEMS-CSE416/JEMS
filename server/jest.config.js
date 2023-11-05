@@ -1,4 +1,7 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-    verbose: true,
-    testMatch: ["**/JEMS/server/tests/*.test.js"],
-  };
+  preset: "ts-jest",
+  testEnvironment: "node",
+  testMatch: ["**/JEMS/server/tests/*.test.ts"],
+  forceExit: true,
+};
