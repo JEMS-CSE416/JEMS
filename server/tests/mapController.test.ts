@@ -7,7 +7,7 @@ describe("Testing connection to Mongodb server", () => {
   it("it should exit gracefully", async () => {
     const fixtures = new Fixtures({
       dir: "tests/fixtures",
-      mute: false, // do not mute the log output
+      mute: true, // do not mute the log output
     });
 
     await fixtures.connect("mongodb://localhost:27017/");
@@ -20,7 +20,7 @@ describe("Testing connection to Mongodb server", () => {
   test("if unload and load worked by finding a Person", async () => {
     const fixtures = new Fixtures({
       dir: "tests/fixtures",
-      mute: false, // do not mute the log output
+      mute: true, // do not mute the log output
       filter: "people.*",
     });
     await fixtures
@@ -59,19 +59,37 @@ describe("Crud Map operations", () => {
     const Map = mongoose.model("map", mapSchema);
 
     const map = new Map(map1);
-    await map.save();
+    const result = await map.save();
+
+    console.log(result.mapName)
+
+    await fixtures.disconnect();
+  });
+
+  test("if READ a map works", async () => {
+    const fixtures = new Fixtures({
+      dir: "tests/fixtures",
+      mute: true, // do not mute the log output
+      filter: "map.*",
+    });
+    await fixtures.connect("mongodb://localhost:27017/");
+    await fixtures.unload();
+    await fixtures.load();
+
+    await mongoose.connect("mongodb://127.0.0.1:27017");
+
+    const Map = mongoose.model("map", mapSchema);
+
 
     const retrievedmap = await Map.find({ mapName: "Sample Map" });
 
     expect(retrievedmap).toBeDefined();
     expect(retrievedmap[0].mapName).toBe("Sample Map");
 
+    console.log(retrievedmap[0]);
+
     await fixtures.disconnect();
   });
-
-  // test("if READ a map works", async () => {
-
-  // })
 
   // test("if UPDATE a map works", async () => {
 

@@ -1,4 +1,4 @@
-const request = require("supertest");
+import request from "supertest"
 
 // Test the map routes
 describe("testing the map routse", () => {
