@@ -1,4 +1,4 @@
-import "../css/homePage.css";
+import "../css/homeScreen.css";
 import { Group, Text } from "@mantine/core";
 import MapCard from "../browsing/MapCard";
 import NavBar from "../common/Navbar";

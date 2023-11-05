@@ -1,7 +1,12 @@
+import NavBar from "../common/Navbar";
+import MapHeader from "./MapHeader";
 const SelectedCardPage = () => {
   return (
     <>
-      <h1>Selected Card Page</h1>
+    <NavBar></NavBar>
+    <div id="content">
+        <MapHeader></MapHeader>
+    </div>
     </>
   );
 };
