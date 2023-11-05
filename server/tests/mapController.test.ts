@@ -66,36 +66,36 @@ describe("Crud Map operations", () => {
     await fixtures.disconnect();
   });
 
-//   test("if READ a map works", async () => {
-//     const fixtures = new Fixtures({
-//       dir: "tests/fixtures",
-//       mute: true, // do not mute the log output
-//       filter: "map.*",
-//     });
-//     await fixtures.connect("mongodb://localhost:27017/");
-//     await fixtures.unload();
-//     await fixtures.load();
+  test("if READ a map works", async () => {
+    const fixtures = new Fixtures({
+      dir: "tests/fixtures",
+      mute: true, // do not mute the log output
+      filter: "map.*",
+    });
+    await fixtures.connect("mongodb://localhost:27017/");
+    await fixtures.unload();
+    await fixtures.load();
 
-//     await mongoose.connect("mongodb://127.0.0.1:27017");
+    await mongoose.connect("mongodb://127.0.0.1:27017");
 
-//     const Map = mongoose.model("map", mapSchema);
+    const Map = mongoose.model("map", mapSchema);
 
 
-//     const retrievedmap = await Map.find({ mapName: "Sample Map" });
+    const retrievedmap = await Map.find({ mapName: "Sample Map" });
 
-//     expect(retrievedmap).toBeDefined();
-//     expect(retrievedmap[0].mapName).toBe("Sample Map");
+    expect(retrievedmap).toBeDefined();
+    expect(retrievedmap[0].mapName).toBe("Sample Map");
 
-//     console.log(retrievedmap[0]);
+    console.log(retrievedmap[0]);
 
-//     await fixtures.disconnect();
-//   });
+    await fixtures.disconnect();
+  });
 
-  // test("if UPDATE a map works", async () => {
+  test("if UPDATE a map works", async () => {
 
-  // })
+  })
 
-  // test("if DELETE a map works", async () => {
+  test("if DELETE a map works", async () => {
 
-  // })
+  })
 });
