@@ -1,0 +1,75 @@
+[
+  {
+    "creatorId": "6119dbef8b0915f12c818a37",
+    "mapName": "Sample Map",
+    "description": "This is a sample map",
+    "creationDate": "2023-11-04T12:00:00Z",
+    "public": true,
+    "colorType": "basic",
+    "displayStrings": true,
+    "displayNumerics": true,
+    "displayLegend": true,
+    "displayPointers": true,
+    "thumbnail": {
+      "imageUrl": "https://example.com/thumbnail.jpg",
+      "imageType": "jpg"
+    },
+    "regions": {
+      "regionA": [
+        {
+          "regionName": "Region A",
+          "coordinate": [
+            [10, 20],
+            [30, 40],
+            [50, 60]
+          ],
+          "stringLabel": "Label A",
+          "stringOffset": [5, 10],
+          "numericLabel": 100,
+          "numericUnit": "km",
+          "color": "#FF0000"
+        },
+        {
+          "regionName": "Region A-2",
+          "coordinate": [
+            [15, 25],
+            [35, 45],
+            [55, 65]
+          ],
+          "stringLabel": "Label A-2",
+          "stringOffset": [8, 12],
+          "numericLabel": 120,
+          "numericUnit": "km",
+          "color": "#00FF00"
+        }
+      ],
+      "regionB": [
+        {
+          "regionName": "Region B",
+          "coordinate": [
+            [100, 200],
+            [300, 400],
+            [500, 600]
+          ],
+          "stringLabel": "Label B",
+          "stringOffset": [50, 100],
+          "numericLabel": 500,
+          "numericUnit": "km",
+          "color": "#0000FF"
+        }
+      ]
+    },
+    "legend": {
+      "colorLegend": {
+        "Red": "High",
+        "Green": "Medium",
+        "Blue": "Low"
+      },
+      "choroplethLegend": {
+        "Level1": 100,
+        "Level2": 200,
+        "Level3": 300
+      }
+    }
+  }
+]

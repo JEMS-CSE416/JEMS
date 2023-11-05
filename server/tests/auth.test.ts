@@ -1,4 +1,4 @@
-const request = require("supertest");
+import request from "supertest"
 
 // Test the auth routes
 describe("testing the auth routes", () => {

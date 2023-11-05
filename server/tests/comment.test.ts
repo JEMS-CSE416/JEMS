@@ -1,4 +1,4 @@
-const request = require("supertest");
+import request from "supertest"
 
 // Test the comment routes
 describe("testing the comment routes", () => {
