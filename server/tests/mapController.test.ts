@@ -81,10 +81,10 @@ describe("Crud Map operations", () => {
     const Map = mongoose.model("map", mapSchema);
 
 
-    const retrievedmap = await Map.find({ mapName: "Sample Map" });
+    const retrievedmap = await Map.find({ mapName: "Sample Map 1" });
 
     expect(retrievedmap).toBeDefined();
-    expect(retrievedmap[0].mapName).toBe("Sample Map");
+    expect(retrievedmap[0].mapName).toBe("Sample Map 1");
 
     console.log(retrievedmap[0]);
 
