@@ -55,7 +55,7 @@ jobs:
       #run: npm run build --if-present
 
     - name: init npm for cypress install
-      run: npm init 
+      run: npm init -y
 
     - name: Cypress install
       uses: cypress-io/github-action@v6
