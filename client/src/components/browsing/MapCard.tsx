@@ -1,10 +1,11 @@
-import { Card, Image, Text, Badge, Button, Group } from "@mantine/core";
+import { Card, Image, Text, Badge, Group } from "@mantine/core";
 import "../css/mapCard.css";
 import ellipses from "../../assets/images/ellipses.png";
 
 type MapCardProps = {
   private: boolean;
 };
+
 function MapCard(props: MapCardProps) {
   return (
     <Card shadow="sm" padding="xl" radius="md" withBorder id="card">

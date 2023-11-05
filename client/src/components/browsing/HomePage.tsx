@@ -1,11 +1,13 @@
 import "../css/homePage.css";
-import { Group, Text } from "@mantine/core";
+import { Group, Text, AppShell } from "@mantine/core";
 import MapCard from "./MapCard";
 import NavBar from "../common/Navbar";
+import Footer from "../common/Footer";
 
 const HomePage = () => {
   return (
     <>
+
       <NavBar></NavBar>
       <div id="content">
         <Group id="homePageHeaderGroup">
@@ -39,6 +41,7 @@ const HomePage = () => {
           <MapCard private={false}></MapCard>
         </div>
       </div>
+      <Footer></Footer>
     </>
   );
 };
