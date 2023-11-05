@@ -1,0 +1,26 @@
+#card {
+  width: 290px;
+  min-width: 168px;
+  padding-bottom: 1%;
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 5px;
+}
+
+#card:hover{
+    border: 1px solid #228be6;
+}
+
+#mapTitle {
+  padding-top: 10%;
+}
+
+#mapDescription {
+  padding-top: 5%;
+}
+
+#ellipses {
+  margin-left: auto;
+  margin-right: 1%;
+}
