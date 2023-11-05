@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "typescript": "^5.2.2"
     "@types/jest": "^29.5.7",
     "@types/supertest": "^2.0.15",
     "@types/swagger-jsdoc": "^6.0.2",
@@ -26,6 +27,5 @@
   "devDependencies": {
     "@types/express": "^4.17.20",
     "@types/node": "^20.8.10",
-    "typescript": "^5.2.2"
   }
 }
