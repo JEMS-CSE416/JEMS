@@ -138,7 +138,7 @@ const mapRouter = Router();
  *           type: string
  *
  *     responses:
- *       201:
+ *       200:
  *         description: List of maps
  *         content:
  *           application/json:
@@ -186,7 +186,7 @@ mapRouter.post("/duplicate", duplicateMap);
  *               map_file_content:
  *                 $ref: '#/components/schemas/Map'
  *     responses:
- *       201:
+ *       200:
  *         description: List of maps
  *         content:
  *           application/json:

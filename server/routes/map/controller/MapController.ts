@@ -1,13 +1,15 @@
 import { Request, Response } from "express";
 import { connect, model } from 'mongoose'
 import { mapSchema } from './MapSchema'
+import { MongoClient } from "mongodb"
 
 /**
  * Connects to the mongodb server and returns a queriable object
  * @returns 
  */
 async function getMapModel(){
-    await connect('mongodb://127.0.0.1:27017/test');
+    const url = "mongodb+srv://doadmin:18p4z9W07ke5O2xg@jems-mongodb-b2a684c3.mongo.ondigitalocean.com/admin?tls=true&authSource=admin&replicaSet=jems-mongodb"
+    await connect(url);
     return model('Map', mapSchema);
 }
 
