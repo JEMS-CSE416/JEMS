@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { splashGetStartedButton } from "./id.cy";
+import { splashGetStartedButton } from "./id";
 
 beforeEach(() => {
     cy.visit('/');
