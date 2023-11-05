@@ -18,22 +18,20 @@ const HomePage = () => {
             See all
           </Text>
         </Group>
-        <Link to="/selected">
-          <Group justify="space-between">
-            <Link to="/selected">
-              <MapCard private={false}></MapCard>
-            </Link>
-            <Link to="/selected">
-              <MapCard private={false}></MapCard>
-            </Link>
-            <Link to="/selected">
-              <MapCard private={false}></MapCard>
-            </Link>
-            <Link to="/selected">
-              <MapCard private={false}></MapCard>
-            </Link>
-          </Group>
-        </Link>
+        <Group justify="space-between">
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+          </Link>
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+          </Link>
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+          </Link>
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+          </Link>
+        </Group>
         <Group id="homePageHeaderGroup">
           <Text fw={700} size="xl" id="homePageHeader" ta="left">
             Discover Maps
@@ -42,22 +40,20 @@ const HomePage = () => {
             See all
           </Text>
         </Group>
-        <Link to="/selected">
-          <Group justify="space-between">
-            <Link to="/selected">
-              <MapCard private={false}></MapCard>
-            </Link>
-            <Link to="/selected">
-              <MapCard private={false}></MapCard>
-            </Link>
-            <Link to="/selected">
-              <MapCard private={false}></MapCard>
-            </Link>
-            <Link to="/selected">
-              <MapCard private={false}></MapCard>
-            </Link>
-          </Group>
-        </Link>
+        <Group justify="space-between">
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+          </Link>
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+          </Link>
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+          </Link>
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+          </Link>
+        </Group>
         <div>
           <Group justify="space-between">
             <Link to="/selected">
