@@ -51,8 +51,6 @@ jobs:
 
     #- name: npm Clean Install
       #run: npm ci
-    #- name: Run build
-      #run: npm run build --if-present
 
     - name: init npm for cypress install
       run: npm init -y
@@ -60,6 +58,10 @@ jobs:
       run: |
         npm install typescript
         npm install cypress
+
+    - name: Run build
+      run: npm run build --if-present
+      working-directory: ./client/
 
     - name: Cypress linking
       uses: cypress-io/github-action@v6
@@ -71,5 +73,4 @@ jobs:
       with:
         install: false
         project: ./client/
-        start: npm start
         browser: chrome
