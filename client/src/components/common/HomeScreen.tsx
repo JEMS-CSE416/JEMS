@@ -19,10 +19,20 @@ const HomePage = () => {
           </Text>
         </Group>
         <Link to="/selected">
-          <MapCard private={true}></MapCard>
-          <MapCard private={true}></MapCard>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
+          <Group justify="space-between">
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+          </Group>
         </Link>
         <Group id="homePageHeaderGroup">
           <Text fw={700} size="xl" id="homePageHeader" ta="left">
@@ -33,18 +43,36 @@ const HomePage = () => {
           </Text>
         </Group>
         <Link to="/selected">
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
+          <Group justify="space-between">
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+          </Group>
         </Link>
         <div>
-          <Link to="/selected">
-            <MapCard private={false}></MapCard>
-            <MapCard private={false}></MapCard>
-            <MapCard private={false}></MapCard>
-            <MapCard private={false}></MapCard>
-          </Link>
+          <Group justify="space-between">
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+            <Link to="/selected">
+              <MapCard private={false}></MapCard>
+            </Link>
+          </Group>
         </div>
       </div>
       <Footer></Footer>

@@ -8,8 +8,48 @@
   text-align: left;
 }
 
-#editIcon{
-    height: 15px;
-    margin-left: auto;
-    margin-right: 1%;
+#editIcon {
+  height: 15px;
+  margin-left: auto;
+  margin-right: 0px;
+}
+
+#editText {
+  margin-left: 0px;
+  padding-left: 0px;
+}
+
+#creatorName {
+  margin-right: auto;
+  margin-left: 0px;
+  color: #228be6;
+}
+
+#numberMaps {
+  margin-right: auto;
+  margin-left: 0px;
+}
+
+#downloadIcon {
+  height: 15px;
+  margin-left: auto;
+  margin-right: 0px;
+}
+
+#dowloadText {
+  margin-left: 0px;
+  padding-left: 0px;
+  margin-right: 1%;
+}
+
+#duplicateIcon {
+  height: 15px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+#duplicateText {
+  margin-left: 0px;
+  padding-left: 0px;
+  margin-right: 1%;
 }
