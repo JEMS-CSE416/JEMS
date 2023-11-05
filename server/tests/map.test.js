@@ -1,8 +1,7 @@
-const { describe } = require("node:test");
 const request = require("supertest");
 
 // Test the map routes
-describe("testing the map routes", () => {
+describe("testing the map routse", () => {
   describe("GET /map", () => {
     describe("when user is authenticated", () => {
       test("with an ID of a map, it should return status code 201", async () => {
