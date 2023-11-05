@@ -7,7 +7,6 @@ import Footer from "../common/Footer";
 const HomePage = () => {
   return (
     <>
-
       <NavBar></NavBar>
       <div id="content">
         <Group id="homePageHeaderGroup">

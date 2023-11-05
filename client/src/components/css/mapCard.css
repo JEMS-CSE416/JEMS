@@ -8,6 +8,10 @@
   margin-top: 5px;
 }
 
+#card:hover{
+    border: 1px solid #228be6;
+}
+
 #mapTitle {
   padding-top: 10%;
 }
