@@ -3,7 +3,7 @@ import { Text, Group, Image, Avatar } from "@mantine/core";
 import pencil from "../../assets/images/pencil.png";
 import avatar from "../../assets/images/circle-letter-l.png";
 import download from "../../assets/images/download.png";
-import duplicate from "../../assets/images/copy.png"
+import duplicate from "../../assets/images/copy.png";
 
 const MapHeader = () => {
   return (
