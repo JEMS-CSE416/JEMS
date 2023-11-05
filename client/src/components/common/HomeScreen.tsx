@@ -3,6 +3,7 @@ import { Group, Text } from "@mantine/core";
 import MapCard from "../browsing/MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
@@ -17,10 +18,12 @@ const HomePage = () => {
             See all
           </Text>
         </Group>
-        <MapCard private={true}></MapCard>
-        <MapCard private={true}></MapCard>
-        <MapCard private={false}></MapCard>
-        <MapCard private={false}></MapCard>
+        <Link to="/selected">
+          <MapCard private={true}></MapCard>
+          <MapCard private={true}></MapCard>
+          <MapCard private={false}></MapCard>
+          <MapCard private={false}></MapCard>
+        </Link>
         <Group id="homePageHeaderGroup">
           <Text fw={700} size="xl" id="homePageHeader" ta="left">
             Discover Maps
@@ -29,15 +32,19 @@ const HomePage = () => {
             See all
           </Text>
         </Group>
-        <MapCard private={false}></MapCard>
-        <MapCard private={false}></MapCard>
-        <MapCard private={false}></MapCard>
-        <MapCard private={false}></MapCard>
+        <Link to="/selected">
+          <MapCard private={false}></MapCard>
+          <MapCard private={false}></MapCard>
+          <MapCard private={false}></MapCard>
+          <MapCard private={false}></MapCard>
+        </Link>
         <div>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
+          <Link to="/selected">
+            <MapCard private={false}></MapCard>
+            <MapCard private={false}></MapCard>
+            <MapCard private={false}></MapCard>
+            <MapCard private={false}></MapCard>
+          </Link>
         </div>
       </div>
       <Footer></Footer>
