@@ -32,9 +32,9 @@ jobs:
         
   TestCypress:
     runs-on: ubuntu-latest
-    defaults: 
-      run:
-        working-directory: ./client/
+    #defaults: 
+      #run:
+        #working-directory: ./client/
 
     strategy:
       matrix:
@@ -48,19 +48,19 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: npm
-        cache-dependency-path: client/package-lock.json
 
-    - name: npm Clean Install
-      run: npm ci
-    - name: Run build
-      run: npm run build --if-present
+    #- name: npm Clean Install
+      #run: npm ci
+    #- name: Run build
+      #run: npm run build --if-present
+
+    - name: init npm for cypress install
+      run: npm init 
 
     - name: Cypress install
       uses: cypress-io/github-action@v6
       with:
         runTests: false
-        install-command: npm init && npm install cypress
 
     - name: Cypress run
       uses: cypress-io/github-action@v6
