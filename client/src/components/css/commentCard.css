@@ -1,0 +1,12 @@
+#commentText {
+  text-align: left;
+}
+
+#commentsContainer {
+  background-color: white;
+}
+
+#commentSpoiler {
+  color: black;
+  font-size: 12px;
+}

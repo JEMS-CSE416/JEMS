@@ -3,6 +3,7 @@ import NavBar from "../common/Navbar";
 import MapHeader from "./MapHeader";
 import Canvas from "./Canvas";
 import MapAbout from "./MapAbout";
+import Comments from "./Comments";
 import Footer from "../common/Footer";
 const SelectedCardPage = () => {
   return (
@@ -12,6 +13,7 @@ const SelectedCardPage = () => {
         <MapHeader></MapHeader>
         <Canvas></Canvas>
         <MapAbout></MapAbout>
+        <Comments></Comments>
       </div>
       <Footer></Footer>
     </>

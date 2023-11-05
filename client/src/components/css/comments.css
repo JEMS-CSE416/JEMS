@@ -1,0 +1,25 @@
+#commentsText {
+  margin-top: 3%;
+  text-align: left;
+}
+
+#inputCommentRow {
+  margin-top: 3%;
+}
+
+#inputComment {
+  height: 38px;
+  width: 90%;
+  border-width: 0 0 1px;
+  border-color: #dddfe4;
+}
+
+#inputComment:focus {
+  outline: none;
+  border-width: 0 0 1px;
+  border-color: #228be6;
+}
+
+#comments {
+  margin-top: 3%;
+}
