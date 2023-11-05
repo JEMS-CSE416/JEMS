@@ -8,7 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Browser } from "leaflet";
 import SplashScreen from "./components/common/SplashScreen";
 import HomeScreen from "./components/common/HomeScreen";
-import DiscoverMaps from "./components/browsing/DiscoverMaps";
+import HomePage from "./components/browsing/HomePage";
 import SelectedCardPage from "./components/selectedcard/SelectedCardPage";
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
     setFileInfo({
       ...fileInfo, // Spread the current state to retain any other properties
       fileType: file,
-      fileContent: content
+      fileContent: content,
     });
   };
 
@@ -27,10 +27,10 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SplashScreen/>} />
-          <Route path="/home" element={<HomeScreen/>} />
-          <Route path="/discover" element={<DiscoverMaps/>} />
-          <Route path="/selected" element={<SelectedCardPage/>} />
+          <Route path="/" element={<SplashScreen />} />
+          <Route path="/home" element={<HomeScreen />} />
+          <Route path="/discover" element={<HomePage />} />
+          <Route path="/selected" element={<SelectedCardPage />} />
         </Routes>
       </BrowserRouter>
     </div>
