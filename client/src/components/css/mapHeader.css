@@ -1,4 +1,15 @@
 #creationDate {
-    text-align: left;
-    color: #228be6
+  margin-top: 3%;
+  text-align: left;
+  color: #228be6;
+}
+
+#title {
+  text-align: left;
+}
+
+#editIcon{
+    height: 15px;
+    margin-left: auto;
+    margin-right: 1%;
 }
