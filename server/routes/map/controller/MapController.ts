@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import { connect, model } from 'mongoose'
 import { mapSchema } from './MapSchema'
-import { MongoClient } from "mongodb"
+import * as dotenv from 'dotenv'
 
 /**
  * Connects to the mongodb server and returns a queriable object
  * @returns 
  */
 async function getMapModel(){
-    const url = "mongodb+srv://doadmin:18p4z9W07ke5O2xg@jems-mongodb-b2a684c3.mongo.ondigitalocean.com/admin?tls=true&authSource=admin&replicaSet=jems-mongodb"
-    await connect(url);
+    dotenv.config()
+    await connect(process.env.MONGO_DB_CONNECTION_STRING);
     return model('Map', mapSchema);
 }
 
@@ -24,7 +24,6 @@ async function getMapModel(){
 const queryMaps = async (req: Request, res: Response) => {
     const mapModel = await getMapModel();
     const qPhrase = req.query.qPhrase
-    console.log("here")
 
     res.send(
         await mapModel.find()
@@ -57,11 +56,8 @@ const duplicateMap = async (req: Request, res: Response) => {};
  */
 const createMap = async (req: Request, res: Response) => {
     const MapModel = await getMapModel();
-    console.log(req.body)
     const mapStr = req.body.map_file_content
     const map = new MapModel(mapStr);
-    console.log(mapStr)
-    console.log(map)
     map.save()
         .then( savedDoc => {res.send(savedDoc)})
         .catch( err => { res.status(400).send('unable to save map due to ' + err)})
