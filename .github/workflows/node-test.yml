@@ -57,7 +57,9 @@ jobs:
     - name: init npm for cypress install
       run: npm init -y
     - name: Cypress install
-      run: npm install cypress
+      run: |
+        npm install typescript
+        npm install cypress
 
     - name: Cypress linking
       uses: cypress-io/github-action@v6
