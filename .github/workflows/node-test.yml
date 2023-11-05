@@ -32,9 +32,6 @@ jobs:
         
   TestCypress:
     runs-on: ubuntu-latest
-    #defaults: 
-      #run:
-        #working-directory: ./client/
 
     strategy:
       matrix:
@@ -49,20 +46,18 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: npm Clean Install
+    - name: Prepare client directory for npm start
       run: npm ci
       working-directory: ./client/
-    #- name: Run build
-      #run: npm run build --if-present
 
-    - name: init npm for cypress install
+    - name: init npm for cypress install in JEMS directory
       run: npm init -y
-    - name: Cypress install
+    - name: Cypress install in JEMS directory
       run: |
         npm install typescript
         npm install cypress
 
-    - name: Cypress linking
+    - name: Link cypress for testing client directory
       uses: cypress-io/github-action@v6
       with:
         runTests: false
