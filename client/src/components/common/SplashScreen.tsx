@@ -45,7 +45,7 @@ const SplashScreen = () => {
                         Premium Map Creation/Editing Software that’s really good
                       </h1>
                       <Link to="/home">
-                        <Button>Get Started</Button>
+                        <Button id="splash-button">Get Started</Button>
                       </Link>
                     </Box>
                   </Center>
