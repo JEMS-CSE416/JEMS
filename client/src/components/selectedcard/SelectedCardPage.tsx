@@ -1,7 +1,7 @@
 import "../css/selectedCardPage.css";
 import NavBar from "../common/Navbar";
 import MapHeader from "./MapHeader";
-import Canvas from "./Canvas";
+import Canvas from "./NewCanvas";
 import MapAbout from "./MapAbout";
 import Comments from "./Comments";
 import Footer from "../common/Footer";

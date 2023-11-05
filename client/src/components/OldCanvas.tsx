@@ -6,7 +6,7 @@ interface CanvasProps {
   fileInfo: FileInfo;
 }
 
-const Canvas: React.FC<CanvasProps> = ({ fileInfo }) => {
+const OldCanvas: React.FC<CanvasProps> = ({ fileInfo }) => {
     return (
         <>
             {fileInfo.fileContent !== undefined // only display render displaymap if goejson exists
@@ -18,4 +18,4 @@ const Canvas: React.FC<CanvasProps> = ({ fileInfo }) => {
     )
 }
 
-export default Canvas;
+export default OldCanvas;

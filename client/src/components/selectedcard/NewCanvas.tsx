@@ -1,5 +1,6 @@
 import { Image } from "@mantine/core";
 import "../css/canvas.css"
+
 const Canvas = () => {
   return (
     <>
