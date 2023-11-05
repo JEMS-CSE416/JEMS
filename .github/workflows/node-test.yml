@@ -63,4 +63,5 @@ jobs:
         install: false
         project: ./client/
         start: npm start
+        command: cd ./client && npx cypress run
         browser: chrome
