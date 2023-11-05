@@ -2,6 +2,7 @@
   "main": "dist/server.js",
   "scripts": {
     "clean": "npx pm2 stop all && npx pm2 kill && rm -rf ./node_modules/",
+    "stop": "npx pm2 stop all && npx pm2 kill",
     "build": "npm install && tsc",
     "start": "npx pm2 start 'node .'",
     "deploy": "npm run build && npm run start",
