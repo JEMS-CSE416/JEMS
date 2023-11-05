@@ -2,6 +2,6 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testMatch: ["**/JEMS/server/tests/*.test.ts"],
+  testMatch: ["**/tests/**/*.test.js"],
   forceExit: true,
 };
