@@ -1,6 +1,6 @@
 const request = require("supertest");
 
-// Test the map routes
+// Test the auth routes
 describe("testing the auth routes", () => {
   describe("GET /loggedIn", () => {
     describe("session token provided", () => {

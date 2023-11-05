@@ -1,6 +1,6 @@
 const request = require("supertest");
 
-// Test the map routes
+// Test the comment routes
 describe("testing the comment routes", () => {
   describe("GET /comments", () => {
     describe("when user is authenticated", () => {
