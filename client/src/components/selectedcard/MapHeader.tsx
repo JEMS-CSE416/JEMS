@@ -3,10 +3,13 @@ import { Text, Group, Image, Avatar } from "@mantine/core";
 import pencil from "../../assets/images/pencil.png";
 import download from "../../assets/images/download.png";
 import duplicate from "../../assets/images/copy.png";
-
+import { useDisclosure } from '@mantine/hooks';
+import DownloadMapModal from "../common/DownloadMapModal"
 const MapHeader = () => {
+  const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
+    <DownloadMapModal opened={opened} onClose={close}></DownloadMapModal>
       <Text fw={500} size="sm" id="creationDate">
         Created 5 days ago
       </Text>
@@ -33,8 +36,8 @@ const MapHeader = () => {
           </div>
         </Group>
 
-        <Image src={download} id="downloadIcon"></Image>
-        <Text size="xs" id="downloadText">
+        <Image src={download} id="downloadIcon" onClick={open}></Image>
+        <Text size="xs" id="downloadText" onClick={open}>
           Download
         </Text>
 
