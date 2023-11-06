@@ -6,6 +6,7 @@
     "build": "npm install && tsc",
     "start": "npx pm2 start 'node .'",
     "deploy": "npm run build && npm run start",
+    "dev": "node .",
     "test": "jest"
   },
   "dependencies": {
