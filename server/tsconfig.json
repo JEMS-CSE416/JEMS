@@ -15,9 +15,7 @@
                 "node_modules/*"
             ]
         },
-        "resolveJsonModule": true,
     },
     "include": [
-        "*", "tests/*.ts"
-    ],
+        "*", "tests/*.ts", "tests/**/*.test.ts" ],
 }

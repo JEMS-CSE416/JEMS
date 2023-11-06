@@ -1,5 +1,5 @@
 import request from "supertest"
-
+import app from "../../../app"
 // Test the map routes
 describe("testing the map routse", () => {
   describe("GET /map", () => {
@@ -41,7 +41,7 @@ describe("testing the map routse", () => {
   describe("PUT /map", () => {
     describe("when user is authenticated", () => {
       test("given map file details, it should return status code 201", async () => {
-        // Test logic for map file details provided
+        
       });
 
       test("given no map file details, it should return status code 400", async () => {
