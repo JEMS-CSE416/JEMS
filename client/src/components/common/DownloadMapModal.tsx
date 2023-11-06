@@ -1,6 +1,6 @@
-import { useDisclosure } from "@mantine/hooks";
 import { Modal, Button, Group } from "@mantine/core";
 import "../css/downloadMapModal.css"
+import React from "react";
 
 interface DownloadMapModalProps {
     opened: boolean;
