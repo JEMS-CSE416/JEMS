@@ -1,0 +1,222 @@
+[
+  {
+    "map_file_content": {
+      "creatorId": "652daf32e2225cdfeceea17f",
+      "mapName": "**MAKE THIS MAP NAME LITERALLY AS IDENTIFIABLE AS POSSIBLE***",
+      "description": "dummyDesc",
+      "creationDate": "2023-10-16T21:46:26.858Z",
+      "public": true,
+      "colorType": "Color",
+      "displayStrings": true,
+      "displayNumerics": true,
+      "displayLegend": true,
+      "displayPointers": true,
+      "thumbnail": {
+        "imageUrl": "dummyUrl.com",
+        "imageType": "jpg"
+      },
+      "regions": {
+        "dummyGroup": [
+          {
+            "regionName": "dummyName",
+            "coordinate": [
+              [0, 0],
+              [1, 1]
+            ],
+            "stringLabel": "dummyLabel",
+            "stringOffset": [0, 0],
+            "numericLabel": 0,
+            "numericUnit": "dummyUnit",
+            "color": "#eeeeee"
+          }
+        ]
+      },
+      "legend": {
+        "colorLegend": {
+          "#000000": "black",
+          "#ffffff": "white"
+        },
+        "choroplethLegend": {
+          "#000000": 0,
+          "#ffffff": 10
+        }
+      }
+    }
+  },
+  {
+    "map_file_content": {
+      "creatorId": "8a4f93b5c87e8d7a5f8c6a4d",
+      "mapName": "Different Identifiable Map Name",
+      "description": "anotherDummyDesc",
+      "creationDate": "2023-11-06T15:30:00.000Z",
+      "public": false,
+      "colorType": "Type",
+      "displayStrings": false,
+      "displayNumerics": true,
+      "displayLegend": false,
+      "displayPointers": true,
+      "thumbnail": {
+        "imageUrl": "differentUrl.com",
+        "imageType": "png"
+      },
+      "regions": {
+        "anotherGroup": [
+          {
+            "regionName": "differentName",
+            "coordinate": [
+              [1, 0],
+              [2, 1]
+            ],
+            "stringLabel": "anotherLabel",
+            "stringOffset": [1, 1],
+            "numericLabel": 10,
+            "numericUnit": "differentUnit",
+            "color": "#aabbcc"
+          }
+        ]
+      },
+      "legend": {
+        "colorLegend": {
+          "#ff0000": "red",
+          "#00ff00": "green"
+        },
+        "choroplethLegend": {
+          "#0000ff": 5,
+          "#ffff00": 15
+        }
+      }
+    }
+  },
+  {
+    "map_file_content": {
+      "creatorId": "3b8c1a2f3e4d5c6b7a8d9f1e",
+      "mapName": "Map Name Three",
+      "description": "description3",
+      "creationDate": "2023-11-06T18:45:00.000Z",
+      "public": true,
+      "colorType": "DifferentColor",
+      "displayStrings": true,
+      "displayNumerics": false,
+      "displayLegend": true,
+      "displayPointers": false,
+      "thumbnail": {
+        "imageUrl": "urlthree.com",
+        "imageType": "gif"
+      },
+      "regions": {
+        "regionGroup": [
+          {
+            "regionName": "Region Three",
+            "coordinate": [
+              [5, 3],
+              [8, 4]
+            ],
+            "stringLabel": "Label3",
+            "stringOffset": [2, 2],
+            "numericLabel": 25,
+            "numericUnit": "unitThree",
+            "color": "#336699"
+          }
+        ]
+      },
+      "legend": {
+        "colorLegend": {
+          "#ffcc00": "orange",
+          "#6600cc": "purple"
+        },
+        "choroplethLegend": {
+          "#339933": 7,
+          "#cc3300": 20
+        }
+      }
+    }
+  },
+  {
+    "map_file_content": {
+      "creatorId": "3n9c1a4E5e4d9c6b7a8d9f1D",
+      "mapName": "Some Map Name",
+      "description": "Some description",
+      "creationDate": "2023-11-06T19:00:00.000Z",
+      "public": true,
+      "colorType": "Some Color Type",
+      "displayStrings": true,
+      "displayNumerics": true,
+      "displayLegend": false,
+      "displayPointers": false,
+      "thumbnail": {
+        "imageUrl": "someurl.com",
+        "imageType": "jpeg"
+      },
+      "regions": {
+        "someGroup": [
+          {
+            "regionName": "Some Region",
+            "coordinate": [
+              [3, 4],
+              [6, 7]
+            ],
+            "stringLabel": "Some Label",
+            "stringOffset": [3, 3],
+            "numericLabel": 15,
+            "numericUnit": "Some Unit",
+            "color": "#ff9900"
+          }
+        ]
+      },
+      "legend": {
+        "colorLegend": {
+          "#990099": "violet",
+          "#00ff99": "cyan"
+        },
+        "choroplethLegend": {
+          "#0033cc": 12,
+          "#66cc00": 18
+        }
+      }
+    }
+  },
+  {
+    "map_file_content": {
+      "creatorId": "3b8c1a2f3e4d5652daf32e22",
+      "mapName": "Fourth Map",
+      "description": "Description for the fourth map",
+      "creationDate": "2023-11-06T20:15:00.000Z",
+      "public": false,
+      "colorType": "Colorful Type",
+      "displayStrings": false,
+      "displayNumerics": false,
+      "displayLegend": true,
+      "displayPointers": true,
+      "thumbnail": {
+        "imageUrl": "fourthurl.com",
+        "imageType": "bmp"
+      },
+      "regions": {
+        "fourthGroup": [
+          {
+            "regionName": "Fourth Region",
+            "coordinate": [
+              [7, 9],
+              [10, 12]
+            ],
+            "stringLabel": "Label Four",
+            "stringOffset": [4, 4],
+            "numericLabel": 30,
+            "numericUnit": "Fourth Unit",
+            "color": "#ffcc00"
+          }
+        ]
+      },
+      "legend": {
+        "colorLegend": {
+          "#6600ff": "indigo",
+          "#cc0099": "magenta"
+        },
+        "choroplethLegend": {
+          "#00cc66": 8,
+          "#cc6600": 22
+        }
+      }
+    }
+  }
+]

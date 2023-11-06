@@ -1,8 +1,13 @@
-import request from "supertest"
-import app from "../../../app"
+import request from "supertest";
+import app from "../../../app";
+import maps from "../../fixtures/maps.json";
+
+// https://stackoverflow.com/questions/69794934/set-an-authentication-token-in-a-request-header-when-using-supertest-with-jest-a
+// for auth
+
 // Test the map routes
-describe("testing the map routse", () => {
-  describe("GET /map", () => {
+describe("testing the api/map route", () => {
+  describe("GET /api/map", () => {
     describe("when user is authenticated", () => {
       test("with an ID of a map, it should return status code 201", async () => {
         // Test logic for a request with an ID of a map
@@ -20,7 +25,7 @@ describe("testing the map routse", () => {
     });
   });
 
-  describe("GET /map/:id", () => {
+  describe("GET /api/map/:id", () => {
     describe("when user is authenticated", () => {
       test("given an ID of a map, it should return status code 201", async () => {
         // Test logic for a valid ID of a map
@@ -38,14 +43,23 @@ describe("testing the map routse", () => {
     });
   });
 
-  describe("PUT /map", () => {
+  describe("PUT /api/map", () => {
     describe("when user is authenticated", () => {
       test("given map file details, it should return status code 201", async () => {
-        
+        const authenticated = true;
+
+        const map_2 = maps[1];
+
+        const response = await request(app)
+          .put("/api/maps/")
+          .send(map_2)
+          .expect(201);
       });
 
       test("given no map file details, it should return status code 400", async () => {
-        // Test logic for no map file details provided
+        const authenticated = true;
+        const response = await request(app).put("/api/maps/").send({}).expect(400);
+
       });
     });
 
@@ -56,7 +70,7 @@ describe("testing the map routse", () => {
     });
   });
 
-  describe("POST /map/:id", () => {
+  describe("POST /api/map/:id", () => {
     describe("when user is authenticated", () => {
       test("when ID is not valid for the user to update, it should return status code 400", async () => {
         // Test logic for an invalid ID for the user to update
@@ -78,7 +92,7 @@ describe("testing the map routse", () => {
     });
   });
 
-  describe("POST /map/duplicate", () => {
+  describe("POST /api/map/duplicate", () => {
     describe("when user is authenticated", () => {
       test("with a valid map ID, it should successfully duplicate the map and return 201", async () => {
         // Test logic for duplicating a map with a valid ID
@@ -96,5 +110,3 @@ describe("testing the map routse", () => {
     });
   });
 });
-
-
