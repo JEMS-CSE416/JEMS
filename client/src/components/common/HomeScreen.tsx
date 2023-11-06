@@ -1,55 +1,79 @@
-import "../css/homePage.css";
-import { Group, Text } from "@mantine/core";
+import "../css/homeScreen.css";
+import { Group, Text, Stack, Box } from "@mantine/core";
 import MapCard from "../browsing/MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
-  return (
-    <>
-      <NavBar></NavBar>
-      <div id="content">
-        <Group id="homePageHeaderGroup">
-          <Text fw={700} size="xl" id="homePageHeader" ta="left">
-            Your Maps
-          </Text>
-          <Text size="sm" id="seeAll">
-            See all
-          </Text>
-        </Group>
-        <Link to="/selected">
-          <MapCard private={true}></MapCard>
-          <MapCard private={true}></MapCard>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
-        </Link>
-        <Group id="homePageHeaderGroup">
-          <Text fw={700} size="xl" id="homePageHeader" ta="left">
-            Discover Maps
-          </Text>
-          <Text size="sm" ta="right" id="seeAll">
-            See all
-          </Text>
-        </Group>
-        <Link to="/selected">
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
-          <MapCard private={false}></MapCard>
-        </Link>
-        <div>
-          <Link to="/selected">
-            <MapCard private={false}></MapCard>
-            <MapCard private={false}></MapCard>
-            <MapCard private={false}></MapCard>
-            <MapCard private={false}></MapCard>
-          </Link>
-        </div>
-      </div>
-      <Footer></Footer>
-    </>
-  );
+    return (
+        <>
+            <NavBar></NavBar>
+            <div id="content">
+                <Stack>
+                    <Box>
+                        <Stack gap="xs">
+                            <Group id="homePageHeaderGroup"> 
+                                <Text fw={700} size="xl" id="homePageHeader" ta="left" style={{width:"50%"}}> Your Maps </Text>
+                                <Text size="sm" id="seeAll" ta="right" style={{width:"25%"}}>See all </Text>
+                            </Group>
+                            <Group justify="flex-start" grow wrap="wrap" style={{width: "100%"}}>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                            </Group>
+                        </Stack>
+                    </Box>
+                    <Box>
+                        <Stack gap="xs">
+                            <Group id="homePageHeaderGroup"> 
+                                <Text fw={700} size="xl" id="homePageHeader" ta="left" style={{width:"50%"}}> Discover Maps </Text>
+                                <Text size="sm" id="seeAll" ta="right" style={{width:"25%"}}>See all </Text>
+                            </Group>
+                            <Group justify="flex-start" grow>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                            </Group>
+                            <Group justify="flex-start" grow>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                                <Link to="/selected">
+                                    <MapCard private={false}></MapCard>
+                                </Link>
+                            </Group>
+                        </Stack>
+                    </Box>
+                </Stack>
+            </div>
+            <Footer></Footer>
+        </>
+    );
 };
 
 export default HomePage;

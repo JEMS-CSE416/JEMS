@@ -2,12 +2,16 @@ import { useDisclosure } from '@mantine/hooks';
 import { Divider, Modal, Button, Textarea, TextInput, Text, Box, Select, rem, Group, Stack } from '@mantine/core';
 import { FileDropZone } from './FileDropZone';
 
-const CreateMapModal = () => {
-    const [opened, { open, close }] = useDisclosure(false);
+interface CreateMapModalProps {
+    opened: boolean;
+    onClose: () => void;
+  }
+
+  const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
 
     return (
         <>
-            <Modal opened={opened} onClose={close} title="Create Map" centered size="70%" >
+            <Modal opened={opened} onClose={onClose} title="Create Map" centered size="70%" >
                 <Box style={{ margin: "20px" }}>
                     <Group>
                         <Box style={{ width: "40%" }}>
@@ -55,7 +59,6 @@ const CreateMapModal = () => {
                     </Group>
                 </Box>
             </Modal>
-            <Button onClick={open}>Open centered Modal</Button>
         </>
     );
 }

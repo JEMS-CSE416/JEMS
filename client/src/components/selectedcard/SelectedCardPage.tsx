@@ -1,7 +1,21 @@
+import "../css/selectedCardPage.css";
+import NavBar from "../common/Navbar";
+import MapHeader from "./MapHeader";
+import Canvas from "./Canvas";
+import MapAbout from "./MapAbout";
+import Comments from "./Comments";
+import Footer from "../common/Footer";
 const SelectedCardPage = () => {
   return (
     <>
-      <h1>Selected Card Page</h1>
+      <NavBar></NavBar>
+      <div id="content">
+        <MapHeader></MapHeader>
+        <Canvas></Canvas>
+        <MapAbout></MapAbout>
+        <Comments></Comments>
+      </div>
+      <Footer></Footer>
     </>
   );
 };
