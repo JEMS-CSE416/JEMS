@@ -34,7 +34,6 @@ describe("Testing connection to Mongodb server", () => {
 
     const paul = await Person.find({ name: "Paul" });
 
-    console.log(paul[0].name);
 
     await mockdb.disconnect();
   });
@@ -48,8 +47,6 @@ describe("Crud Map operations", () => {
 
     const map = new Map(map1);
     const result = await map.save();
-
-    console.log(result.mapName);
 
     await mockdb.disconnect();
   });
@@ -76,7 +73,6 @@ describe("Crud Map operations", () => {
     expect(retrievedmap).toBeDefined();
     expect(retrievedmap[0].mapName).toBe("Sample Map 1");
 
-    console.log(retrievedmap[0]);
 
     await mockdb.disconnect();
   });

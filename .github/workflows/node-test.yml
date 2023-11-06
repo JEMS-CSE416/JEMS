@@ -33,13 +33,16 @@ jobs:
       run: npm run build --if-present
 
     - name: Run Tests
-      run: npm run test
+      run: |
+        echo 'MONGO_DB_CONNECTION_STRING="mongodb://127.0.0.1:27017"' > .env
+        npm run test
 
     - name: break down mongodb
       run: |
         docker stop mongodb
         docker rm mongodb
 
+  
     
   TestCypressE2E:
     runs-on: ubuntu-latest

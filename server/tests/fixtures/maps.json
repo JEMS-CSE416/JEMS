@@ -19,24 +19,12 @@
         {
           "regionName": "Region A",
           "coordinate": [
-            [
-              10,
-              20
-            ],
-            [
-              30,
-              40
-            ],
-            [
-              50,
-              60
-            ]
+            [10, 20],
+            [30, 40],
+            [50, 60]
           ],
           "stringLabel": "Label A",
-          "stringOffset": [
-            5,
-            10
-          ],
+          "stringOffset": [5, 10],
           "numericLabel": 100,
           "numericUnit": "km",
           "color": "#FF0000"
@@ -44,24 +32,12 @@
         {
           "regionName": "Region A-2",
           "coordinate": [
-            [
-              15,
-              25
-            ],
-            [
-              35,
-              45
-            ],
-            [
-              55,
-              65
-            ]
+            [15, 25],
+            [35, 45],
+            [55, 65]
           ],
           "stringLabel": "Label A-2",
-          "stringOffset": [
-            8,
-            12
-          ],
+          "stringOffset": [8, 12],
           "numericLabel": 120,
           "numericUnit": "km",
           "color": "#00FF00"
@@ -71,24 +47,12 @@
         {
           "regionName": "Region B",
           "coordinate": [
-            [
-              100,
-              200
-            ],
-            [
-              300,
-              400
-            ],
-            [
-              500,
-              600
-            ]
+            [100, 200],
+            [300, 400],
+            [500, 600]
           ],
           "stringLabel": "Label B",
-          "stringOffset": [
-            50,
-            100
-          ],
+          "stringOffset": [50, 100],
           "numericLabel": 500,
           "numericUnit": "km",
           "color": "#0000FF"
@@ -109,80 +73,46 @@
     }
   },
   {
-    "creatorId": "6119dbef8b0915f12c818a38",
-    "mapName": "Sample Map 2",
-    "description": "This is a second sample map",
-    "creationDate": "2023-11-05T09:00:00Z",
-    "public": false,
-    "colorType": "basic",
-    "displayStrings": true,
-    "displayNumerics": false,
-    "displayLegend": true,
-    "displayPointers": false,
-    "thumbnail": {
-      "imageUrl": "https://example.com/thumbnail2.jpg",
-      "imageType": "jpg"
-    },
-    "regions": {
-      "regionA": [
-        {
-          "regionName": "Region C",
-          "coordinate": [
-            [
-              110,
-              210
+    "map_file_content": {
+      "creatorId": "652daf32e2225cdfeceea17f",
+      "mapName": "**MAKE THIS MAP NAME LITERALLY AS IDENTIFIABLE AS POSSIBLE***",
+      "description": "dummyDesc",
+      "creationDate": "2023-10-16T21:46:26.858Z",
+      "public": true,
+      "colorType": "Color",
+      "displayStrings": true,
+      "displayNumerics": true,
+      "displayLegend": true,
+      "displayPointers": true,
+      "thumbnail": {
+        "imageUrl": "dummyUrl.com",
+        "imageType": "jpg"
+      },
+      "regions": {
+        "dummyGroup": [
+          {
+            "regionName": "dummyName",
+            "coordinate": [
+              [0, 0],
+              [1, 1]
             ],
-            [
-              310,
-              410
-            ],
-            [
-              510,
-              610
-            ]
-          ],
-          "stringLabel": "Label C",
-          "stringOffset": [
-            15,
-            20
-          ],
-          "numericLabel": 300,
-          "numericUnit": "miles",
-          "color": "#00FF00"
+            "stringLabel": "dummyLabel",
+            "stringOffset": [0, 0],
+            "numericLabel": 0,
+            "numericUnit": "dummyUnit",
+            "color": "#eeeeee"
+          }
+        ]
+      },
+      "legend": {
+        "colorLegend": {
+          "#000000": "black",
+          "#ffffff": "white"
+        },
+        "choroplethLegend": {
+          "#000000": 0,
+          "#ffffff": 10
         }
-      ],
-      "regionB": [
-        {
-          "regionName": "Region D",
-          "coordinate": [
-            [
-              120,
-              220
-            ],
-            [
-              320,
-              420
-            ],
-            [
-              520,
-              620
-            ]
-          ],
-          "stringLabel": "Label D",
-          "stringOffset": [
-            18,
-            22
-          ],
-          "numericLabel": 400,
-          "numericUnit": "miles",
-          "color": "#FF0000"
-        }
-      ]
-    },
-    "legend": {
-      "colorLegend": {
-        "Red": "Stop",
-        "Green": "Go"
       }
     }
   },
@@ -206,18 +136,9 @@
         {
           "regionName": "Region E",
           "coordinate": [
-            [
-              210,
-              310
-            ],
-            [
-              410,
-              510
-            ],
-            [
-              610,
-              710
-            ]
+            [210, 310],
+            [410, 510],
+            [610, 710]
           ],
           "numericLabel": 500,
           "numericUnit": "feet",
@@ -228,18 +149,9 @@
         {
           "regionName": "Region F",
           "coordinate": [
-            [
-              220,
-              320
-            ],
-            [
-              420,
-              520
-            ],
-            [
-              620,
-              720
-            ]
+            [220, 320],
+            [420, 520],
+            [620, 720]
           ],
           "numericLabel": 600,
           "numericUnit": "feet",
@@ -275,24 +187,12 @@
         {
           "regionName": "Region G",
           "coordinate": [
-            [
-              310,
-              410
-            ],
-            [
-              510,
-              610
-            ],
-            [
-              710,
-              810
-            ]
+            [310, 410],
+            [510, 610],
+            [710, 810]
           ],
           "stringLabel": "Label G",
-          "stringOffset": [
-            35,
-            40
-          ],
+          "stringOffset": [35, 40],
           "color": "#00FFFF"
         }
       ],
@@ -300,24 +200,12 @@
         {
           "regionName": "Region H",
           "coordinate": [
-            [
-              320,
-              420
-            ],
-            [
-              520,
-              620
-            ],
-            [
-              720,
-              820
-            ]
+            [320, 420],
+            [520, 620],
+            [720, 820]
           ],
           "stringLabel": "Label H",
-          "stringOffset": [
-            38,
-            42
-          ],
+          "stringOffset": [38, 42],
           "color": "#FFFF00"
         }
       ]
@@ -349,18 +237,9 @@
         {
           "regionName": "Region I",
           "coordinate": [
-            [
-              410,
-              510
-            ],
-            [
-              610,
-              710
-            ],
-            [
-              810,
-              910
-            ]
+            [410, 510],
+            [610, 710],
+            [810, 910]
           ],
           "color": "#FF0000"
         }
@@ -369,18 +248,9 @@
         {
           "regionName": "Region J",
           "coordinate": [
-            [
-              420,
-              520
-            ],
-            [
-              620,
-              720
-            ],
-            [
-              820,
-              920
-            ]
+            [420, 520],
+            [620, 720],
+            [820, 920]
           ],
           "color": "#00FF00"
         }
