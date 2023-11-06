@@ -1,21 +1,19 @@
-import { useDisclosure } from '@mantine/hooks';
-import { Divider, Modal, Button, Textarea, TextInput, Text, Box, Select, rem, Group, Stack } from '@mantine/core';
+import { Divider, Modal, Button, Textarea, TextInput, Box, Select, Group, Stack } from '@mantine/core';
 import { FileDropZone } from './FileDropZone';
 
 interface CreateMapModalProps {
     opened: boolean;
     onClose: () => void;
-  }
+}
 
-  const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
-
+const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
     return (
         <>
             <Modal opened={opened} onClose={onClose} title="Create Map" centered size="70%" >
                 <Box style={{ margin: "20px" }}>
                     <Group>
                         <Box style={{ width: "40%" }}>
-                            <Stack>
+                            <Stack justify="flex-start">
                                 <TextInput
                                     label="Map Name"
                                     description="Enter a name to describe your map"
@@ -57,6 +55,7 @@ interface CreateMapModalProps {
                             </Stack>
                         </Box>
                     </Group>
+                    <Button style={{float:"right", margin:"100px 0 30px 0"}}>Create Map</Button>
                 </Box>
             </Modal>
         </>

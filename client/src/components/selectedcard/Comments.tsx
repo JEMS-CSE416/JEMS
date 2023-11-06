@@ -1,7 +1,6 @@
 import { Center, Box, Group, Stack, Text, Avatar } from "@mantine/core";
 import { CommentCard } from "./CommentCard";
 import "../css/comments.css";
-import avatar from "../../assets/images/circle-letter-l.png";
 
 const Comments = () => {
   return (
@@ -10,7 +9,7 @@ const Comments = () => {
         Comments
       </Text>
       <Group justify="center" id="inputCommentRow">
-        <Avatar src={avatar}></Avatar>
+        <Avatar color="blue" radius="xl" id="profilePhoto">L</Avatar>
         <input
           type="text"
           placeholder="Add a comment..."
