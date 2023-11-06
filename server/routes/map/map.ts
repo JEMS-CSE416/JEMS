@@ -186,8 +186,8 @@ mapRouter.post("/duplicate", duplicateMap);
  *               map_file_content:
  *                 $ref: '#/components/schemas/Map'
  *     responses:
- *       200:
- *         description: List of maps
+ *       201:
+ *         description: the map created
  *         content:
  *           application/json:
  *             schema:

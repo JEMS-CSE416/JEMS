@@ -57,6 +57,7 @@ const duplicateMap = async (req: Request, res: Response) => {};
 const createMap = async (req: Request, res: Response) => {
     const MapModel = await getMapModel();
     const mapStr = req.body.map_file_content
+
     const map = new MapModel(mapStr);
     map.save()
         .then( savedDoc => {res.send(savedDoc)})

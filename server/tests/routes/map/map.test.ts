@@ -1,5 +1,8 @@
-import request from "supertest"
-import app from "../../../app"
+import request from "supertest";
+import app from "../../../app";
+import maps from "../../fixtures/maps.json";
+import exp from "constants";
+
 // Test the map routes
 describe("testing the map routse", () => {
   describe("GET /map", () => {
@@ -41,11 +44,19 @@ describe("testing the map routse", () => {
   describe("PUT /map", () => {
     describe("when user is authenticated", () => {
       test("given map file details, it should return status code 201", async () => {
-        
+        const authenticated = true;
+
+        const map_2 = maps[1];
+        const response = await request(app).put("/api/maps/").send(map_2);
+
+        expect(response.statusCode).toBe(201);
       });
 
       test("given no map file details, it should return status code 400", async () => {
-        // Test logic for no map file details provided
+        const authenticated = true;
+        const response = await request(app).put("/api/maps/").send({});
+
+        expect(response.statusCode).toBe(400);
       });
     });
 
@@ -96,5 +107,3 @@ describe("testing the map routse", () => {
     });
   });
 });
-
-
