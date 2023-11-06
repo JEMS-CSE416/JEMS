@@ -126,7 +126,7 @@ const createMap = async (req: Request, res: Response) => {
   map
     .save()
     .then((savedDoc) => {
-      res.send(savedDoc);
+      res.status(201).send(savedDoc);
     })
     .catch((err) => {
       res.status(400).send("unable to save map due to " + err);
