@@ -34,6 +34,12 @@ jobs:
 
     - name: Run Tests
       run: npm run test
+
+    - name: break down mongodb
+      run: |
+        docker stop mongodb
+        docker rm mongodb
+
     
   TestCypress:
     runs-on: ubuntu-latest
