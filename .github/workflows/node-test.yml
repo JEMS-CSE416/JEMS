@@ -71,13 +71,14 @@ jobs:
       uses: cypress-io/github-action@v6
       with:
         install: false
+        wait-on: "http://localhost:3000" # URL to wait before tests
+        wait-on-timeout: 300 # How long to wait in seconds
         project: ./client/
         start: npm start --prefix ./client/
         browser: chrome
 
   TestCypressComponent:
     runs-on: ubuntu-latest
-    needs: TestCypressE2E
 
     strategy:
       matrix:
