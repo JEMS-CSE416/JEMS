@@ -132,11 +132,23 @@ const mapRouter = Router();
  *     summary: Query Maps with a string
  *     tags: [Maps]
  *     parameters:
- *       - in: path
- *         name: qPhrase
+ *       - in: query
+ *         name: map_name
  *         schema:
  *           type: string
- *
+ *       - in: query
+ *         name: private
+ *         schema:
+ *            type: boolean
+ *       - in: query
+ *         name: creator_id
+ *         schema: 
+ *            type: string
+ *       - in: query
+ *         name: session_token
+ *         schema:
+ *            type: string
+ * 
  *     responses:
  *       200:
  *         description: List of maps
