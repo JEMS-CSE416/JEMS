@@ -1,7 +1,6 @@
 import "../css/mapHeader.css";
 import { Text, Group, Image, Avatar } from "@mantine/core";
 import pencil from "../../assets/images/pencil.png";
-import avatar from "../../assets/images/circle-letter-l.png";
 import download from "../../assets/images/download.png";
 import duplicate from "../../assets/images/copy.png";
 
@@ -23,7 +22,7 @@ const MapHeader = () => {
 
       <Group>
         <Group>
-          <Avatar src={avatar} alt="Jacob Warnhalter" radius="xl" />
+          <Avatar color="blue" radius="xl">L</Avatar>
           <div>
             <Text fw={500} size="sm" id="creatorName">
               @Luffy
@@ -35,7 +34,7 @@ const MapHeader = () => {
         </Group>
 
         <Image src={download} id="downloadIcon"></Image>
-        <Text size="xs" id="dowloadText">
+        <Text size="xs" id="downloadText">
           Download
         </Text>
 
