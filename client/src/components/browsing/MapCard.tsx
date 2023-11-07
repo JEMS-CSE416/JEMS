@@ -3,6 +3,7 @@ import "../css/mapCard.css";
 import ellipses from "../../assets/images/ellipses.png";
 
 type MapCardProps = {
+  name?: string;
   private: boolean;
 };
 
@@ -17,7 +18,7 @@ function MapCard(props: MapCardProps) {
         />
       </Card.Section>
       <Text fw={700} ta="left" id="mapTitle">
-        Best Places to Eat in the East Sea
+        {props.name}
       </Text>
       <Text size="9px" ta="left">
         Luffy • Created 5 minutes ago
