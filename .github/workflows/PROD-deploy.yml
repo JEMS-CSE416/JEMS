@@ -1,0 +1,35 @@
+name: PROD - JEMS Github Actions Deploy
+run-name: Deploying PROD.
+on:
+  push:
+    branches:
+      - 'PROD'
+jobs:
+  Setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kill Node Servers and git pull
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DIGITALOCEAN_SSH_PROD_HOST }}
+          username: root
+          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+          script: |
+            cd JEMS
+            git gc --prune=now
+            git pull
+
+  Deploy-Backend:
+    needs: Setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build-And-Deploy
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DIGITALOCEAN_SSH_PROD_HOST }}
+          username: root
+          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+          script: |
+            cd JEMS/server
+            npm run clean
+            npm run deploy

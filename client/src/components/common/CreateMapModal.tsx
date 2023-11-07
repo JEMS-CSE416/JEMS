@@ -99,7 +99,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
 
         try {
             // Replace with your API endpoint
-            const apiUrl = 'http://143.198.28.153:3000/api/maps';
+            const apiUrl = 'http://159.203.173.53:3000/api/maps';
 
             const response = await fetch(apiUrl, {
                 method: 'PUT',

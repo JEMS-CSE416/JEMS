@@ -24,7 +24,7 @@ function MapCard(props: MapCardProps) {
         Luffy • Created 5 minutes ago
       </Text>
       <Text size="10px" ta="left" id="mapDescription">
-        Nom nom nom good food yum this is a great description nom nom nomdfad
+        Nom nom nom good food yum this is a great description nom nom nom
         ....
       </Text>
       <Group justify="space-between" mt="md" mb="xs">
