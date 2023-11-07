@@ -6,7 +6,6 @@ import Footer from "../common/Footer";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
-import { forEach } from "jszip";
 
 const HomePage = () => {
     const [maps, setMaps] = useState([]);
@@ -43,27 +42,29 @@ const HomePage = () => {
     // convert maps array into a 2d array of 4 maps each, it can have <4 maps in the last array
     // input = maps array
     // output = 2d array of maps
-    // let convertedMaps = [];
-    // let i = 0;
-    // while (i < maps.length) {
-    //     let temp = [{}];
-    //     for (let j = 0; j < 4; j++) {
-    //         if (i < maps.length) {
-    //             temp.push(maps[i]);
-    //             i++;
-    //         }
-    //     }
-    //     convertedMaps.push(temp);
-    // }
+    let convertedMaps = [];
+    if(maps.length > 1){
+         let i = 0;
+         while (i < maps.length) {
+             let temp = [];
+             for (let j = 0; j < 4; j++) {
+                 if (i < maps.length) {
+                     temp.push(
+                           <MapCard private={false} name={maps[i]['mapName']}></MapCard>
+                     );
+                     i++;
+                 }
+             }
+             convertedMaps.push(temp);
+         }
+        if(maps.length % 4 !== 0)
+            for(let i = 0; i < 4 - maps.length %4; i++){
+                if(convertedMaps[convertedMaps.length - 1])
+                    convertedMaps[convertedMaps.length - 1].push(<div></div>)
+            }
+    }
 
     // console.log(convertedMaps)
-
-    const mapCards = maps.map((item, index) => (
-        <>
-            {/* {index < 4 ? <Link to="/selected"></Link> : <></>} */}
-           <MapCard private={false} name={item['mapName']}></MapCard>
-        </>
-    ));
 
     return (
         <>
@@ -99,9 +100,11 @@ const HomePage = () => {
                                 <Text size="sm" id="seeAll" ta="right" style={{ width: "25%" }}>See all </Text>
                             </Group>
                             
+                            {convertedMaps.map(maps => 
                             <Group justify="flex-start" grow>
-                                {mapCards}
+                               {maps}
                             </Group>
+                            )}
                             {/* <Group justify="flex-start" grow>
                                 <Link to="/selected">
                                     <MapCard private={false}></MapCard>
