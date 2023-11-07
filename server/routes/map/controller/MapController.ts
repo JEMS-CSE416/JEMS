@@ -55,8 +55,6 @@ const queryMaps = async (req: Request, res: Response) => {
   } else if (map_private == "false") {
     // want public maps
     query.public = true;
-  }else{
-    return res.status(400).send("Error 400: Bad request");
   }
 
   /* does the request want to search by map name too? */
