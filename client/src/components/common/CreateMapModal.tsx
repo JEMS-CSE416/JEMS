@@ -1,6 +1,7 @@
 import { Divider, Modal, Button, Textarea, TextInput, Box, Select, Group, Stack } from '@mantine/core';
 import { FileDropZone } from './FileDropZone';
 import { useForm } from '@mantine/form';
+import { useDisclosure } from '@mantine/hooks';
 
 interface CreateMapModalProps {
     opened: boolean;
@@ -174,7 +175,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
                         </Group>
 
                         <Group justify="flex-end" mt="md">
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit" onClick={onClose}>Submit</Button>
                         </Group>
                     </form>
                 </Box>
