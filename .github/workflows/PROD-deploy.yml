@@ -17,6 +17,8 @@ jobs:
           script: |
             cd JEMS
             git gc --prune=now
+            git fetch 
+            git checkout PROD
             git pull
 
   Deploy-Backend:
