@@ -3,8 +3,12 @@ import swaggerUi from "swagger-ui-express"
 import swaggerJSDoc from "swagger-jsdoc"
 import * as swaggerDocument from './swagger.json'
 import mapRouter from "./routes/map/map"
+var cors = require('cors')
 
 const app = express()
+
+// setup cors
+app.use(cors())
 
 // Setup Map router
 app.use(express.json())
