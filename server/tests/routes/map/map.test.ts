@@ -19,8 +19,11 @@ describe("testing the api/map route", () => {
     });
 
     describe("when user is not authenticated", () => {
-      it("should return status code 401", async () => {
-        // Test logic for an unauthenticated user
+      test("if the user is asking for just private maps, it should return status code 401", async () => {
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({ private: true })
+          .expect(401);
       });
     });
   });
@@ -58,8 +61,10 @@ describe("testing the api/map route", () => {
 
       test("given no map file details, it should return status code 400", async () => {
         const authenticated = true;
-        const response = await request(app).put("/api/maps/").send({}).expect(400);
-
+        const response = await request(app)
+          .put("/api/maps/")
+          .send({})
+          .expect(400);
       });
     });
 
