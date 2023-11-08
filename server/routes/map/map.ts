@@ -2,7 +2,7 @@
  * @swagger
  * tags:
  *   name: Maps
- *   description: The API that manages Maps
+ *   description: The Map Api
  *
  * components:
  *   schemas:
