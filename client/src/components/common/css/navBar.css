@@ -49,3 +49,8 @@
   margin-right: 2%;
 }
 
+.text-no-underline{
+  text-decoration: none;
+  color: inherit
+}
+
