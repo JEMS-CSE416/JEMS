@@ -1,15 +1,19 @@
 import "./css/mapHeader.css";
-import { Text, Group, Image, Avatar } from "@mantine/core";
-import pencil from "../../assets/images/pencil.png";
-import download from "../../assets/images/download.png";
-import duplicate from "../../assets/images/copy.png";
-import { useDisclosure } from '@mantine/hooks';
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import DownloadMapModal from "../modals/DownloadMapModal"
+import DuplicateMapModal from "../modals/DuplicateMapModal";
+import DeleteMapModal from "../modals/DeleteMapModal";
+import { Text, Group, Avatar, Button } from "@mantine/core";
+import { IconEdit, IconDownload, IconCopy, IconTrash } from "@tabler/icons-react";
+
 const MapHeader = () => {
-  const [opened, { open, close }] = useDisclosure(false);
+  const [downloadModalOpen, setDownloadModalOpen] = useState(false);
+  const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
   return (
     <>
-    <DownloadMapModal opened={opened} onClose={close}></DownloadMapModal>
       <Text fw={500} size="sm" id="creationDate">
         Created 5 days ago
       </Text>
@@ -17,10 +21,20 @@ const MapHeader = () => {
         Best Places to Eat in The East Blue
       </Text>
       <Group id="edit">
-        <Image src={pencil} id="editIcon"></Image>
-        <Text size="xs" id="editText">
-          Edit Map
-        </Text>
+        <Link to="/edit" style={{ marginLeft: "auto" }}>
+          <Button
+            leftSection={<IconEdit size={14} />}
+            variant="subtle" color="gray"
+          >
+            Edit Map
+          </Button>
+        </Link>
+        <Button
+          leftSection={<IconTrash size={14} />}
+          variant="subtle" color="gray"
+          onClick={() => setDeleteModalOpen(true)}>
+          Delete
+        </Button>
       </Group>
 
       <Group>
@@ -35,17 +49,26 @@ const MapHeader = () => {
             </Text>
           </div>
         </Group>
+        <Group style={{ marginLeft: "auto" }}>
+          <Button
+            leftSection={<IconDownload size={14} />}
+            variant="subtle" color="gray"
+            onClick={() => setDownloadModalOpen(true)}>
+            Download
+          </Button>
 
-        <Image src={download} id="downloadIcon" onClick={open}></Image>
-        <Text size="xs" id="downloadText" onClick={open}>
-          Download
-        </Text>
-
-        <Image src={duplicate} id="duplicateIcon"></Image>
-        <Text size="xs" id="duplicateIcon">
-          Duplicate
-        </Text>
+          <Button
+            leftSection={<IconCopy size={14} />}
+            variant="subtle" color="gray"
+            onClick={() => setDuplicateModalOpen(true)}>
+            Duplicate
+          </Button>
+        </Group>
       </Group>
+      <DownloadMapModal opened={downloadModalOpen} onClose={() => setDownloadModalOpen(false)}></DownloadMapModal>
+      <DuplicateMapModal opened={duplicateModalOpen} onClose={() => setDuplicateModalOpen(false)}></DuplicateMapModal>
+      <DeleteMapModal opened={deleteModalOpen} onClose={() => setDeleteModalOpen(false)}></DeleteMapModal>
+
     </>
   );
 };
