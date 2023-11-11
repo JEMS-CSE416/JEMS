@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SplashScreen from "./components/common/SplashScreen";
-import HomeScreen from "./components/common/HomeScreen";
+import HomeScreen from "./components/browsing/HomeScreen";
 import Discover from "./components/browsing/Discover";
 import SelectedCardPage from "./components/selectedcard/SelectedCardPage";
 import MyMaps from "./components/browsing/MyMaps";

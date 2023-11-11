@@ -1,6 +1,6 @@
 import "./css/homeScreen.css";
 import { Group, Text, Stack, Box } from "@mantine/core";
-import MapCard from "../browsing/MapCard";
+import MapCard from "./MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Link } from "react-router-dom";
@@ -67,6 +67,8 @@ const HomePage = () => {
       }
   }
 
+  // console.log(convertedMaps)
+
   return (
     <>
       <NavBar></NavBar>
@@ -82,13 +84,12 @@ const HomePage = () => {
                   ta="left"
                   style={{ width: "50%" }}
                 >
-                  Your Maps
+                  {" "}
+                  Your Maps{" "}
                 </Text>
-                <Link to="/myMaps" id="seeAllLink">
-                  <Text size="sm" ta="right">
-                    See all{" "}
-                  </Text>
-                </Link>
+                <Text size="sm" id="seeAll" ta="right" style={{ width: "25%" }}>
+                  See all{" "}
+                </Text>
               </Group>
               <Group
                 justify="flex-start"
@@ -124,11 +125,9 @@ const HomePage = () => {
                   {" "}
                   Discover Maps{" "}
                 </Text>
-                <Link to="/discover" id="seeAllLink">
-                  <Text size="sm" ta="right">
-                    See all{" "}
-                  </Text>
-                </Link>
+                <Text size="sm" id="seeAll" ta="right" style={{ width: "25%" }}>
+                  See all{" "}
+                </Text>
               </Group>
 
               {convertedMaps.map((maps) => (
