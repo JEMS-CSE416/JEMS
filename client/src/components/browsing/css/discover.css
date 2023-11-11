@@ -1,0 +1,16 @@
+body,
+html {
+  width: 100%;
+  margin: 0 auto;
+}
+
+#myMapsHeader {
+  color: #228be6;
+  margin-left: 0.5%;
+}
+
+#pagination {
+  margin-top: 3%;
+  margin-left: auto;
+  margin-right: 0px;
+}

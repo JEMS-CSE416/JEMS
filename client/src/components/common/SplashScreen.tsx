@@ -12,10 +12,15 @@ import {
 import landingBg from "../../assets/images/landingBackground.png";
 import landingPic from "../../assets/images/landingPic.png";
 import jemsLogo from "../../assets/images/logo.svg";
+import LoginModal from "../modals/LoginModal";
+import { useDisclosure } from '@mantine/hooks';
+
 
 const SplashScreen = () => {
+  const [opened, { open, close }] = useDisclosure(false);
   return (
     <>
+    <LoginModal opened={opened} onClose={close}/>
       <Box maw={"100%"} mx="auto">
         <BackgroundImage
           src={landingBg}
@@ -43,9 +48,7 @@ const SplashScreen = () => {
                       <h1>
                         Premium Map Creation/Editing Software that’s really good
                       </h1>
-                      <Link to="/home">
-                        <Button id="splash-button">Get Started</Button>
-                      </Link>
+                        <Button id="splash-button" onClick={open}>Get Started</Button>
                     </Box>
                   </Center>
                 </Box>
