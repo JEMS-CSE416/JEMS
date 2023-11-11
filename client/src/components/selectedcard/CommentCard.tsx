@@ -1,5 +1,5 @@
 import { Text, Avatar, Group, Spoiler } from "@mantine/core";
-import "../css/commentCard.css";
+import "./css/commentCard.css";
 
 export function CommentCard() {
   return (

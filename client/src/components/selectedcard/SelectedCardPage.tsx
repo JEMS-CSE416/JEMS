@@ -1,4 +1,4 @@
-import "../css/selectedCardPage.css";
+import "./css/selectedCardPage.css";
 import NavBar from "../common/Navbar";
 import MapHeader from "./MapHeader";
 import Canvas from "./Canvas";

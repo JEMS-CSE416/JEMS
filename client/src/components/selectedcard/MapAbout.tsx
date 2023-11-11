@@ -1,4 +1,4 @@
-import "../css/mapAbout.css";
+import "./css/mapAbout.css";
 import { Text } from "@mantine/core";
 
 const MapAbout = () => {
