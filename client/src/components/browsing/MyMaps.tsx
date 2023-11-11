@@ -73,7 +73,7 @@ function MyMaps() {
               <MapCard private={false}></MapCard>
             </Link>
           </Group>
-          <Pagination total={10} id="pagination" />;
+          <Pagination total={10} id="pagination" />
         </Stack>
       </div>
       <Footer />
