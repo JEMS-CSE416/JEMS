@@ -1,5 +1,5 @@
 import { Card, Image, Text, Badge, Group } from "@mantine/core";
-import "../css/mapCard.css";
+import "./css/mapCard.css";
 import ellipses from "../../assets/images/ellipses.png";
 
 type MapCardProps = {

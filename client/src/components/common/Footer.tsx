@@ -1,5 +1,5 @@
 import { Text } from "@mantine/core";
-import "../css/footer.css";
+import "./css/footer.css";
 
 const Footer = () => {
   return (

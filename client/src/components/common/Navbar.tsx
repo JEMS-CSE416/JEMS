@@ -1,9 +1,9 @@
-import "../css/navBar.css";
+import "./css/navBar.css";
 import { Button, Group, Avatar, Image } from "@mantine/core";
-import jemsLogo from "../../assets/images/logo.svg";
+import jemsLogo from "../../assets/images/logo.png";
 import { Link } from "react-router-dom";
-import { useDisclosure } from '@mantine/hooks';
-import CreateMapModal from "./CreateMapModal";
+import { useDisclosure } from "@mantine/hooks";
+import CreateMapModal from "../modals/CreateMapModal";
 
 const NavBar = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -18,7 +18,9 @@ const NavBar = () => {
         <Button radius="xl" id="createMapButton" onClick={open}>
           + Create Map
         </Button>
-        <Avatar color="blue" radius="xl" id="profilePhoto">L</Avatar>
+        <Avatar color="blue" radius="xl" id="profilePhoto">
+          L
+        </Avatar>
       </Group>
     </div>
   );

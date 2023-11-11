@@ -1,5 +1,5 @@
 import { Modal, Button, Group } from "@mantine/core";
-import "../css/downloadMapModal.css"
+import "./css/downloadMapModal.css"
 import React from "react";
 
 interface DownloadMapModalProps {

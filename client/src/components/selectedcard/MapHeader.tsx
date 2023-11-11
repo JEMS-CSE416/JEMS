@@ -1,10 +1,10 @@
-import "../css/mapHeader.css";
+import "./css/mapHeader.css";
 import { Text, Group, Image, Avatar } from "@mantine/core";
 import pencil from "../../assets/images/pencil.png";
 import download from "../../assets/images/download.png";
 import duplicate from "../../assets/images/copy.png";
 import { useDisclosure } from '@mantine/hooks';
-import DownloadMapModal from "../common/DownloadMapModal"
+import DownloadMapModal from "../modals/DownloadMapModal"
 const MapHeader = () => {
   const [opened, { open, close }] = useDisclosure(false);
   return (
