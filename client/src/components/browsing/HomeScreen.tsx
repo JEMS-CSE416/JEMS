@@ -67,8 +67,6 @@ const HomePage = () => {
       }
   }
 
-  // console.log(convertedMaps)
-
   return (
     <>
       <NavBar></NavBar>
@@ -86,9 +84,14 @@ const HomePage = () => {
                 >
                   Your Maps
                 </Text>
-                <Text size="sm" id="seeAllLink" ta="right">
-                  See all
-                </Text>
+                <Link to="/myMaps" id="seeAllLink">
+                  <Text
+                    size="sm"
+                    ta="right"
+                  >
+                    See all{" "}
+                  </Text>
+                </Link>
               </Group>
               <Group
                 justify="flex-start"
@@ -121,11 +124,15 @@ const HomePage = () => {
                   ta="left"
                   style={{ width: "50%" }}
                 >
-                  Discover Maps
+                  {" "}
+                  Discover Maps{" "}
                 </Text>
                 <Link to="/discover" id="seeAllLink">
-                  <Text size="sm" ta="right">
-                    See all
+                  <Text
+                    size="sm"
+                    ta="right"
+                  >
+                    See all{" "}
                   </Text>
                 </Link>
               </Group>
