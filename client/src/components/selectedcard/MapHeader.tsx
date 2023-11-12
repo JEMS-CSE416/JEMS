@@ -1,15 +1,51 @@
 import "./css/mapHeader.css";
-import { Text, Group, Image, Avatar } from "@mantine/core";
-import pencil from "../../assets/images/pencil.png";
-import download from "../../assets/images/download.png";
-import duplicate from "../../assets/images/copy.png";
-import { useDisclosure } from '@mantine/hooks';
-import DownloadMapModal from "../modals/DownloadMapModal"
+import { Link } from "react-router-dom";
+import DownloadMapModal from "../modals/DownloadMapModal";
+import DuplicateMapModal from "../modals/DuplicateMapModal";
+import DeleteMapModal from "../modals/DeleteMapModal";
+import { Text, Group, Avatar, Button } from "@mantine/core";
+import {
+  IconEdit,
+  IconDownload,
+  IconCopy,
+  IconTrash,
+} from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
+
 const MapHeader = () => {
-  const [opened, { open, close }] = useDisclosure(false);
+  // the download modal state
+  const [downloadModalOpened, setDownloadModal] = useDisclosure(false);
+  // the duplicate modal state
+  const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
+  // the delete modal state
+  const [deleteModalOpened, setDeleteModal] = useDisclosure(false);
+
   return (
     <>
-    <DownloadMapModal opened={opened} onClose={close}></DownloadMapModal>
+      {/* Show download modal when needed */}
+      {downloadModalOpened && (
+        <DownloadMapModal
+          opened={downloadModalOpened}
+          onClose={setDownloadModal.close}
+        />
+      )}
+
+      {/* Show duplicate modal when needed */}
+      {duplicateModalOpened && (
+        <DuplicateMapModal
+          opened={duplicateModalOpened}
+          onClose={setDuplicateModal.close}
+        />
+      )}
+
+      {/* Show delete modal when needed */}
+      {deleteModalOpened && (
+        <DeleteMapModal
+          opened={deleteModalOpened}
+          onClose={setDeleteModal.close}
+        ></DeleteMapModal>
+      )}
+
       <Text fw={500} size="sm" id="creationDate">
         Created 5 days ago
       </Text>
@@ -17,15 +53,30 @@ const MapHeader = () => {
         Best Places to Eat in The East Blue
       </Text>
       <Group id="edit">
-        <Image src={pencil} id="editIcon"></Image>
-        <Text size="xs" id="editText">
-          Edit Map
-        </Text>
+        <Link to="/edit" style={{ marginLeft: "auto" }}>
+          <Button
+            leftSection={<IconEdit size={14} />}
+            variant="subtle"
+            color="gray"
+          >
+            Edit Map
+          </Button>
+        </Link>
+        <Button
+          leftSection={<IconTrash size={14} />}
+          variant="subtle"
+          color="gray"
+          onClick={setDeleteModal.open}
+        >
+          Delete
+        </Button>
       </Group>
 
       <Group>
         <Group>
-          <Avatar color="blue" radius="xl">L</Avatar>
+          <Avatar color="blue" radius="xl">
+            L
+          </Avatar>
           <div>
             <Text fw={500} size="sm" id="creatorName">
               @Luffy
@@ -35,16 +86,25 @@ const MapHeader = () => {
             </Text>
           </div>
         </Group>
+        <Group style={{ marginLeft: "auto" }}>
+          <Button
+            leftSection={<IconDownload size={14} />}
+            variant="subtle"
+            color="gray"
+            onClick={setDownloadModal.open}
+          >
+            Download
+          </Button>
 
-        <Image src={download} id="downloadIcon" onClick={open}></Image>
-        <Text size="xs" id="downloadText" onClick={open}>
-          Download
-        </Text>
-
-        <Image src={duplicate} id="duplicateIcon"></Image>
-        <Text size="xs" id="duplicateIcon">
-          Duplicate
-        </Text>
+          <Button
+            leftSection={<IconCopy size={14} />}
+            variant="subtle"
+            color="gray"
+            onClick={setDuplicateModal.open}
+          >
+            Duplicate
+          </Button>
+        </Group>
       </Group>
     </>
   );
