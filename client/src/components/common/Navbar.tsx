@@ -6,10 +6,18 @@ import { useDisclosure } from "@mantine/hooks";
 import CreateMapModal from "../modals/CreateMapModal";
 
 const NavBar = () => {
+  // the create modal state
   const [opened, { open, close }] = useDisclosure(false);
+
+
   return (
     <div id="navBar">
-      <CreateMapModal opened={opened} onClose={close}></CreateMapModal>
+
+      {/* show modal if opened */}
+      {opened && (
+        <CreateMapModal opened={opened} onClose={close}></CreateMapModal>
+      )}
+
       <Group>
         <Link to="/home">
           <Image src={jemsLogo} id="jemsLogo" />

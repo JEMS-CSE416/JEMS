@@ -18,11 +18,12 @@ interface CreateMapModalProps {
 }
 
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+  // Form state that we'll use as default values for now
   const form = useForm({
     initialValues: {
       creatorId: "652daf32e2225cdfeceea17f",
-      mapName: "hello",
-      description: "hi",
+      mapName: "enter a map name",
+      description: "enter a description",
       creationDate: "2023-11-04T12:00:00Z",
       public: true,
       colorType: "basic",
@@ -84,6 +85,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
     },
   });
 
+  // Handle form submission and close the modal
   const handleFormSubmit = async () => {
     console.log("Form values:", form.values);
     const req = {
@@ -131,6 +133,8 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
     } catch (error) {
       console.error("Error updating data:", error);
     }
+
+    onClose();
   };
 
   return (
@@ -197,9 +201,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
             </Group>
 
             <Group justify="flex-end" mt="md">
-              <Button type="submit" onClick={onClose}>
-                Submit
-              </Button>
+              <Button type="submit">Submit</Button>
             </Group>
           </form>
         </Box>
