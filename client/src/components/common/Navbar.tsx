@@ -9,9 +9,8 @@ import {
   Image,
   Box,
 } from "@mantine/core";
-
 import jemsLogo from "../../assets/images/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import CreateMapModal from "../modals/CreateMapModal";
 import {
@@ -24,8 +23,15 @@ import {
   // IconTrash,
   // IconArrowsLeftRight,
 } from "@tabler/icons-react";
+import { useState } from "react";
 
 const NavBar = () => {
+  // This is the hook that allows us to navigate to different pages
+  const navigate = useNavigate();
+
+  // This is the hook that controls the search bar
+  const [search, setSearch] = useState("");
+
   // User that we get from the backend.
   // For now we'll pretend we have it hardcoded here
   const user = {
@@ -35,6 +41,14 @@ const NavBar = () => {
 
   const handelLogOut = () => {
     console.log("logging out");
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      // Run your function here
+      console.log("searching for: " + search);
+      navigate("/maps/search/" + search);
+    }
   };
 
   // This is the hook that controls the modal
@@ -58,7 +72,14 @@ const NavBar = () => {
         </Link>
 
         {/* search bar */}
-        <input type="search" id="search" placeholder="Search"></input>
+        <input
+          type="search"
+          id="search"
+          placeholder="Search"
+          onKeyDown={handleKeyPress}
+          onChange={e => setSearch(e.target.value)}
+        />
+
 
         {/* create map button */}
         <Button radius="xl" id="createMapButton" onClick={open}>
