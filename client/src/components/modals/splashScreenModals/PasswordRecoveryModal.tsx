@@ -1,4 +1,11 @@
-import { Text, TextInput, PasswordInput, Image, Button } from "@mantine/core";
+import {
+  Text,
+  TextInput,
+  PasswordInput,
+  Image,
+  Button,
+  Group,
+} from "@mantine/core";
 import jemsLogo from "../../../assets/images/logo.png";
 import "./css/splashScreenModals.css";
 import SplashScreenModalTemplate from "./SplashScreenModalTemplate";
@@ -28,7 +35,12 @@ const PasswordRecoveryModal: React.FC<PasswordRecoveryModalProps> = ({
         </Text>
         <br />
 
-        <TextInput label="Email" required className="splashScreenInput" ta={"left"} />
+        <TextInput
+          label="Email"
+          required
+          className="splashScreenInput"
+          ta={"left"}
+        />
         <br />
 
         <PasswordInput
@@ -47,12 +59,22 @@ const PasswordRecoveryModal: React.FC<PasswordRecoveryModalProps> = ({
         />
         <br />
 
-        <Button
-          onClick={handleClosePasswordRecoveryOpenLoginModal}
-        >
-          {" "}
-          Confirm{" "}
-        </Button>
+        <Group>
+          <div id="cursorToFinger">
+            <Text
+              id="splashScreenModalRedirect"
+              onClick={handleClosePasswordRecoveryOpenLoginModal}
+            >
+              Back to login
+            </Text>
+          </div>
+          <Button
+            onClick={handleClosePasswordRecoveryOpenLoginModal}
+            id="loginButtonDiv"
+          >
+            Confirm
+          </Button>
+        </Group>
       </SplashScreenModalTemplate>
     </>
   );

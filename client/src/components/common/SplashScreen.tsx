@@ -52,6 +52,7 @@ const SplashScreen = () => {
 
   return (
     <>
+    {/* MODALS */}
       {openLoginModal ? (
         <LoginModal
           onCloseLoginModal={handleCloseLoginModal}
@@ -77,6 +78,7 @@ const SplashScreen = () => {
       ) : (
         <></>
       )}
+      {/* END OF MODALS */}
 
       <Box maw={"100%"} mx="auto">
         <BackgroundImage
