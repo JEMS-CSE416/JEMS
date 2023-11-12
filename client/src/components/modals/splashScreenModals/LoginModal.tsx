@@ -71,9 +71,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
               Sign up!
             </Text>
           </div>
-          <div id="loginButton">
+          <div id="loginButtonDiv">
             <Link to={"/home"}>
-              <Button onClick={checkFields}>Login</Button>
+              <Button onClick={checkFields} id="loginButton">Login</Button>
             </Link>
           </div>
         </Group>
