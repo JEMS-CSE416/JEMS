@@ -8,6 +8,7 @@ beforeEach(() => {
 
 describe('Routing', () => {
     it('Navigates to home and selected pages', () => {
+        cy.get(splashGetStartedButton).click();
         cy.get(loginButton).click();
         cy.url().should('include', '/home');
 
