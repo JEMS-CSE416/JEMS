@@ -41,10 +41,14 @@ const NavBar = () => {
   // Open is responsible for opening the modal
   // Close is responsible for closing the modal
   const [opened, { open, close }] = useDisclosure(false);
+
   return (
     <div id="navBar">
-      {/* This is the modal that will open when the user clicks on the create map*/}
-      <CreateMapModal opened={opened} onClose={close}></CreateMapModal>
+      {/* show modal if opened */}
+      {opened && (
+        /* This is the modal that will open when the user clicks on the create map*/
+        <CreateMapModal opened={opened} onClose={close}></CreateMapModal>
+      )}
 
       {/* This is the actual navbar */}
       <Group>
