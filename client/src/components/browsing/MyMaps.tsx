@@ -31,46 +31,46 @@ function MyMaps() {
                 style={{ width: "100%" }}
               >
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
               </Group>
             </Stack>
           </Box>
           <Group justify="flex-start" grow>
             <Link to="/selected">
-              <MapCard private={false}></MapCard>
+              <MapCard isPrivate={false}></MapCard>
             </Link>
             <Link to="/selected">
-              <MapCard private={false}></MapCard>
+              <MapCard isPrivate={false}></MapCard>
             </Link>
             <Link to="/selected">
-              <MapCard private={false}></MapCard>
+              <MapCard isPrivate={false}></MapCard>
             </Link>
             <Link to="/selected">
-              <MapCard private={false}></MapCard>
+              <MapCard isPrivate={false}></MapCard>
             </Link>
           </Group>
           <Group justify="flex-start" grow>
             <Link to="/selected">
-              <MapCard private={false}></MapCard>
+              <MapCard isPrivate={false}></MapCard>
             </Link>
             <Link to="/selected">
-              <MapCard private={false}></MapCard>
+              <MapCard isPrivate={false}></MapCard>
             </Link>
             <Link to="/selected">
-              <MapCard private={false}></MapCard>
+              <MapCard isPrivate={false}></MapCard>
             </Link>
             <Link to="/selected">
-              <MapCard private={false}></MapCard>
+              <MapCard isPrivate={false}></MapCard>
             </Link>
           </Group>
           <Pagination total={10} id="pagination" />

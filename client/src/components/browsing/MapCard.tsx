@@ -1,22 +1,14 @@
-import {
-  Card,
-  Image,
-  Text,
-  Badge,
-  Group,
-  Menu,
-  UnstyledButton,
-  Button,
-} from "@mantine/core";
+import { Card, Image, Text, Badge, Group, Button } from "@mantine/core";
 import "./css/mapCard.css";
 import ellipses from "../../assets/images/ellipses.png";
+import React, { ReactNode } from "react";
 
 type MapCardProps = {
   name?: string;
-  private: boolean;
+  isPrivate: boolean;
 };
 
-function MapCard(props: MapCardProps) {
+const MapCard: React.FC<MapCardProps> = ({ name, isPrivate }) => {
   return (
     <Card shadow="sm" padding="xl" radius="md" withBorder id="card">
       <Card.Section>
@@ -27,7 +19,7 @@ function MapCard(props: MapCardProps) {
         />
       </Card.Section>
       <Text fw={700} ta="left" id="mapTitle">
-        {props.name}
+        {name}
       </Text>
       <Text size="9px" ta="left">
         Luffy • Created 5 minutes ago
@@ -37,26 +29,28 @@ function MapCard(props: MapCardProps) {
         ....
       </Text>
       <Group justify="space-between" mt="md" mb="xs">
-        {props.private ? (
+        {isPrivate ? (
           <Badge color="blue" variant="light" size="xs" ta="right">
             Private
           </Badge>
         ) : (
           <></>
         )}
-        {/* <div>
+        <div>
           <Button
             onClick={(e) => {
-              // do not close modal if anything inside modal content is clicked
-              e.stopPropagation();
+              e.preventDefault();
+              randomTest();
             }}
           >
             <Image src={ellipses} height={20} id="ellipses"></Image>
           </Button>
-        </div> */}
+        </div>
       </Group>
     </Card>
   );
+};
+function randomTest() {
+  console.log("lool");
 }
-
 export default MapCard;

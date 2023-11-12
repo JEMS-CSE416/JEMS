@@ -54,7 +54,7 @@ const HomePage = () => {
       for (let j = 0; j < 4; j++) {
         if (i < maps.length) {
           temp.push(
-            <MapCard private={false} name={maps[i]["mapName"]}></MapCard>
+            <MapCard isPrivate={false} name={maps[i]["mapName"]}></MapCard>
           );
           i++;
         }
@@ -98,25 +98,16 @@ const HomePage = () => {
                 style={{ width: "100%" }}
               >
                 <Link to="/selected">
-                  <MapCard private={false}>
-                    <Button
-                      onClick={(e) => {
-                        // do not close modal if anything inside modal content is clicked
-                        e.stopPropagation();
-                      }}
-                    >
-                      <Image src={ellipses} height={20} id="ellipses"></Image>
-                    </Button>
-                  </MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
               </Group>
             </Stack>
@@ -148,16 +139,16 @@ const HomePage = () => {
               ))}
               {/* <Group justify="flex-start" grow>
                                 <Link to="/selected">
-                                    <MapCard private={false}></MapCard>
+                                    <MapCard isPrivate={false}></MapCard>
                                 </Link>
                                 <Link to="/selected">
-                                    <MapCard private={false}></MapCard>
+                                    <MapCard isPrivate={false}></MapCard>
                                 </Link>
                                 <Link to="/selected">
-                                    <MapCard private={false}></MapCard>
+                                    <MapCard isPrivate={false}></MapCard>
                                 </Link>
                                 <Link to="/selected">
-                                    <MapCard private={false}></MapCard>
+                                    <MapCard isPrivate={false}></MapCard>
                                 </Link>
                             </Group> */}
             </Stack>
