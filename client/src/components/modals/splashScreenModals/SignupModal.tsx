@@ -77,9 +77,9 @@ const SignupModal: React.FC<SignupModalProps> = ({
             </Text>
           </div>
 
-          <div id="loginButton">
+          <div id="signupButton">
             <Link to="/home">
-              <Button id="loginButton"> Sell your soul </Button>
+              <Button> Sell your soul </Button>
             </Link>
           </div>
         </Group>

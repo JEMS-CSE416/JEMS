@@ -48,7 +48,6 @@ const PasswordRecoveryModal: React.FC<PasswordRecoveryModalProps> = ({
         <br />
 
         <Button
-          id="loginButton"
           onClick={handleClosePasswordRecoveryOpenLoginModal}
         >
           {" "}
