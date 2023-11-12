@@ -22,8 +22,8 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   const form = useForm({
     initialValues: {
       creatorId: "652daf32e2225cdfeceea17f",
-      mapName: "map name",
-      description: "map des",
+      mapName: "",
+      description: "",
       creationDate: "2023-11-04T12:00:00Z",
       public: true,
       colorType: "basic",
