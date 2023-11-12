@@ -2,6 +2,7 @@ import { Card, Image, Text, Badge, Group, Button, Menu } from "@mantine/core";
 import "./css/mapCard.css";
 import ellipses from "../../assets/images/ellipses.png";
 import React, { ReactNode } from "react";
+import { IconDots } from "@tabler/icons-react";
 
 type MapCardProps = {
   name?: string;
@@ -36,7 +37,6 @@ const MapCard: React.FC<MapCardProps> = ({ name, isPrivate }) => {
         ) : (
           <></>
         )}
-        {/* <Image src={ellipses} height={20} id="ellipses"></Image> */}
 
         <div id="ellipses">
           <Menu
@@ -56,7 +56,7 @@ const MapCard: React.FC<MapCardProps> = ({ name, isPrivate }) => {
                   e.preventDefault();
                 }}
               >
-                <Image src={ellipses} height={20}></Image>
+                <IconDots height={20} color="black"></IconDots>
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
