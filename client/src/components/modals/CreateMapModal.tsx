@@ -22,11 +22,11 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   const form = useForm({
     initialValues: {
       creatorId: "652daf32e2225cdfeceea17f",
-      mapName: "enter a map name",
-      description: "enter a description",
+      mapName: "",
+      description: "",
       creationDate: "2023-11-04T12:00:00Z",
       public: true,
-      colorType: "basic",
+      colorType: "",
       displayStrings: true,
       displayNumerics: true,
       displayLegend: true,
