@@ -1,4 +1,4 @@
-import { Card, Image, Text, Badge, Group, Button } from "@mantine/core";
+import { Card, Image, Text, Badge, Group, Button, Menu } from "@mantine/core";
 import "./css/mapCard.css";
 import ellipses from "../../assets/images/ellipses.png";
 import React, { ReactNode } from "react";
@@ -36,15 +36,61 @@ const MapCard: React.FC<MapCardProps> = ({ name, isPrivate }) => {
         ) : (
           <></>
         )}
-        <div>
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              randomTest();
-            }}
+        {/* <Image src={ellipses} height={20} id="ellipses"></Image> */}
+
+        <div id="ellipses">
+          <Menu
+            shadow="md"
+            width={200}
+            trigger="hover"
+            openDelay={100}
+            closeDelay={400}
+            position="right-start"
+            offset={4}
           >
-            <Image src={ellipses} height={20} id="ellipses"></Image>
-          </Button>
+            <Menu.Target>
+              <Button
+                variant="subtle"
+                size="compact-xs"
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <Image src={ellipses} height={20}></Image>
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown>
+              {/* <Menu.Label>Application</Menu.Label> */}
+              <Menu.Item
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Download as PNG
+              </Menu.Item>
+              <Menu.Item
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Download as JPG
+              </Menu.Item>
+              <Menu.Item
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Download as JSON
+              </Menu.Item>
+              <Menu.Item
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Duplicate
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </div>
       </Group>
     </Card>

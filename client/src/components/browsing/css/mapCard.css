@@ -6,8 +6,8 @@
   margin-top: 1%;
 }
 
-#card:hover{
-    border: 1px solid #228be6;
+#card:hover {
+  border: 1px solid #228be6;
 }
 
 #mapTitle {
@@ -20,5 +20,5 @@
 
 #ellipses {
   margin-left: auto;
-  margin-right: 1%;
+  margin-right: 0px;
 }
