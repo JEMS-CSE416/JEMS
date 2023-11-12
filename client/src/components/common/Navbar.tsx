@@ -9,9 +9,8 @@ import {
   Image,
   Box,
 } from "@mantine/core";
-
 import jemsLogo from "../../assets/images/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import CreateMapModal from "../modals/CreateMapModal";
 import {
@@ -24,8 +23,15 @@ import {
   // IconTrash,
   // IconArrowsLeftRight,
 } from "@tabler/icons-react";
+import { useState } from "react";
 
 const NavBar = () => {
+  // This is the hook that allows us to navigate to different pages
+  const navigate = useNavigate();
+
+  // This is the hook that controls the search bar
+  const [search, setSearch] = useState("");
+
   // User that we get from the backend.
   // For now we'll pretend we have it hardcoded here
   const user = {
@@ -33,8 +39,24 @@ const NavBar = () => {
     avatar: "https://avatars.githubusercontent.com/u/132554",
   };
 
+  // This is the function that will be called when the user clicks on the logout button
   const handelLogOut = () => {
     console.log("logging out");
+  };
+
+  // This is the function that will be called when the user presses enter on the search bar
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      console.log("searching for: " + search);
+
+      if (search === "") return;
+
+      // This is how we navigate to /maps/search with each query.
+      // the reason for {state: forceRefresh: true} is because we want
+      // to force a refresh of the page incase the user just wants to recieve
+      // new updagtes on the results
+      navigate("/maps/search/" + search, { state: { forceRefresh: true } });
+    }
   };
 
   // This is the hook that controls the modal
@@ -58,7 +80,13 @@ const NavBar = () => {
         </Link>
 
         {/* search bar */}
-        <input type="search" id="search" placeholder="Search"></input>
+        <input
+          type="search"
+          id="search"
+          placeholder="Search"
+          onKeyDown={handleKeyPress}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
         {/* create map button */}
         <Button radius="xl" id="createMapButton" onClick={open}>
