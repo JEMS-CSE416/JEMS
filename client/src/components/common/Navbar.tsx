@@ -25,7 +25,6 @@ import {
   // IconArrowsLeftRight,
 } from "@tabler/icons-react";
 
-
 const NavBar = () => {
   // User that we get from the backend.
   // For now we'll pretend we have it hardcoded here
@@ -36,7 +35,7 @@ const NavBar = () => {
 
   const handelLogOut = () => {
     console.log("logging out");
-  }
+  };
 
   // This is the hook that controls the modal
   // Open is responsible for opening the modal
@@ -46,10 +45,9 @@ const NavBar = () => {
     <div id="navBar">
       {/* This is the modal that will open when the user clicks on the create map*/}
       <CreateMapModal opened={opened} onClose={close}></CreateMapModal>
-      
+
       {/* This is the actual navbar */}
       <Group>
-
         {/* logo */}
         <Link to="/home">
           <Image src={jemsLogo} id="jemsLogo" />
@@ -80,15 +78,15 @@ const NavBar = () => {
               </Menu.Label>
               <Menu.Divider />
               <Menu.Label>Account Management</Menu.Label>
-              <Menu.Item
-                leftSection={
-                  <IconMap style={{ width: rem(14), height: rem(14) }} />
-                }
-              >
-                <Link to="/myMaps" className="text-no-underline">
+              <Link to="/myMaps" className="text-no-underline">
+                <Menu.Item
+                  leftSection={
+                    <IconMap style={{ width: rem(14), height: rem(14) }} />
+                  }
+                >
                   <Text>Your Maps</Text>
-                  </Link>
-              </Menu.Item>
+                </Menu.Item>
+              </Link>
               <Menu.Item
                 leftSection={
                   <IconLogout style={{ width: rem(14), height: rem(14) }} />
