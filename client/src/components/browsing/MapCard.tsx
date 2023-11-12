@@ -1,4 +1,13 @@
-import { Card, Image, Text, Badge, Group } from "@mantine/core";
+import {
+  Card,
+  Image,
+  Text,
+  Badge,
+  Group,
+  Menu,
+  UnstyledButton,
+  Button,
+} from "@mantine/core";
 import "./css/mapCard.css";
 import ellipses from "../../assets/images/ellipses.png";
 
@@ -35,8 +44,16 @@ function MapCard(props: MapCardProps) {
         ) : (
           <></>
         )}
-
-        <Image src={ellipses} height={20} id="ellipses"></Image>
+        {/* <div>
+          <Button
+            onClick={(e) => {
+              // do not close modal if anything inside modal content is clicked
+              e.stopPropagation();
+            }}
+          >
+            <Image src={ellipses} height={20} id="ellipses"></Image>
+          </Button>
+        </div> */}
       </Group>
     </Card>
   );

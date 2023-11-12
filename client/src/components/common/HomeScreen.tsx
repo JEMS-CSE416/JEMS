@@ -1,11 +1,12 @@
 import "./css/homeScreen.css";
-import { Group, Text, Stack, Box } from "@mantine/core";
+import { Group, Text, Stack, Box, Button, Image } from "@mantine/core";
 import MapCard from "../browsing/MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
+import ellipses from "../../assets/images/ellipses.png";
 
 const HomePage = () => {
   const [maps, setMaps] = useState([]);
@@ -85,10 +86,7 @@ const HomePage = () => {
                   Your Maps
                 </Text>
                 <Link to="/myMaps" id="seeAllLink">
-                  <Text
-                    size="sm"
-                    ta="right"
-                  >
+                  <Text size="sm" ta="right">
                     See all{" "}
                   </Text>
                 </Link>
@@ -100,7 +98,16 @@ const HomePage = () => {
                 style={{ width: "100%" }}
               >
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard private={false}>
+                    <Button
+                      onClick={(e) => {
+                        // do not close modal if anything inside modal content is clicked
+                        e.stopPropagation();
+                      }}
+                    >
+                      <Image src={ellipses} height={20} id="ellipses"></Image>
+                    </Button>
+                  </MapCard>
                 </Link>
                 <Link to="/selected">
                   <MapCard private={false}></MapCard>
@@ -128,10 +135,7 @@ const HomePage = () => {
                   Discover Maps{" "}
                 </Text>
                 <Link to="/discover" id="seeAllLink">
-                  <Text
-                    size="sm"
-                    ta="right"
-                  >
+                  <Text size="sm" ta="right">
                     See all{" "}
                   </Text>
                 </Link>
