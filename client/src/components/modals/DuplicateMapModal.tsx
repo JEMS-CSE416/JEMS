@@ -1,6 +1,8 @@
 import { Modal, Button, Group, Box, TextInput, Stack, Select, Divider, Textarea } from "@mantine/core";
 import React from "react";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons-react";
 
 interface DuplicateMapModalProps {
   opened: boolean;
@@ -30,6 +32,15 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
       },
     },
   });
+
+  const handleMakeCopy = () => {
+    onClose();
+    notifications.show({
+      icon: <IconCheck />,
+      title: 'Your map has been duplicated!',
+      message: 'You can now edit your new map at: https://jems.app/',
+    })
+  }
 
   return (
     <>
@@ -67,8 +78,8 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
               />
             </Stack>
             <Stack style={{marginTop: "30px" }}>
-              <Button type="submit" onClick={onClose} style={{marginLeft: "auto" }}>
-                Submit
+              <Button type="submit" onClick={handleMakeCopy} style={{marginLeft: "auto" }}>
+                Make copy
               </Button>
             </Stack>
           </Box>
