@@ -28,7 +28,7 @@ html {
 }
 
 .container {
-  width: 90%;
+  width: 85%;
   margin: 20px auto;
 
   @media (min-width: 1250px) {

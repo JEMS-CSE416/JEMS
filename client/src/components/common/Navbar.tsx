@@ -39,15 +39,23 @@ const NavBar = () => {
     avatar: "https://avatars.githubusercontent.com/u/132554",
   };
 
+  // This is the function that will be called when the user clicks on the logout button
   const handelLogOut = () => {
     console.log("logging out");
   };
 
+  // This is the function that will be called when the user presses enter on the search bar
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      // Run your function here
+    if (event.key === "Enter") {
       console.log("searching for: " + search);
-      navigate("/maps/search/" + search);
+
+      if (search === "") return;
+
+      // This is how we navigate to /maps/search with each query.
+      // the reason for {state: forceRefresh: true} is because we want
+      // to force a refresh of the page incase the user just wants to recieve
+      // new updagtes on the results
+      navigate("/maps/search/" + search, { state: { forceRefresh: true } });
     }
   };
 
@@ -77,9 +85,8 @@ const NavBar = () => {
           id="search"
           placeholder="Search"
           onKeyDown={handleKeyPress}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
-
 
         {/* create map button */}
         <Button radius="xl" id="createMapButton" onClick={open}>

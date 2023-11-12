@@ -17,7 +17,7 @@ function App() {
           <Route path="/selected" element={<SelectedCardPage />} />
           <Route path="/myMaps" element={<MyMaps />} />
           <Route path="/discover" element={<Discover />} />
-          <Route path="/maps/search/:search" element={<SearchedMaps/>} />
+          <Route path="/maps/search/:search?" element={<SearchedMaps/>} />
         </Routes>
       </BrowserRouter>
     </div>
