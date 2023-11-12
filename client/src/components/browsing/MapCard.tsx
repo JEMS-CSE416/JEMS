@@ -1,13 +1,15 @@
-import { Card, Image, Text, Badge, Group } from "@mantine/core";
+import { Card, Image, Text, Badge, Group, Button, Menu } from "@mantine/core";
 import "./css/mapCard.css";
 import ellipses from "../../assets/images/ellipses.png";
+import React, { ReactNode } from "react";
+import { IconDots } from "@tabler/icons-react";
 
 type MapCardProps = {
   name?: string;
-  private: boolean;
+  isPrivate: boolean;
 };
 
-function MapCard(props: MapCardProps) {
+const MapCard: React.FC<MapCardProps> = ({ name, isPrivate }) => {
   return (
     <Card shadow="sm" padding="xl" radius="md" withBorder id="card">
       <Card.Section>
@@ -18,7 +20,7 @@ function MapCard(props: MapCardProps) {
         />
       </Card.Section>
       <Text fw={700} ta="left" id="mapTitle">
-        {props.name}
+        {name}
       </Text>
       <Text size="9px" ta="left">
         Luffy • Created 5 minutes ago
@@ -28,7 +30,7 @@ function MapCard(props: MapCardProps) {
         ....
       </Text>
       <Group justify="space-between" mt="md" mb="xs">
-        {props.private ? (
+        {isPrivate ? (
           <Badge color="blue" variant="light" size="xs" ta="right">
             Private
           </Badge>
@@ -36,10 +38,65 @@ function MapCard(props: MapCardProps) {
           <></>
         )}
 
-        <Image src={ellipses} height={20} id="ellipses"></Image>
+        <div id="ellipses">
+          <Menu
+            shadow="md"
+            width={200}
+            trigger="hover"
+            openDelay={100}
+            closeDelay={400}
+            position="right-start"
+            offset={4}
+          >
+            <Menu.Target>
+              <Button
+                variant="subtle"
+                size="compact-xs"
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <IconDots height={20} color="black"></IconDots>
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown>
+              {/* <Menu.Label>Application</Menu.Label> */}
+              <Menu.Item
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Download as PNG
+              </Menu.Item>
+              <Menu.Item
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Download as JPG
+              </Menu.Item>
+              <Menu.Item
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Download as JSON
+              </Menu.Item>
+              <Menu.Item
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                Duplicate
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </div>
       </Group>
     </Card>
   );
+};
+function randomTest() {
+  console.log("lool");
 }
-
 export default MapCard;

@@ -1,11 +1,12 @@
 import "./css/homeScreen.css";
-import { Group, Text, Stack, Box } from "@mantine/core";
+import { Group, Text, Stack, Box, Button, Image } from "@mantine/core";
 import MapCard from "../browsing/MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
+import ellipses from "../../assets/images/ellipses.png";
 
 const HomePage = () => {
   const [maps, setMaps] = useState([]);
@@ -53,7 +54,7 @@ const HomePage = () => {
       for (let j = 0; j < 4; j++) {
         if (i < maps.length) {
           temp.push(
-            <MapCard private={false} name={maps[i]["mapName"]}></MapCard>
+            <MapCard isPrivate={false} name={maps[i]["mapName"]}></MapCard>
           );
           i++;
         }
@@ -85,10 +86,7 @@ const HomePage = () => {
                   Your Maps
                 </Text>
                 <Link to="/myMaps" id="seeAllLink">
-                  <Text
-                    size="sm"
-                    ta="right"
-                  >
+                  <Text size="sm" ta="right">
                     See all{" "}
                   </Text>
                 </Link>
@@ -100,16 +98,16 @@ const HomePage = () => {
                 style={{ width: "100%" }}
               >
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
                 <Link to="/selected">
-                  <MapCard private={false}></MapCard>
+                  <MapCard isPrivate={false}></MapCard>
                 </Link>
               </Group>
             </Stack>
@@ -128,10 +126,7 @@ const HomePage = () => {
                   Discover Maps{" "}
                 </Text>
                 <Link to="/discover" id="seeAllLink">
-                  <Text
-                    size="sm"
-                    ta="right"
-                  >
+                  <Text size="sm" ta="right">
                     See all{" "}
                   </Text>
                 </Link>
@@ -144,16 +139,16 @@ const HomePage = () => {
               ))}
               {/* <Group justify="flex-start" grow>
                                 <Link to="/selected">
-                                    <MapCard private={false}></MapCard>
+                                    <MapCard isPrivate={false}></MapCard>
                                 </Link>
                                 <Link to="/selected">
-                                    <MapCard private={false}></MapCard>
+                                    <MapCard isPrivate={false}></MapCard>
                                 </Link>
                                 <Link to="/selected">
-                                    <MapCard private={false}></MapCard>
+                                    <MapCard isPrivate={false}></MapCard>
                                 </Link>
                                 <Link to="/selected">
-                                    <MapCard private={false}></MapCard>
+                                    <MapCard isPrivate={false}></MapCard>
                                 </Link>
                             </Group> */}
             </Stack>

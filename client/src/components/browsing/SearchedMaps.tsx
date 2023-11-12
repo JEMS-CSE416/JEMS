@@ -96,7 +96,7 @@ const SearchedMapsScreen = () => {
           ) : (
             maps.map((map) => (
               <Group justify="flex-start" grow>
-                <MapCard private={false} name={map["mapName"]} />
+                <MapCard isPrivate={false} name={map["mapName"]} />
               </Group>
             ))
           )}
