@@ -23,7 +23,7 @@ const DeleteMapModal: React.FC<DeleteMapModalProps> = ({ opened, onClose }) => {
       <Modal opened={opened} onClose={onClose} title="Delete Map?" centered size="auto">
         <Group justify="space-between">
           <Button variant="light" onClick={onClose}>
-            Delete
+            Cancel
           </Button>
           <Button variant="filled" onClick={handleConfirm}>
             Confirm
