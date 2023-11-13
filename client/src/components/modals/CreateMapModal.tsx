@@ -114,7 +114,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
     // Replace with your API endpoint
     const apiUrl = "http://143.198.28.153:3000/api/maps";
 
-    const response = await fetch(apiUrl, {
+    await fetch(apiUrl, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(req),
@@ -123,15 +123,17 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
         if (res.ok) {
           const responseData = await res.json();
           console.log("Map created successfully:", responseData);
+          onClose();
+          navigate(`/edit/${responseData._id}`);
         } else {
           console.error("Error creating map:", res.status, res.statusText);
+          onClose();
         }
       })
       .catch((err) => {
         console.error("Error updating data:", err);
+        onClose();
       });
-    onClose();
-    navigate("/map/edit/");
   };
 
   return (
