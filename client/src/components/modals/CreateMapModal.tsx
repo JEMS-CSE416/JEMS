@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { FileDropZone } from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
+import { useNavigate } from "react-router-dom";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -18,6 +19,8 @@ interface CreateMapModalProps {
 }
 
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+  const navigate = useNavigate();
+
   // Form state that we'll use as default values for now
   const form = useForm({
     initialValues: {
@@ -87,7 +90,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
 
   // Handle form submission and close the modal
   const handleFormSubmit = async () => {
-    console.log("Form values:", form.values);
+    console.log("Creating this map", form.values);
     const req = {
       map_file_content: {
         creatorId: form.values.creatorId,
@@ -108,33 +111,27 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
       },
     };
 
-    try {
-      // Replace with your API endpoint
-      const apiUrl = "http://143.198.28.153:3000/api/maps";
+    // Replace with your API endpoint
+    const apiUrl = "http://143.198.28.153:3000/api/maps";
 
-      const response = await fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(req),
+    const response = await fetch(apiUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const responseData = await res.json();
+          console.log("Map created successfully:", responseData);
+        } else {
+          console.error("Error creating map:", res.status, res.statusText);
+        }
+      })
+      .catch((err) => {
+        console.error("Error updating data:", err);
       });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("Data updated successfully:", responseData);
-      } else {
-        console.error(
-          "Error updating data:",
-          response.status,
-          response.statusText
-        );
-      }
-    } catch (error) {
-      console.error("Error updating data:", error);
-    }
-
     onClose();
+    navigate("/map/edit/");
   };
 
   return (
