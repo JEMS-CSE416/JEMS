@@ -1,6 +1,6 @@
 //Use this file to export all the ids to the actual suites
 
-const splashGetStartedButton = '#' + 'splash-button';
+const splashGetStartedButton = '#splash-button';
 const mapCard = '#card';
 const loginButton = '#loginButton';
 const editButton = '#edit-button';

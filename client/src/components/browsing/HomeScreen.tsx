@@ -71,22 +71,22 @@ const HomePage = () => {
               <Grid style={{ textAlign: "initial" }}>
                 <Grid.Col span={cardSpan}>
                   <Link to="/selected">
-                    <MapCard isPrivate={false} />
+                    <MapCard id="MyMapCard1" isPrivate={false} />
                   </Link>
                 </Grid.Col>
                 <Grid.Col span={cardSpan}>
                   <Link to="/selected">
-                    <MapCard isPrivate={false} />
+                    <MapCard id="MyMapCard2" isPrivate={false} />
                   </Link>
                 </Grid.Col>
                 <Grid.Col span={cardSpan}>
                   <Link to="/selected">
-                    <MapCard isPrivate={false} />
+                    <MapCard id="MyMapCard3" isPrivate={false} />
                   </Link>
                 </Grid.Col>
                 <Grid.Col span={cardSpan}>
                   <Link to="/selected">
-                    <MapCard isPrivate={false} />
+                    <MapCard id="MyMapCard4" isPrivate={false} />
                   </Link>
                 </Grid.Col>
               </Grid>

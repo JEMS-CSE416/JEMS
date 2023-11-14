@@ -7,6 +7,7 @@ import { IconDots } from "@tabler/icons-react";
 type MapCardProps = {
   name?: string;
   isPrivate: boolean;
+  id?: string;
 };
 
 const MapCard: React.FC<MapCardProps> = ({ name, isPrivate }) => {
