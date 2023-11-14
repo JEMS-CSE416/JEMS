@@ -8,6 +8,7 @@ import {
   Avatar,
   Image,
   Box,
+  Grid,
 } from "@mantine/core";
 import jemsLogo from "../../assets/images/logo.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -73,105 +74,80 @@ const NavBar = () => {
       )}
 
       {/* This is the actual navbar */}
-      <Group>
+      <Grid>
         {/* logo */}
-        <Link to="/home">
-          <Image src={jemsLogo} id="jemsLogo" />
-        </Link>
+        <Grid.Col span="content">
+          <Box>
+            <Link to="/home">
+              <Image src={jemsLogo} id="jemsLogo" />
+            </Link>
+          </Box>
+        </Grid.Col>
 
         {/* search bar */}
-        <input
-          type="search"
-          id="search"
-          placeholder="Search"
-          onKeyDown={handleKeyPress}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <Grid.Col span="auto">
+          <Box style={{ textAlign: "center" }}>
+            <input
+              type="search"
+              id="search"
+              placeholder="Search"
+              onKeyDown={handleKeyPress}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </Box>
+        </Grid.Col>
 
         {/* create map button */}
-        <Button radius="xl" id="createMapButton" onClick={open}>
-          + Create Map
-        </Button>
+        <Grid.Col span='content'>
+          <Box style={{ textAlign: "left" }}>
+            <Button radius="xl" id="createMapButton" onClick={open}>
+              + Create Map
+            </Button>
+          </Box>
+        </Grid.Col>
 
         {/* user profile */}
-        <Box id="user-profile">
-          <Menu>
-            <Menu.Target>
-              <Avatar color="blue" radius="xl" className="cursor-pointer">
-                {user.name.charAt(0)}
-              </Avatar>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              <Menu.Label>
-                <Text size="xl" lh="xl" c="#36454F">
-                  Hello, {user.name}
-                </Text>
-              </Menu.Label>
-              <Menu.Divider />
-              <Menu.Label>Account Management</Menu.Label>
-              <Link to="/myMaps" className="text-no-underline">
+        <Grid.Col span='content'>
+          <Box
+            id="user-profile"
+            style={{display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}
+          >
+            <Menu>
+              <Menu.Target>
+                <Avatar color="blue" radius="xl" className="cursor-pointer">
+                  {user.name.charAt(0)}
+                </Avatar>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>
+                  <Text size="xl" lh="xl" c="#36454F">
+                    Hello, {user.name}
+                  </Text>
+                </Menu.Label>
+                <Menu.Divider />
+                <Menu.Label>Account Management</Menu.Label>
+                <Link to="/myMaps" className="text-no-underline">
+                  <Menu.Item
+                    leftSection={
+                      <IconMap style={{ width: rem(14), height: rem(14) }} />
+                    }
+                  >
+                    <Text>Your Maps</Text>
+                  </Menu.Item>
+                </Link>
                 <Menu.Item
                   leftSection={
-                    <IconMap style={{ width: rem(14), height: rem(14) }} />
+                    <IconLogout style={{ width: rem(14), height: rem(14) }} />
                   }
+                  onClick={handelLogOut}
                 >
-                  <Text>Your Maps</Text>
+                  Logout
                 </Menu.Item>
-              </Link>
-              <Menu.Item
-                leftSection={
-                  <IconLogout style={{ width: rem(14), height: rem(14) }} />
-                }
-                onClick={handelLogOut}
-              >
-                Logout
-              </Menu.Item>
-
-              {/* <Menu.Item
-                leftSection={
-                  <IconPhoto style={{ width: rem(14), height: rem(14) }} />
-                }
-              >
-                Gallery
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconSearch style={{ width: rem(14), height: rem(14) }} />
-                }
-                rightSection={
-                  <Text size="xs" c="dimmed">
-                    ⌘K
-                  </Text>
-                }
-              >
-                Search
-              </Menu.Item> */}
-
-              {/* <Menu.Divider />
-
-              <Menu.Label>Danger zone</Menu.Label>
-              <Menu.Item
-                leftSection={
-                  <IconArrowsLeftRight
-                    style={{ width: rem(14), height: rem(14) }}
-                  />
-                }
-              >
-                Transfer my data
-              </Menu.Item>
-              <Menu.Item
-                color="red"
-                leftSection={
-                  <IconTrash style={{ width: rem(14), height: rem(14) }} />
-                }
-              >
-                Delete my account
-              </Menu.Item> */}
-            </Menu.Dropdown>
-          </Menu>
-        </Box>
-      </Group>
+              </Menu.Dropdown>
+            </Menu>
+          </Box>
+        </Grid.Col>
+      </Grid>
     </div>
   );
 };

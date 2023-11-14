@@ -14,12 +14,12 @@
 
 /* Search Bar styling */
 #search {
-  margin-left: auto;
-  margin-right: 1%;
+  margin-left: 0%;
   border-radius: 20px;
   border: 1px solid #c1c2c5;
   height: 35px;
-  width: 60%;
+  width: 90%;
+  max-width: 600px;
   background: url("../../../assets/images/search.png") no-repeat left;
   background-color: white;
   background-size: 20px;
