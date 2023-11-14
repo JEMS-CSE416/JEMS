@@ -138,12 +138,9 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
 
   return (
     <>
-      <Modal
-        opened={opened}
-        onClose={onClose}
-        title="Create Map"
-        centered
-        size="70%"
+      <Modal id="delete-modal" opened={opened}
+        onClose={onClose} title="Create Map"
+        centered size="70%"
       >
         <Box style={{ margin: "20px" }}>
           <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>

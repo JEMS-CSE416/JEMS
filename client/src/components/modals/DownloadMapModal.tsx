@@ -10,7 +10,7 @@ interface DownloadMapModalProps {
 const DownloadMapModal: React.FC<DownloadMapModalProps> =({opened, onClose}) => {
   return (
     <>
-      <Modal opened={opened} onClose={onClose} title="Save As" centered>
+      <Modal id="download-modal" opened={opened} onClose={onClose} title="Save As" centered>
         <Group justify="space-between">
           <Button variant="light" id="saveAsButton">PNG</Button>
           <Button variant="light" id="saveAsButton">JPG</Button>
