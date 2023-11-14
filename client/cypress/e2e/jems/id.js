@@ -2,13 +2,15 @@
 
 const splashGetStartedButton = '#' + 'splash-button';
 const mapCard = '#card';
-const loginButton = '#loginButton'
+const loginButton = '#loginButton';
+const editButton = '#edit-button';
 
 context('Share IDs across all suites', () => {
     // Generating a random userCount value for further verifications.
     module.exports = {
         splashGetStartedButton,
         mapCard,
-        loginButton
+        loginButton,
+        editButton,
     }
 });
