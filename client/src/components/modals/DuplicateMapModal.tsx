@@ -78,7 +78,7 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
               />
             </Stack>
             <Stack style={{marginTop: "30px" }}>
-              <Button type="submit"  style={{marginLeft: "auto" }}>
+              <Button id="duplicate-modal-submit-button" type="submit" style={{marginLeft: "auto" }}>
                 Make copy
               </Button>
             </Stack>

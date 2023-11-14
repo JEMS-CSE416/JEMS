@@ -58,6 +58,7 @@ const MapHeader = () => {
             leftSection={<IconEdit size={14} />}
             variant="subtle"
             color="gray"
+            id="edit-button"
           >
             Edit Map
           </Button>
@@ -67,6 +68,7 @@ const MapHeader = () => {
           variant="subtle"
           color="gray"
           onClick={setDeleteModal.open}
+          id="delete-button"
         >
           Delete
         </Button>
@@ -92,6 +94,7 @@ const MapHeader = () => {
             variant="subtle"
             color="gray"
             onClick={setDownloadModal.open}
+            id="download-button"
           >
             Download
           </Button>
@@ -101,6 +104,7 @@ const MapHeader = () => {
             variant="subtle"
             color="gray"
             onClick={setDuplicateModal.open}
+            id="duplicate-button"
           >
             Duplicate
           </Button>
