@@ -43,31 +43,6 @@ const HomePage = () => {
     }
   };
 
-  // convert maps array into a 2d array of 4 maps each, it can have <4 maps in the last array
-  // input = maps array
-  // output = 2d array of maps
-  // let convertedMaps = [];
-  // if (maps.length > 1) {
-  //   let i = 0;
-  //   while (i < maps.length) {
-  //     let temp = [];
-  //     for (let j = 0; j < 4; j++) {
-  //       if (i < maps.length) {
-  //         temp.push(
-  //           <MapCard isPrivate={false} name={maps[i]["mapName"]}></MapCard>
-  //         );
-  //         i++;
-  //       }
-  //     }
-  //     convertedMaps.push(temp);
-  //   }
-  //   if (maps.length % 4 !== 0)
-  //     for (let i = 0; i < 4 - (maps.length % 4); i++) {
-  //       if (convertedMaps[convertedMaps.length - 1])
-  //         convertedMaps[convertedMaps.length - 1].push(<div></div>);
-  //     }
-  // }
-
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 
   return (
