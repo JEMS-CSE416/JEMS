@@ -9,7 +9,8 @@ export default function Canvas () {
           zoom={5}
           style={{
             width: "100%",
-            height: "calc(100Vh - 60px)"
+            height: "calc(100Vh - 60px)",
+            zIndex: -1
           }}
         >
           <TileLayer
