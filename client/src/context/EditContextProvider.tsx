@@ -56,7 +56,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
     () => {
       // TODO: replace with code to actually query the map
       const newMap = ErrorMap;
-      newMap.mapName = "This Map has been initialized"
+      newMap.mapName = "Title for a newly initialized Map"
       dispatch({
         type: "init_map",
         map: newMap

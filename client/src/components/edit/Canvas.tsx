@@ -1,6 +1,5 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Paper } from "@mantine/core";
 import Legend from "./Legend";
 
 export default function Canvas () {

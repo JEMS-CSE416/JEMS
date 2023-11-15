@@ -1,6 +1,5 @@
 import {
-    ColorInput,
-    ColorSwatch,
+  ColorSwatch,
   Paper,
   Space,
   Stack,

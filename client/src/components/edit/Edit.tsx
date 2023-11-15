@@ -32,9 +32,6 @@ export default function Edit(){
 
         {/* Middle element */}
         <AppShell.Main>
-          <Box pos="relative">
-          <Legend/>
-          </Box>
           <Canvas/>
         </AppShell.Main>
 

@@ -34,13 +34,17 @@ export default function Regions(){
               return (
                 <>
                   <Title order={5} >{groupName}</Title>
-                  <Stack pl={10} gap={0}>
+                  <Stack gap={0} w="100%">
                     {regions.map((region) =>
                       <Button
                         variant="subtle"
                         color="black"
+                        fullWidth
+                        pl={15}
+                        justify="left"
                       > 
-                        <Text>{region.regionName}
+                        <Text>
+                          {region.regionName}
                         </Text>
                       </Button>
                     )}
