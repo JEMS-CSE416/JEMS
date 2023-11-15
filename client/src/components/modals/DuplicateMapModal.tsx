@@ -1,4 +1,4 @@
-import { Modal, Button, Group, Box, TextInput, Stack, Select, Divider, Textarea } from "@mantine/core";
+import { Modal, Button, Box, TextInput, Stack, Select, Textarea } from "@mantine/core";
 import React from "react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
