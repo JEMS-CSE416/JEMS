@@ -10,15 +10,23 @@ import {
   IconShare2,
   IconSettings
 } from "@tabler/icons-react";
+import { ExportMapModal } from "../modals/ExportMapModal";
+import { SettingsMapModal } from "../modals/SettingsMapModal";
 
 
+/*
+ * Edit navbar
+ */
 export default function EditNavBar(){
   const editState = useEditContext();
 
   return (
     <BaseNavbar
       modals= {
-        <div/>
+        <>
+          <ExportMapModal/>
+          <SettingsMapModal/>
+        </>
       }
       center_component={
         <MapTitle name={editState.map.mapName}/>
@@ -49,12 +57,12 @@ function EditNavButtons(){
         <IconDeviceFloppy size={iconSize}/>
       </Button>
       <Button radius="xl" onClick={
-          () => setEditPageState({ type:"edit_modal", modal:"MAP_EXPORT" })
+          () => setEditPageState({ type:"change_modal", modal:"MAP_EXPORT" })
         }>
         <IconShare2 size={iconSize}/>
       </Button>
       <Button radius="xl" onClick={
-          () => setEditPageState({ type:"edit_modal", modal:"MAP_SETTINGS" })
+          () => setEditPageState({ type:"change_modal", modal:"MAP_SETTINGS" })
         }>
         <IconSettings size={iconSize}/>
       </Button>
