@@ -18,7 +18,7 @@ function App() {
           <Route path="/selected" element={<SelectedCardPage />} />
           <Route path="/myMaps" element={<MyMaps />} />
           <Route path="/discover" element={<Discover />} />
-          <Route path="/edit/{:id}" element={<Edit />} />
+          <Route path="/edit/:id?" element={<Edit />} />
           <Route path="/maps/search/:search?" element={<SearchedMaps/>} />
         </Routes>
       </BrowserRouter>
