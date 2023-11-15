@@ -8,6 +8,8 @@ import {
   Select,
   Group,
   Stack,
+  Image,
+  AspectRatio,
 } from "@mantine/core";
 import { FileDropZone } from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
@@ -19,51 +21,7 @@ export function SettingsMapModal(){
 
   // Form state that we'll use as default values for now
   const form = useForm({
-    initialValues: {
-      creatorId: "652daf32e2225cdfeceea17f",
-      mapName: "",
-      description: "",
-      creationDate: "2023-11-04T12:00:00Z",
-      public: true,
-      colorType: "basic",
-      displayStrings: true,
-      displayNumerics: true,
-      displayLegend: true,
-      displayPointers: true,
-      thumbnail: {
-        imageUrl: "https://example.com/thumbnail.jpg",
-        imageType: "jpg",
-      },
-      regions: {
-        dummyGroup: [
-          {
-            regionName: "dummyName",
-            coordinate: [
-              [0, 0],
-              [1, 1],
-            ],
-            stringLabel: "dummyLabel",
-            stringOffset: [0, 0],
-            numericLabel: 0,
-            numericUnit: "dummyUnit",
-            color: "#eeeeee",
-          },
-        ],
-      },
-      legend: {
-        colorLegend: {
-          "#000000": "black",
-          "#ffffff": "white",
-        },
-        choroplethLegend: {
-          "#000000": 0,
-          "#ffffff": 10,
-        },
-      },
-      visibility: "",
-      template: "",
-    },
-
+    initialValues: editPageState.map,
     validate: {
       mapName: (value) => {
         // You can add your map name validation logic here
@@ -100,7 +58,7 @@ export function SettingsMapModal(){
                   <TextInput
                     label="Map Name"
                     description="Enter a name to describe your map"
-                    placeholder="Map of Grand Line"
+                    placeholder={editPageState.map.mapName}
                     style={{ width: "100%" }}
                     data-autofocus
                     withAsterisk
@@ -109,7 +67,7 @@ export function SettingsMapModal(){
                   <Textarea
                     label="Map Description"
                     description="Enter a description to describe your map"
-                    placeholder="This is a map of the Grand Line"
+                    placeholder={editPageState.map.description}
                     style={{ width: "100%" }}
                     variant="filled"
                     data-autofocus
@@ -130,18 +88,13 @@ export function SettingsMapModal(){
               <Box style={{ width: "55%" }}>
                 <Stack>
                   <FileDropZone />
-                  <Select
-                    label="Template"
-                    data={[
-                      "String Label Map",
-                      "Color Label Map",
-                      "Numeric Label",
-                      "Choropleth Map",
-                      "Pointer Label",
-                    ]}
-                    style={{ width: "90%" }}
-                    {...form.getInputProps("template")}
-                  />
+                    <AspectRatio ratio={20/9}>
+                    <Image
+                      src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
+                      radius="md"
+                      alt="Norway"
+                    />
+                    </AspectRatio>
                 </Stack>
               </Box>
             </Group>
