@@ -12,8 +12,8 @@ export default function Edit(){
       <AppShell
         header={{height: 60, offset:true}}
         navbar={{width:225, breakpoint: 'sm'}}
-        aside={{width:225, breakpoint: 'sm'}}
-        padding="lg"
+        aside={{width:275, breakpoint: 'sm'}}
+        padding={0}
       >
         {/* Top element */}
         <AppShell.Header>
@@ -30,14 +30,11 @@ export default function Edit(){
 
         {/* Middle element */}
         <AppShell.Main>
-          Main
+          <Canvas/>
         </AppShell.Main>
 
         {/* Right element */}
         <AppShell.Aside zIndex={-1}>
-          <h1>
-            Test
-          </h1>
         </AppShell.Aside>
       </AppShell>
     </EditContextProvider>
