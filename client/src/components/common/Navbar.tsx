@@ -64,6 +64,10 @@ export function BaseNavbar(props: NavbarProps){
           </Box>
         </Grid.Col>
 
+
+        {/* Spacing componenet*/}
+        <Grid.Col span={2.5}/>
+
         {/* search bar  or center_component*/}
         <Grid.Col span="auto">
           <Box style={{ textAlign: "center" }}>
@@ -72,7 +76,7 @@ export function BaseNavbar(props: NavbarProps){
         </Grid.Col>
 
         {/* create map button  or right_component*/}
-        <Grid.Col span='content'>
+        <Grid.Col span={2.5}>
           <Box style={{ textAlign: "left" }}>
             {props.right_component}
           </Box>
@@ -182,9 +186,13 @@ function SearchBar() {
 
 function CreateMap(props: any){
   return (
-    <Button radius="xl" id="createMapButton" onClick={props.open}>
-      + Create Map
-    </Button>
+    <Box
+      ta="right"
+    >
+      <Button radius="xl" id="createMapButton" onClick={props.open}>
+        + Create Map
+      </Button>
+    </Box>
   );
 }
 
