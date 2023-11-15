@@ -29,40 +29,41 @@ const SearchedMapsScreen = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    queryForMaps();
-  }, [location.state]);
-
-  const queryForMaps = async () => {
-    try {
-      const apiUrl =
-        "http://143.198.28.153:3000/api/maps/?" +
-        new URLSearchParams({
-          private: "false",
-          map_name: `${search}`, // there is a bug in the backend where it cannot handle spaces in the query string
+    const queryForMaps = async () => {
+      try {
+        const apiUrl =
+          "http://143.198.28.153:3000/api/maps/?" +
+          new URLSearchParams({
+            private: "false",
+            map_name: `${search}`, // there is a bug in the backend where it cannot handle spaces in the query string
+          });
+        console.log(apiUrl);
+        const response = await fetch(apiUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
-      console.log(apiUrl);
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
 
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("maps fetched successfully:", responseData);
-        setMaps(responseData);
-      } else {
-        console.error(
-          "Error fetching data:",
-          response.status,
-          response.statusText
-        );
+        if (response.ok) {
+          const responseData = await response.json();
+          console.log("maps fetched successfully:", responseData);
+          setMaps(responseData);
+        } else {
+          console.error(
+            "Error fetching data:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching maps:", error);
       }
-    } catch (error) {
-      console.error("Error fetching maps:", error);
-    }
-  };
+    };
+
+    queryForMaps();
+  }, [search, location.state]);
+
 
   if (!search) {
     navigate("/");
