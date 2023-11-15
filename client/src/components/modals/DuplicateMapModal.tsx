@@ -46,7 +46,7 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
     <>
       <Modal opened={opened} onClose={onClose}
         title="Duplicate Map" centered size="lg">
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form onSubmit={form.onSubmit((values) => handleMakeCopy())}>
           <Box>
             <Stack justify="flex-start">
               <TextInput
@@ -78,7 +78,7 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
               />
             </Stack>
             <Stack style={{marginTop: "30px" }}>
-              <Button type="submit" onClick={handleMakeCopy} style={{marginLeft: "auto" }}>
+              <Button id="duplicate-modal-submit-button" type="submit" style={{marginLeft: "auto" }}>
                 Make copy
               </Button>
             </Stack>

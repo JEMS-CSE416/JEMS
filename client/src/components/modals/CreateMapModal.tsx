@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { FileDropZone } from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
+import { useNavigate } from "react-router-dom";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -18,11 +19,14 @@ interface CreateMapModalProps {
 }
 
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+  const navigate = useNavigate();
+
+  // Form state that we'll use as default values for now
   const form = useForm({
     initialValues: {
       creatorId: "652daf32e2225cdfeceea17f",
-      mapName: "hello",
-      description: "hi",
+      mapName: "",
+      description: "",
       creationDate: "2023-11-04T12:00:00Z",
       public: true,
       colorType: "basic",
@@ -84,8 +88,9 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
     },
   });
 
+  // Handle form submission and close the modal
   const handleFormSubmit = async () => {
-    console.log("Form values:", form.values);
+    console.log("Creating this map", form.values);
     const req = {
       map_file_content: {
         creatorId: form.values.creatorId,
@@ -106,41 +111,36 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
       },
     };
 
-    try {
-      // Replace with your API endpoint
-      const apiUrl = "http://143.198.28.153:3000/api/maps";
+    // Replace with your API endpoint
+    const apiUrl = "http://143.198.28.153:3000/api/maps";
 
-      const response = await fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(req),
+    await fetch(apiUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const responseData = await res.json();
+          console.log("Map created successfully:", responseData);
+          onClose();
+          navigate(`/edit/${responseData._id}`);
+        } else {
+          console.error("Error creating map:", res.status, res.statusText);
+          onClose();
+        }
+      })
+      .catch((err) => {
+        console.error("Error updating data:", err);
+        onClose();
       });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("Data updated successfully:", responseData);
-      } else {
-        console.error(
-          "Error updating data:",
-          response.status,
-          response.statusText
-        );
-      }
-    } catch (error) {
-      console.error("Error updating data:", error);
-    }
   };
 
   return (
     <>
-      <Modal
-        opened={opened}
-        onClose={onClose}
-        title="Create Map"
-        centered
-        size="70%"
+      <Modal id="delete-modal" opened={opened}
+        onClose={onClose} title="Create Map"
+        centered size="70%"
       >
         <Box style={{ margin: "20px" }}>
           <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>
@@ -197,9 +197,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
             </Group>
 
             <Group justify="flex-end" mt="md">
-              <Button type="submit" onClick={onClose}>
-                Submit
-              </Button>
+              <Button type="submit">Submit</Button>
             </Group>
           </form>
         </Box>
