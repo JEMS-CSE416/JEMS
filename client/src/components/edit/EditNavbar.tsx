@@ -56,12 +56,12 @@ function EditNavButtons(){
       <Button radius="xl" >
         <IconDeviceFloppy size={iconSize}/>
       </Button>
-      <Button radius="xl" onClick={
+      <Button id="export-button" radius="xl" onClick={
           () => setEditPageState({ type:"change_modal", modal:"MAP_EXPORT" })
         }>
         <IconShare2 size={iconSize}/>
       </Button>
-      <Button radius="xl" onClick={
+      <Button id="settings-button" radius="xl" onClick={
           () => setEditPageState({ type:"change_modal", modal:"MAP_SETTINGS" })
         }>
         <IconSettings size={iconSize}/>
