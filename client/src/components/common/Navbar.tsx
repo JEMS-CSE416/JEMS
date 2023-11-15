@@ -54,76 +54,76 @@ export function BaseNavbar(props: NavbarProps){
       {/* show modal if opened */}
       {props.modals}
       {/* This is the actual navbar */}
-      <Grid align="center">
-        {/* logo */}
-        <Grid.Col span="content">
-          <Box>
-            <Link to="/home">
-              <Image src={jemsLogo} id="jemsLogo" />
-            </Link>
-          </Box>
-        </Grid.Col>
+        <Grid align="center">
+          {/* logo */}
+          <Grid.Col span="content">
+            <Box>
+              <Link to="/home">
+                <Image src={jemsLogo} id="jemsLogo" />
+              </Link>
+            </Box>
+          </Grid.Col>
 
 
-        {/* Spacing componenet*/}
-        <Grid.Col span={2.5}/>
+          {/* Spacing componenet*/}
+          <Grid.Col span={2.5}/>
 
-        {/* search bar  or center_component*/}
-        <Grid.Col span="auto">
-          <Box style={{ textAlign: "center" }}>
-            {props.center_component}
-          </Box>
-        </Grid.Col>
+          {/* search bar  or center_component*/}
+          <Grid.Col span="auto">
+            <Box style={{ textAlign: "center" }}>
+              {props.center_component}
+            </Box>
+          </Grid.Col>
 
-        {/* create map button  or right_component*/}
-        <Grid.Col span={2.5}>
-          <Box style={{ textAlign: "left" }}>
-            {props.right_component}
-          </Box>
-        </Grid.Col>
+          {/* create map button  or right_component*/}
+          <Grid.Col span={2.5}>
+            <Box style={{ textAlign: "left" }}>
+              {props.right_component}
+            </Box>
+          </Grid.Col>
 
-        {/* user profile */}
-        <Grid.Col span='content'>
-          <Box
-            id="user-profile"
-            style={{display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}
-          >
-            <Menu>
-              <Menu.Target>
-                <Avatar color="blue" radius="xl" className="cursor-pointer">
-                  {user.name.charAt(0)}
-                </Avatar>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Label>
-                  <Text size="xl" lh="xl" c="#36454F">
-                    Hello, {user.name}
-                  </Text>
-                </Menu.Label>
-                <Menu.Divider />
-                <Menu.Label>Account Management</Menu.Label>
-                <Link to="/myMaps" className="text-no-underline">
+          {/* user profile */}
+          <Grid.Col span='content'>
+            <Box
+              id="user-profile"
+              style={{display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}
+            >
+              <Menu>
+                <Menu.Target>
+                  <Avatar color="blue" radius="xl" className="cursor-pointer">
+                    {user.name.charAt(0)}
+                  </Avatar>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>
+                    <Text size="xl" lh="xl" c="#36454F">
+                      Hello, {user.name}
+                    </Text>
+                  </Menu.Label>
+                  <Menu.Divider />
+                  <Menu.Label>Account Management</Menu.Label>
+                  <Link to="/myMaps" className="text-no-underline">
+                    <Menu.Item
+                      leftSection={
+                        <IconMap style={{ width: rem(14), height: rem(14) }} />
+                      }
+                    >
+                      <Text>Your Maps</Text>
+                    </Menu.Item>
+                  </Link>
                   <Menu.Item
                     leftSection={
-                      <IconMap style={{ width: rem(14), height: rem(14) }} />
+                      <IconLogout style={{ width: rem(14), height: rem(14) }} />
                     }
+                    onClick={handelLogOut}
                   >
-                    <Text>Your Maps</Text>
+                    Logout
                   </Menu.Item>
-                </Link>
-                <Menu.Item
-                  leftSection={
-                    <IconLogout style={{ width: rem(14), height: rem(14) }} />
-                  }
-                  onClick={handelLogOut}
-                >
-                  Logout
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </Box>
-        </Grid.Col>
-      </Grid>
+                </Menu.Dropdown>
+              </Menu>
+            </Box>
+          </Grid.Col>
+        </Grid>
     </div>
   );
 }

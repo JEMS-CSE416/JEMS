@@ -49,9 +49,74 @@ export const ErrorMap = {
         "imageType": "jpg"
     },
     "regions": {
-        "testGroup": [
+        "testGroup1": [
             {
-                "regionName": "dummyName",
+                "regionName": "dummyName1",
+                "coordinate": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "stringLabel": "dummyLabel",
+                "stringOffset": [
+                    0,
+                    0
+                ],
+                "numericLabel": 0,
+                "numericUnit": "dummyUnit",
+                "color": "#eeeeee"
+            },
+            {
+                "regionName": "dummyName2",
+                "coordinate": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "stringLabel": "dummyLabel",
+                "stringOffset": [
+                    0,
+                    0
+                ],
+                "numericLabel": 0,
+                "numericUnit": "dummyUnit",
+                "color": "#eeeeee"
+            }
+        ],
+        "testGroup2": [
+            {
+                "regionName": "dummyName1",
+                "coordinate": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "stringLabel": "dummyLabel",
+                "stringOffset": [
+                    0,
+                    0
+                ],
+                "numericLabel": 0,
+                "numericUnit": "dummyUnit",
+                "color": "#eeeeee"
+            },
+            {
+                "regionName": "dummyName2",
                 "coordinate": [
                     [
                         0,

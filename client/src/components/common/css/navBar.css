@@ -4,6 +4,10 @@
   padding-bottom: 8px;
   box-shadow: 1px 1px 5px #b9b7b7;
   height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
 }
 
 #jemsLogo {
