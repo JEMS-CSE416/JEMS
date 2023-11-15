@@ -23,14 +23,19 @@ import {
   // IconTrash,
   // IconArrowsLeftRight,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
-const NavBar = () => {
-  // This is the hook that allows us to navigate to different pages
-  const navigate = useNavigate();
+interface NavbarProps{
+  modals: ReactNode;
+  center_component: ReactNode;
+  right_component: ReactNode;
+}
 
-  // This is the hook that controls the search bar
-  const [search, setSearch] = useState("");
+/*
+ * Modularized Navbar that EditNavbar will cal in order to reuse the styling
+ * elements of the original navbar
+ */
+export function BaseNavbar(props: NavbarProps){
 
   // User that we get from the backend.
   // For now we'll pretend we have it hardcoded here
@@ -44,34 +49,10 @@ const NavBar = () => {
     console.log("logging out");
   };
 
-  // This is the function that will be called when the user presses enter on the search bar
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      console.log("searching for: " + search);
-
-      if (search === "") return;
-
-      // This is how we navigate to /maps/search with each query.
-      // the reason for {state: forceRefresh: true} is because we want
-      // to force a refresh of the page incase the user just wants to recieve
-      // new updagtes on the results
-      navigate("/maps/search/" + search, { state: { forceRefresh: true } });
-    }
-  };
-
-  // This is the hook that controls the modal
-  // Open is responsible for opening the modal
-  // Close is responsible for closing the modal
-  const [opened, { open, close }] = useDisclosure(false);
-
   return (
     <div id="navBar">
       {/* show modal if opened */}
-      {opened && (
-        /* This is the modal that will open when the user clicks on the create map*/
-        <CreateMapModal opened={opened} onClose={close}></CreateMapModal>
-      )}
-
+      {props.modals}
       {/* This is the actual navbar */}
       <Grid align="center">
         {/* logo */}
@@ -83,25 +64,17 @@ const NavBar = () => {
           </Box>
         </Grid.Col>
 
-        {/* search bar */}
+        {/* search bar  or center_component*/}
         <Grid.Col span="auto">
           <Box style={{ textAlign: "center" }}>
-            <input
-              type="search"
-              id="search"
-              placeholder="Search"
-              onKeyDown={handleKeyPress}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            {props.center_component}
           </Box>
         </Grid.Col>
 
-        {/* create map button */}
+        {/* create map button  or right_component*/}
         <Grid.Col span='content'>
           <Box style={{ textAlign: "left" }}>
-            <Button radius="xl" id="createMapButton" onClick={open}>
-              + Create Map
-            </Button>
+            {props.right_component}
           </Box>
         </Grid.Col>
 
@@ -149,6 +122,69 @@ const NavBar = () => {
       </Grid>
     </div>
   );
+}
+
+
+/*
+ * This is the default Navbar for most pages.
+ * It has calls the modularized BaseNavbar and inputs the data required for
+ *  a generalized navbar
+ */
+export default function NavBar(){
+  // This is the hook that controls the modal
+  // Open is responsible for opening the modal
+  // Close is responsible for closing the modal
+  const [opened, { open, close }] = useDisclosure(false);
+
+  return (
+    <BaseNavbar
+      modals= {
+        /* This is the modal that will open when the user clicks on the create map*/
+        <CreateMapModal opened={opened} onClose={close}></CreateMapModal>
+      }
+      center_component={<SearchBar/>}
+      right_component={<CreateMap open={open}/>}
+    />
+  )
 };
 
-export default NavBar;
+function SearchBar() {
+  // This is the hook that controls the search bar
+  const [search, setSearch] = useState("");
+
+  // This is the hook that allows us to navigate to different pages
+  const navigate = useNavigate();
+
+  // This is the function that will be called when the user presses enter on the search bar
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      console.log("searching for: " + search);
+
+      if (search === "") return;
+
+      // This is how we navigate to /maps/search with each query.
+      // the reason for {state: forceRefresh: true} is because we want
+      // to force a refresh of the page incase the user just wants to recieve
+      // new updagtes on the results
+      navigate("/maps/search/" + search, { state: { forceRefresh: true } });
+    }
+  };
+  return (
+    <input
+      type="search"
+      id="search"
+      placeholder="Search"
+      onKeyDown={handleKeyPress}
+      onChange={(e) => setSearch(e.target.value)}
+    />
+  )
+}
+
+function CreateMap(props: any){
+  return (
+    <Button radius="xl" id="createMapButton" onClick={props.open}>
+      + Create Map
+    </Button>
+  );
+}
+
