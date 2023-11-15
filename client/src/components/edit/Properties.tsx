@@ -7,12 +7,14 @@ import {
   TextInput,
   Switch,
   ColorInput,
+  NumberInput,
 } from "@mantine/core";
 import { useEditContext } from "../../context/EditContextProvider";
 
 
 export default function Properties(){
   const editPageState = useEditContext();
+  console.log(editPageState, "remove me");
   return (
     <Box
       style={{
@@ -82,7 +84,7 @@ export default function Properties(){
                 placeholder="Numeric Label"
               />
 
-          <TextInput
+          <NumberInput
                 label="Numeric Units"
                 placeholder="Numeric Units"
               />

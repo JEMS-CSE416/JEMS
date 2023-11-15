@@ -1,5 +1,7 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { Paper } from "@mantine/core";
+import Legend from "./Legend";
 
 export default function Canvas () {
     return (
@@ -10,13 +12,14 @@ export default function Canvas () {
           style={{
             width: "100%",
             height: "calc(100Vh - 60px)",
-            zIndex: -1
+            zIndex: 125
           }}
         >
           <TileLayer
             url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
+        <Legend/>
         </MapContainer>
       </>
     )

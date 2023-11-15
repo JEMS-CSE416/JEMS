@@ -1,8 +1,9 @@
-import { AppShell } from "@mantine/core";
+import { AppShell, Box } from "@mantine/core";
 import { useParams } from "react-router-dom";
 import { EditContextProvider } from '../../context/EditContextProvider';
 import Canvas from "./Canvas";
 import EditNavBar from "./EditNavbar";
+import Legend from "./Legend";
 import Properties from "./Properties";
 import Regions from "./Regions";
 
@@ -31,6 +32,9 @@ export default function Edit(){
 
         {/* Middle element */}
         <AppShell.Main>
+          <Box pos="relative">
+          <Legend/>
+          </Box>
           <Canvas/>
         </AppShell.Main>
 
