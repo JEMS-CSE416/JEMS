@@ -4,7 +4,6 @@ import {
   Text,
   rem,
   Button,
-  Group,
   Avatar,
   Image,
   Box,
@@ -74,7 +73,7 @@ const NavBar = () => {
       )}
 
       {/* This is the actual navbar */}
-      <Grid>
+      <Grid align="center">
         {/* logo */}
         <Grid.Col span="content">
           <Box>
