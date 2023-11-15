@@ -84,5 +84,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
 function checkFields() {
   const email = document.getElementById("loginEmailInput");
   const pass = document.getElementById("loginPasswordInput");
+  console.log("TODO: delete log when email and pass are used" + email + pass);
 }
 export default LoginModal;
