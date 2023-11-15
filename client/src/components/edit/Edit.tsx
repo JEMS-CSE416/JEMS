@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { EditContextProvider } from '../../context/EditContextProvider';
 import Canvas from "./Canvas";
 import EditNavBar from "./EditNavbar";
+import Properties from "./Properties";
 import Regions from "./Regions";
 
 export default function Edit(){
@@ -34,7 +35,11 @@ export default function Edit(){
         </AppShell.Main>
 
         {/* Right element */}
-        <AppShell.Aside zIndex={-1}>
+        <AppShell.Aside
+          zIndex={-1}
+          p="lg"
+        >
+          <Properties/>
         </AppShell.Aside>
       </AppShell>
     </EditContextProvider>
