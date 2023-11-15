@@ -1,10 +1,9 @@
 import {
   Button,
   Flex,
-  Space,
   Text,
 } from "@mantine/core";
-import { useEditContext } from "../../context/EditContextProvider";
+import { useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
 import { BaseNavbar } from "../common/Navbar";
 import {
   IconDeviceFloppy,
@@ -38,19 +37,25 @@ function MapTitle(props: {name: string}){
 }
 
 function EditNavButtons(){
+  const setEditPageState = useEditDispatchContext() ;
   const iconSize = 20;
+
   return (
     <Flex
       gap="sm"
       justify="center"
     >
-      <Button radius="xl" id="createMapButton" /*onClick={}*/>
+      <Button radius="xl" >
         <IconDeviceFloppy size={iconSize}/>
       </Button>
-      <Button radius="xl" id="createMapButton" /*onClick={}*/>
+      <Button radius="xl" onClick={
+          () => setEditPageState({ type:"edit_modal", modal:"MAP_EXPORT" })
+        }>
         <IconShare2 size={iconSize}/>
       </Button>
-      <Button radius="xl" id="createMapButton" /*onClick={}*/>
+      <Button radius="xl" onClick={
+          () => setEditPageState({ type:"edit_modal", modal:"MAP_SETTINGS" })
+        }>
         <IconSettings size={iconSize}/>
       </Button>
     </Flex>

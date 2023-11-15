@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { ErrorMap, Map } from "../utils/models/Map";
 
-const initState = {
-  map: ErrorMap,
-  selectedRegion: undefined
-}
+// Types
+enum EditModalEnum {
+  NONE = "NONE",
+  MAP_EXPORT = "MAP_EXPORT",
+  MAP_SETTINGS = "MAP_SETTINGS"
 
-export const EditContext = createContext<EditPageState>(initState);
-export const EditDispatchContext = createContext<React.Dispatch<EditPageState>>(() => {});
+}
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
@@ -17,7 +17,26 @@ interface EditContextProviderProps {
 interface EditPageState {
   map: Map;
   selectedRegion ?: String;
+  modal: String
 }
+
+interface Action {
+  type: String,
+  map?: String,
+  modal?: String,
+}
+
+
+
+// Constant initialization
+const initState = {
+  map: ErrorMap,
+  selectedRegion: undefined,
+  modal: "NONE"
+}
+
+export const EditContext = createContext<EditPageState>(initState);
+export const EditDispatchContext = createContext<React.Dispatch<Action>>(() => {});
 
 /*
  * EditContextProvider component.
@@ -62,11 +81,15 @@ function editReducer(state: EditPageState, action: any): EditPageState{
     case 'init_map':
       // Make sure you create a new state, rather than modify the old one
       // Creating new state ensures that componenents will re-render
-      const newState = {
+      return {
         ...state,
-        map: action.map
+        map: action.map ?? ErrorMap
       }
-      return newState
+    case 'change_modal':
+      return {
+        ...state,
+        modal: Object.values(EditModalEnum).includes(action.modal) ? action.modal : "NONE"
+      }
   }
 
   return state;
