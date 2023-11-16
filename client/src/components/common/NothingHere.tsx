@@ -22,7 +22,7 @@ const NothingHere = () => {
           Create Map
         </Button>
       </Stack>
-      <CreateMapModal opened={createMapOpen} onClose={() => setCreateMapOpen(false)}></CreateMapModal>
+      <CreateMapModal opened={createMapOpen} onClose={() => setCreateMapOpen(false)}/>
     </>
   );
 };

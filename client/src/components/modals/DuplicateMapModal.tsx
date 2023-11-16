@@ -1,4 +1,12 @@
-import { Modal, Button, Box, TextInput, Stack, Select, Textarea } from "@mantine/core";
+import {
+  Modal,
+  Button,
+  Box,
+  TextInput,
+  Stack,
+  Select,
+  Textarea,
+} from "@mantine/core";
 import React from "react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
@@ -9,12 +17,15 @@ interface DuplicateMapModalProps {
   onClose: () => void;
 }
 
-const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }) => {
+const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
+  opened,
+  onClose,
+}) => {
   const form = useForm({
     initialValues: {
-      mapName: '',
-      description: '',
-      visibility: '',
+      mapName: "",
+      description: "",
+      visibility: "",
     },
 
     validate: {
@@ -22,13 +33,13 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
         if (value.trim() === "") {
           return "Map name is required";
         }
-        return null;         // Return `null` if it's valid, or an error message if it's invalid
+        return null; // Return `null` if it's valid, or an error message if it's invalid
       },
       description: (value) => {
         if (value.trim() === "") {
           return "Description is required";
         }
-        return null;         // Return `null` if it's valid, or an error message if it's invalid
+        return null; // Return `null` if it's valid, or an error message if it's invalid
       },
     },
   });
@@ -37,15 +48,20 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
     onClose();
     notifications.show({
       icon: <IconCheck />,
-      title: 'Your map has been duplicated!',
-      message: 'You can now edit your new map at: https://jems.app/',
-    })
-  }
+      title: "Your map has been duplicated!",
+      message: "You can now edit your new map at: https://jems.app/",
+    });
+  };
 
   return (
     <>
-      <Modal opened={opened} onClose={onClose}
-        title="Duplicate Map" centered size="lg">
+      <Modal
+        opened={opened}
+        onClose={onClose}
+        title="Duplicate Map"
+        centered
+        size="lg"
+      >
         <form onSubmit={form.onSubmit((values) => handleMakeCopy())}>
           <Box>
             <Stack justify="flex-start">
@@ -77,8 +93,12 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
                 {...form.getInputProps("visibility")}
               />
             </Stack>
-            <Stack style={{marginTop: "30px" }}>
-              <Button id="duplicate-modal-submit-button" type="submit" style={{marginLeft: "auto" }}>
+            <Stack style={{ marginTop: "30px" }}>
+              <Button
+                id="duplicate-modal-submit-button"
+                type="submit"
+                style={{ marginLeft: "auto" }}
+              >
                 Make copy
               </Button>
             </Stack>
@@ -87,6 +107,15 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({ opened, onClose }
       </Modal>
     </>
   );
-}
+};
+
+const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({
+  opened,
+  onClose,
+}) => {
+  return (
+    <>{opened && <DuplicateMapModalBase opened={opened} onClose={onClose} />}</>
+  );
+};
 
 export default DuplicateMapModal;

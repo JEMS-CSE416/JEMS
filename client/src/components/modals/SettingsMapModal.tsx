@@ -15,7 +15,8 @@ import { FileDropZone } from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
 import { useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
 
-export function SettingsMapModal(){
+
+function SettingsMapModalBase(){
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
 
@@ -108,3 +109,14 @@ export function SettingsMapModal(){
     </>
   );
 };
+
+export function SettingsMapModal(){
+  const editPageState = useEditContext();
+  return(
+    <>
+      { editPageState.modal === "MAP_SETTINGS" && <SettingsMapModalBase/>}
+    </>
+  )
+}
+
+
