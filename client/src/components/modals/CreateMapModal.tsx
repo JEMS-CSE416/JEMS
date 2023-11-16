@@ -18,7 +18,7 @@ interface CreateMapModalProps {
   onClose: () => void;
 }
 
-const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   const navigate = useNavigate();
 
   // Form state that we'll use as default values for now
@@ -135,75 +135,86 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
         onClose();
       });
   };
-
   return (
-    <>
-      <Modal id="delete-modal" opened={opened}
-        onClose={onClose} title="Create Map"
-        centered size="70%"
-      >
-        <Box style={{ margin: "20px" }}>
-          <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>
-            <Group>
-              <Box style={{ width: "40%" }}>
-                <Stack justify="flex-start">
-                  <TextInput
-                    label="Map Name"
-                    description="Enter a name to describe your map"
-                    placeholder="Map of Grand Line"
-                    style={{ width: "100%" }}
-                    data-autofocus
-                    withAsterisk
-                    {...form.getInputProps("mapName")}
-                  />
-                  <Textarea
-                    label="Map Description"
-                    description="Enter a description to describe your map"
-                    placeholder="This is a map of the Grand Line"
-                    style={{ width: "100%" }}
-                    variant="filled"
-                    data-autofocus
-                    withAsterisk
-                    {...form.getInputProps("description")}
-                  />
-                  <Select
-                    label="Visibility"
-                    placeholder="Public"
-                    data={["Public", "Private"]}
-                    style={{ width: "100%" }}
-                    withAsterisk
-                    {...form.getInputProps("visibility")}
-                  />
-                </Stack>
-              </Box>
-              <Divider orientation="vertical" />
-              <Box style={{ width: "55%" }}>
-                <Stack>
-                  <FileDropZone />
-                  <Select
-                    label="Template"
-                    data={[
-                      "String Label Map",
-                      "Color Label Map",
-                      "Numeric Label",
-                      "Choropleth Map",
-                      "Pointer Label",
-                    ]}
-                    style={{ width: "90%" }}
-                    {...form.getInputProps("template")}
-                  />
-                </Stack>
-              </Box>
-            </Group>
+    <Modal
+      id="delete-modal"
+      opened={opened}
+      onClose={onClose}
+      title="Create Map"
+      centered
+      size="70%"
+    >
+      <Box style={{ margin: "20px" }}>
+        <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>
+          <Group>
+            <Box style={{ width: "40%" }}>
+              <Stack justify="flex-start">
+                <TextInput
+                  label="Map Name"
+                  description="Enter a name to describe your map"
+                  placeholder="Map of Grand Line"
+                  style={{ width: "100%" }}
+                  data-autofocus
+                  withAsterisk
+                  {...form.getInputProps("mapName")}
+                />
+                <Textarea
+                  label="Map Description"
+                  description="Enter a description to describe your map"
+                  placeholder="This is a map of the Grand Line"
+                  style={{ width: "100%" }}
+                  variant="filled"
+                  data-autofocus
+                  withAsterisk
+                  {...form.getInputProps("description")}
+                />
+                <Select
+                  label="Visibility"
+                  placeholder="Public"
+                  data={["Public", "Private"]}
+                  style={{ width: "100%" }}
+                  withAsterisk
+                  {...form.getInputProps("visibility")}
+                />
+              </Stack>
+            </Box>
+            <Divider orientation="vertical" />
+            <Box style={{ width: "55%" }}>
+              <Stack>
+                <FileDropZone />
+                <Select
+                  label="Template"
+                  data={[
+                    "String Label Map",
+                    "Color Label Map",
+                    "Numeric Label",
+                    "Choropleth Map",
+                    "Pointer Label",
+                  ]}
+                  style={{ width: "90%" }}
+                  {...form.getInputProps("template")}
+                />
+              </Stack>
+            </Box>
+          </Group>
 
-            <Group justify="flex-end" mt="md">
-              <Button type="submit">Submit</Button>
-            </Group>
-          </form>
-        </Box>
-      </Modal>
-    </>
+          <Group justify="flex-end" mt="md">
+            <Button type="submit">Submit</Button>
+          </Group>
+        </form>
+      </Box>
+    </Modal>
   );
 };
+
+const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+  return(
+    <>
+    {
+      opened && <CreateMapModalBase opened={opened} onClose={onClose}/>
+    }
+    </>
+  )
+}
 
 export default CreateMapModal;
