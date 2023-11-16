@@ -18,6 +18,7 @@ interface CreateMapModalProps {
   onClose: () => void;
 }
 
+// The base create map modal with all the logic
 const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   const navigate = useNavigate();
 
@@ -207,6 +208,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
   );
 };
 
+// wrap it in a conditional loading
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   return(
     <>

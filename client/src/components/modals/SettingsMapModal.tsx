@@ -15,7 +15,7 @@ import { FileDropZone } from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
 import { useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
 
-
+// The base Settings modal with all the logic
 function SettingsMapModalBase(){
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
@@ -110,6 +110,8 @@ function SettingsMapModalBase(){
   );
 };
 
+
+// wrap it in a conditional loading 
 export function SettingsMapModal(){
   const editPageState = useEditContext();
   return(
