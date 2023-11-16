@@ -17,6 +17,7 @@ interface DuplicateMapModalProps {
   onClose: () => void;
 }
 
+// The base duplicate map modal with all the logic
 const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
   opened,
   onClose,
@@ -109,6 +110,7 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
   );
 };
 
+// wrap it in a conditional loading
 const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({
   opened,
   onClose,

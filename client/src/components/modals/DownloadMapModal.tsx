@@ -13,27 +13,25 @@ const DownloadMapModal: React.FC<DownloadMapModalProps> = ({
 }) => {
   return (
     <>
-      {opened && (
-        <Modal
-          id="download-modal"
-          opened={opened}
-          onClose={onClose}
-          title="Save As"
-          centered
-        >
-          <Group justify="space-between">
-            <Button variant="light" id="saveAsButton">
-              PNG
-            </Button>
-            <Button variant="light" id="saveAsButton">
-              JPG
-            </Button>
-            <Button variant="light" id="saveAsButton">
-              JSON
-            </Button>
-          </Group>
-        </Modal>
-      )}
+      <Modal
+        id="download-modal"
+        opened={opened}
+        onClose={onClose}
+        title="Save As"
+        centered
+      >
+        <Group justify="space-between">
+          <Button variant="light" id="saveAsButton">
+            PNG
+          </Button>
+          <Button variant="light" id="saveAsButton">
+            JPG
+          </Button>
+          <Button variant="light" id="saveAsButton">
+            JSON
+          </Button>
+        </Group>
+      </Modal>
     </>
   );
 };
