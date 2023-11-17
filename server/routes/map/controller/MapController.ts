@@ -74,10 +74,10 @@ const queryMaps = async (req: Request, res: Response) => {
   /** Now that we've gone through the different fields that you can search by,
    * ask mongodb for the results and filter out maps that the user can't recieve.
    * e.g if they're logged in but requests all private maps. in this case we'll only give them back what they own.
-   * 
-   * 
+   *
+   *
    * If we're here and all the fields are still empty (meaning that the request was sent with no query parameters)
-   * then FOR NOW we just return everything regardless who sent the request. 
+   * then FOR NOW we just return all public maps.
    */
   if (Object.keys(query).length > 0) {
     let result_maps = await mapModel.find(query);
@@ -90,7 +90,7 @@ const queryMaps = async (req: Request, res: Response) => {
 
     res.send(allowed_to_send_back);
   } else {
-    res.send(await mapModel.find({}));
+    res.send(await mapModel.find({ public: true }));
   }
 };
 
@@ -109,7 +109,9 @@ const getMap = async (req: Request, res: Response) => {};
  * @param res
  * @returns a map
  */
-const duplicateMap = async (req: Request, res: Response) => {};
+const duplicateMap = async (req: Request, res: Response) => {
+
+};
 
 /**
  * Adds a new map into the database
@@ -144,6 +146,47 @@ const updateMap = async (req: Request, res: Response) => {};
  * @param req request
  * @param res response
  */
-const deleteMap = async (req: Request, res: Response) => {};
+const deleteMap = async (req: Request, res: Response) => {
+  const mapModel = await getMapModel();
+
+  const map_id = req.params.id;
+
+  const token = req.headers.authorization;
+  
+  // CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER
+  console.log(token);
+  if (!token) {
+    return res.status(401).send("Error 401: Unauthorized");
+  }
+
+  // Verify the token
+  const tokenVerified = true;
+
+  // Get the user ID from the token
+  const tokenUserID = "652daf32e2225cdfeceea17f";
+  if (!tokenVerified) {
+    return res.status(401).send("Error 401: Unauthorized");
+  }
+  // CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER
+  
+
+
+  // Check if the map exists
+  const map = await mapModel.findById(map_id);
+  if (!map) {
+    return res.status(404).send("Error 404: Map not found");
+  }
+
+  // Check if the user is the owner of the map
+  if (map.creatorId.toString() !== tokenUserID) {
+    return res.status(401).send("Error 401: Unauthorized");
+  }
+
+  // Delete the map
+  await map.deleteOne();
+
+  // Return success
+  return res.status(204).send();
+};
 
 export { queryMaps, getMap, createMap, duplicateMap, updateMap, deleteMap };

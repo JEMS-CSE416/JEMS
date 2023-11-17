@@ -221,6 +221,6 @@ mapRouter.post("/duplicate", duplicateMap);
  */
 mapRouter.put("/", createMap);
 
-mapRouter.post("/:id", deleteMap);
+mapRouter.delete("/:id", deleteMap);
 
 export default mapRouter;
