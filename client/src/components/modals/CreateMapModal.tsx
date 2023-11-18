@@ -9,9 +9,10 @@ import {
   Group,
   Stack,
 } from "@mantine/core";
-import { FileDropZone } from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import FileDropZone from "../common/FileDropZone";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -20,6 +21,14 @@ interface CreateMapModalProps {
 
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   const navigate = useNavigate();
+  const [files, setFiles] = useState<File[]>([]);
+
+  const handleFilesDrop = (droppedFiles: File[]) => {
+    console.log(droppedFiles)
+    setFiles(droppedFiles);
+    form.setFieldValue("files", files);
+
+  };
 
   // Form state that we'll use as default values for now
   const form = useForm({
@@ -66,6 +75,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
       },
       visibility: "",
       template: "",
+      files: files,
     },
 
     validate: {
@@ -179,7 +189,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
               <Divider orientation="vertical" />
               <Box style={{ width: "55%" }}>
                 <Stack>
-                  <FileDropZone />
+                  <FileDropZone onFilesDrop={handleFilesDrop}/>
                   <Select
                     label="Template"
                     data={[

@@ -2,13 +2,25 @@ import { Group, Text, rem } from '@mantine/core';
 import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 
-export function FileDropZone(props: Partial<DropzoneProps>) {
+interface FileDropZoneProps {
+  onFilesDrop: (files: File[]) => void;
+}
+
+const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, ...props }) => {
+  const MAP_TYPES = {
+    'application/json': ['.json'],
+    'application/vnd.google-earth.kml+xml': ['.kml'],
+    'application/octet-stream': ['.shp', '.dbf'],
+    'application/zip': ['.zip'],
+  }
+
   return (
     <Dropzone
-      onDrop={(files) => console.log('accepted files', files)}
+      onDrop={(files) => onFilesDrop(files)}
       onReject={(files) => console.log('rejected files', files)}
       maxSize={3 * 1024 ** 2}
-      accept={IMAGE_MIME_TYPE}
+      accept={MAP_TYPES}
+      multiple={true}
       {...props}
     >
       <Group justify="center" gap="xs" mih={220} style={{ pointerEvents: 'none' }}>
@@ -43,3 +55,5 @@ export function FileDropZone(props: Partial<DropzoneProps>) {
     </Dropzone>
   );
 }
+
+export default FileDropZone;
