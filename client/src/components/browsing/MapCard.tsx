@@ -6,11 +6,12 @@ import { IconDots } from "@tabler/icons-react";
 
 type MapCardProps = {
   name?: string;
+  description?: string;
   isPrivate: boolean;
   id?: string;
 };
 
-const MapCard: React.FC<MapCardProps> = ({ name, isPrivate, id}) => {
+const MapCard: React.FC<MapCardProps> = ({ name, description,isPrivate, id}) => {
   return (
     <Card id={id} shadow="sm" padding="xl" radius="md" withBorder className="card">
       <Card.Section>
@@ -26,9 +27,8 @@ const MapCard: React.FC<MapCardProps> = ({ name, isPrivate, id}) => {
       <Text size="9px" ta="left">
         Luffy • Created 5 minutes ago
       </Text>
-      <Text size="10px" ta="left" id="mapDescription">
-        Nom nom nom good food yum this is a great description nom nom nomdfad
-        ....
+      <Text size="10px" ta="left" id="mapDescription" lineClamp={4}>
+        {description}
       </Text>
       <Group justify="space-between" mt="md" mb="xs">
         {isPrivate ? (

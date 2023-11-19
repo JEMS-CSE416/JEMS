@@ -7,9 +7,12 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import ellipses from "../../assets/images/ellipses.png";
+import { getMaps } from "../../api/MapApiAccessor";
+import { Map } from "../../utils/models/Map";
+
 
 const HomePage = () => {
-  const [maps, setMaps] = useState([]);
+  const [maps, setMaps] = useState<Map[]>([]);
 
   useEffect(() => {
     getPublicMaps();
@@ -17,31 +20,24 @@ const HomePage = () => {
 
   const getPublicMaps = async () => {
     try {
-      // Replace with your API endpoint
-      const apiUrl = "https://dev-jems-api.miguelmaramara.com/api/maps/?private=false";
-
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("Data updated successfully:", responseData);
-        setMaps(responseData);
-      } else {
-        console.error(
-          "Error updating data:",
-          response.status,
-          response.statusText
-        );
-      }
+      const responseData = await getMaps({isPrivate: false});
+      console.log("Data updated successfully:", responseData);
+      setMaps(responseData);
     } catch (error) {
       console.error("Error updating data:", error);
     }
   };
+
+  const getYourMaps = async () => {
+    try {
+      const responseData = await getMaps({});
+      console.log("Data updated successfully:", responseData);
+      setMaps(responseData);
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+  } 
+
 
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 
@@ -81,7 +77,7 @@ const HomePage = () => {
                 </Grid.Col>
                 <Grid.Col span={cardSpan}>
                   <Link to="/selected">
-                    <MapCard id="MyMapCard3" isPrivate={false} />
+                    <MapCard id="MyMapCard3" isPrivate={true} />
                   </Link>
                 </Grid.Col>
                 <Grid.Col span={cardSpan}>
@@ -112,13 +108,9 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                {
-                maps.map((map) => (
-                  // <Group className="border" justify="flex-start" grow>
-                  //   {maps}
-                  // </Group>
+                {maps.map((map) => (
                   <Grid.Col span={cardSpan}>
-                      <MapCard isPrivate={false} name={map["mapName"]}></MapCard>
+                    <MapCard isPrivate={!map.public} name={map["mapName"]} description={map.description}/>
                   </Grid.Col>
                 ))}
               </Grid>
