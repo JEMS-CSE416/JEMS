@@ -1,31 +1,29 @@
-import { Map, ErrorMap } from "../utils/models/Map"
-import { BACKEND_URL }from "../utils/constants"
+import { Map, ErrorMap } from "../utils/models/Map";
+import { BACKEND_URL } from "../utils/constants";
 
 const mapsUrl = BACKEND_URL + "/api/maps/";
 
-export async function getMap(
-  id: string
-) :Promise<Map> {
+export async function getMap(id: string): Promise<Map> {
   // TODO: replace this with an actual getMap endpoint
-  console.log("TODO: REMOVE PLACEHOLDER IN GETMAP", id)
+  console.log("TODO: REMOVE PLACEHOLDER IN GETMAP", id);
   return Promise.resolve(ErrorMap);
 }
 
-export async function getMaps (
-  mapName: string,
-  isPrivate: boolean,
-  creatorId: string
-): Promise<Map[]> {
-
-  // TODO: check type of creator_id
+interface MapQueryParams {
+  mapName?: string;
+  isPrivate?: boolean;
+  creatorId?: string;
+  session_token?: string;
+}
+export async function getMaps({mapName,isPrivate,creatorId, session_token}:MapQueryParams): Promise<Map[]> {
   try {
     const searchParams = {} as any;
 
-    searchParams.session_token = "TODO: DELETE THIS LINE"
-    if(mapName) searchParams.map_name = mapName;
-    if(isPrivate) searchParams.private = isPrivate;
-    if(creatorId) searchParams.creator_id = creatorId;
-
+    if (session_token) searchParams.session_token = session_token;
+    if (mapName) searchParams.map_name = mapName;
+    if (isPrivate) searchParams.private = isPrivate;
+    if (creatorId) searchParams.creator_id = creatorId;
+    
 
     // Replace with your API endpoint
     const response = await fetch(
@@ -50,5 +48,5 @@ export async function getMaps (
   } catch (error) {
     console.error("Error updating data:", error);
   }
-  return Promise.resolve([ErrorMap]);
+  return Promise.reject("Error fetching maps");
 }
