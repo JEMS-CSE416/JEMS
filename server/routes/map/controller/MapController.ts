@@ -14,6 +14,8 @@ async function getMapModel() {
   return model("Map", mapSchema);
 }
 
+function verifyToken(token: string) {}
+
 /**
  * Queries the database for matching query and returns a list.
  * @param req request
@@ -114,7 +116,21 @@ const getMap = async (req: Request, res: Response) => {};
  * @param res
  * @returns a map
  */
-const duplicateMap = async (req: Request, res: Response) => {};
+const duplicateMap = async (req: Request, res: Response) => {
+  // takes in map id, map name, and description, and session token
+
+  const mapModel = await getMapModel();
+  const map_id = req.body.map_id;
+  const map_name = req.body.map_name;
+  const description = req.body.description;
+  const token = req.headers.authorization;
+
+  
+  /* CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER */
+
+
+
+};
 
 /**
  * Adds a new map into the database
