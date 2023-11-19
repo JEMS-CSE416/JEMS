@@ -10,18 +10,19 @@ import ellipses from "../../assets/images/ellipses.png";
 import { getMaps } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
 
-
 const HomePage = () => {
   const [maps, setMaps] = useState<Map[]>([]);
+  const [yourMaps, setYourMaps] = useState<Map[]>([]);
 
   useEffect(() => {
     getPublicMaps();
+    getYourMaps();
   }, []);
 
   const getPublicMaps = async () => {
     try {
-      const responseData = await getMaps({isPrivate: false});
-      console.log("Data updated successfully:", responseData);
+      const responseData = await getMaps({ isPrivate: false });
+      console.log("Public Maps fetched successfully:", responseData);
       setMaps(responseData);
     } catch (error) {
       console.error("Error updating data:", error);
@@ -30,14 +31,16 @@ const HomePage = () => {
 
   const getYourMaps = async () => {
     try {
-      const responseData = await getMaps({});
-      console.log("Data updated successfully:", responseData);
-      setMaps(responseData);
+      const responseData = await getMaps({
+        session_token: "652daf32e2225cdfeceea14f",
+        creatorId: "652daf32e2225cdfeceea14f",
+      });
+      console.log("Your Maps fetched successfully:", responseData);
+      setYourMaps(responseData);
     } catch (error) {
       console.error("Error updating data:", error);
     }
-  } 
-
+  };
 
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 
@@ -65,26 +68,13 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard id="MyMapCard1" isPrivate={false} />
-                  </Link>
-                </Grid.Col>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard id="MyMapCard2" isPrivate={false} />
-                  </Link>
-                </Grid.Col>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard id="MyMapCard3" isPrivate={true} />
-                  </Link>
-                </Grid.Col>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard id="MyMapCard4" isPrivate={false} />
-                  </Link>
-                </Grid.Col>
+                {yourMaps.map((map) => (
+                  <Grid.Col span={cardSpan}>
+                    <Link to="/selected">
+                      <MapCard name={map.mapName} description={map.description} isPrivate={!map.public} />
+                    </Link>
+                  </Grid.Col>
+                ))}
               </Grid>
             </Stack>
           </Box>
@@ -110,7 +100,11 @@ const HomePage = () => {
               <Grid style={{ textAlign: "initial" }}>
                 {maps.map((map) => (
                   <Grid.Col span={cardSpan}>
-                    <MapCard isPrivate={!map.public} name={map["mapName"]} description={map.description}/>
+                    <MapCard
+                      isPrivate={!map.public}
+                      name={map["mapName"]}
+                      description={map.description}
+                    />
                   </Grid.Col>
                 ))}
               </Grid>

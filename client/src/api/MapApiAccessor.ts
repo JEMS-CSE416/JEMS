@@ -13,15 +13,17 @@ interface MapQueryParams {
   mapName?: string;
   isPrivate?: boolean;
   creatorId?: string;
+  session_token?: string;
 }
-export async function getMaps({mapName,isPrivate,creatorId}:MapQueryParams): Promise<Map[]> {
+export async function getMaps({mapName,isPrivate,creatorId, session_token}:MapQueryParams): Promise<Map[]> {
   try {
     const searchParams = {} as any;
 
-    searchParams.session_token = "TODO: DELETE THIS LINE";
+    if (session_token) searchParams.session_token = session_token;
     if (mapName) searchParams.map_name = mapName;
     if (isPrivate) searchParams.private = isPrivate;
     if (creatorId) searchParams.creator_id = creatorId;
+    
 
     // Replace with your API endpoint
     const response = await fetch(
