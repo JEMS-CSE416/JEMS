@@ -1,1 +1,1 @@
-export const BACKEND_URL = "http://143.198.28.153:3000"
+export const BACKEND_URL = "https://dev-jems-api.miguelmaramara.com";
