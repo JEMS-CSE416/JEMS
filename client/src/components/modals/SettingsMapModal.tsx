@@ -20,9 +20,9 @@ export function SettingsMapModal(){
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
 
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File>();
 
-  const handleFilesDrop = (droppedFiles: File[]) => {
+  const handleFilesDrop = (droppedFiles: File) => {
     setFiles(droppedFiles);
   };
 

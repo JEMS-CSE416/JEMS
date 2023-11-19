@@ -3,12 +3,13 @@ import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 
 interface FileDropZoneProps {
-  onFilesDrop: (files: File[]) => void;
+  onFilesDrop: (file: File) => void;
 }
 
 const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, ...props }) => {
   const MAP_TYPES = {
     'application/json': ['.json'],
+    'application/geo+json': ['.geojson'],
     'application/vnd.google-earth.kml+xml': ['.kml'],
     'application/octet-stream': ['.shp', '.dbf'],
     'application/zip': ['.zip'],
@@ -16,8 +17,8 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, ...props }) =>
 
   return (
     <Dropzone
-      onDrop={(files) => onFilesDrop(files)}
-      onReject={(files) => console.log('rejected files', files)}
+      onDrop={(file) => onFilesDrop(file[0])}
+      onReject={(file) => console.log('rejected file', file)}
       maxSize={3 * 1024 ** 2}
       accept={MAP_TYPES}
       multiple={true}
@@ -30,12 +31,6 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, ...props }) =>
             stroke={1.5}
           />
         </Dropzone.Accept>
-        <Dropzone.Reject>
-          <IconX
-            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
-            stroke={1.5}
-          />
-        </Dropzone.Reject>
         <Dropzone.Idle>
           <IconPhoto
             style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
@@ -45,10 +40,10 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, ...props }) =>
 
         <div>
           <Text size="xl" inline>
-            Drag images here or click to select files
+            Drag files here or click to select file
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
-            Attach as many files as you like, each file should not exceed 5mb
+            Attach a SHP/DBF file in a .zip. Files over 5mb are not supported. 
           </Text>
         </div>
       </Group>
