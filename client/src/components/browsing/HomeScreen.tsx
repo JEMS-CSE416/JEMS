@@ -18,7 +18,7 @@ const HomePage = () => {
   const getPublicMaps = async () => {
     try {
       // Replace with your API endpoint
-      const apiUrl = "http://143.198.28.153:3000/api/maps/?private=false";
+      const apiUrl = "https://dev-jems-api.miguelmaramara.com/api/maps/?private=false";
 
       const response = await fetch(apiUrl, {
         method: "GET",
