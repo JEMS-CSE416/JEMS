@@ -122,7 +122,7 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
     };
 
     // Replace with your API endpoint
-    const apiUrl = "http://143.198.28.153:3000/api/maps";
+    const apiUrl = "https://dev-jems-api.miguelmaramara.com/api/maps";
 
     await fetch(apiUrl, {
       method: "PUT",

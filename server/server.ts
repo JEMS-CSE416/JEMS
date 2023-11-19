@@ -1,9 +1,14 @@
 import express, {Request, Response} from "express"
 import app from './app'
+import * as fs from 'fs';
+import * as https from 'https'
 
 
-const port = 3000
+const port = 443
+var privateKey = fs.readFileSync( '/etc/letsencrypt/live/dev-jems-api.miguelmaramara.com/privkey.pem' );
+var certificate = fs.readFileSync( '/etc/letsencrypt/live/dev-jems-api.miguelmaramara.com/fullchain.pem' );
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+https.createServer({
+    key: privateKey,
+    cert: certificate
+}, app).listen(port);
