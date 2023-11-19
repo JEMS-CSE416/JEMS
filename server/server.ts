@@ -11,8 +11,3 @@ https.createServer({
     key: privateKey,
     cert: certificate
 }, app).listen(port);
-
-https.createServer
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
