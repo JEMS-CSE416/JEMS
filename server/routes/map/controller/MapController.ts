@@ -175,6 +175,7 @@ const deleteMap = async (req: Request, res: Response) => {
   /* CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER */
   if (!token) {
     return res.status(401).send("Error 401: Unauthorized");
+    
   }
 
   /* Verify the token */
