@@ -23,20 +23,18 @@ const MapHeader = () => {
   return (
     <>
       {/* Show download modal when needed */}
-      {downloadModalOpened && (
-        <DownloadMapModal
-          opened={downloadModalOpened}
-          onClose={setDownloadModal.close}
-        />
-      )}
+
+      <DownloadMapModal
+        opened={downloadModalOpened}
+        onClose={setDownloadModal.close}
+      />
 
       {/* Show duplicate modal when needed */}
-      {duplicateModalOpened && (
-        <DuplicateMapModal
-          opened={duplicateModalOpened}
-          onClose={setDuplicateModal.close}
-        />
-      )}
+
+      <DuplicateMapModal
+        opened={duplicateModalOpened}
+        onClose={setDuplicateModal.close}
+      />
 
       {/* Show delete modal when needed */}
       {deleteModalOpened && (

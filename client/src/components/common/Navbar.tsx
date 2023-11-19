@@ -25,7 +25,7 @@ import {
 } from "@tabler/icons-react";
 import { ReactNode, useState } from "react";
 
-interface NavbarProps{
+interface NavbarProps {
   modals: ReactNode;
   center_component: ReactNode;
   right_component: ReactNode;
@@ -35,8 +35,7 @@ interface NavbarProps{
  * Modularized Navbar that EditNavbar will cal in order to reuse the styling
  * elements of the original navbar
  */
-export function BaseNavbar(props: NavbarProps){
-
+export function BaseNavbar(props: NavbarProps) {
   // User that we get from the backend.
   // For now we'll pretend we have it hardcoded here
   const user = {
@@ -54,103 +53,123 @@ export function BaseNavbar(props: NavbarProps){
       {/* show modal if opened */}
       {props.modals}
       {/* This is the actual navbar */}
-        <Grid align="center">
-          {/* logo */}
-          <Grid.Col span="content">
-            <Box>
-              <Link to="/home">
-                <Image src={jemsLogo} id="jemsLogo" />
-              </Link>
-            </Box>
-          </Grid.Col>
+      <Grid align="center">
+        {/* logo */}
+        <Grid.Col span="content">
+          <Box>
+            <Link to="/home">
+              <Image src={jemsLogo} id="jemsLogo" />
+            </Link>
+          </Box>
+        </Grid.Col>
 
+        {/* Spacing componenet*/}
+        <Grid.Col span={2.5} />
 
-          {/* Spacing componenet*/}
-          <Grid.Col span={2.5}/>
+        {/* search bar  or center_component*/}
+        <Grid.Col span="auto">
+          <Box style={{ textAlign: "center" }}>{props.center_component}</Box>
+        </Grid.Col>
 
-          {/* search bar  or center_component*/}
-          <Grid.Col span="auto">
-            <Box style={{ textAlign: "center" }}>
-              {props.center_component}
-            </Box>
-          </Grid.Col>
+        {/* create map button  or right_component*/}
+        <Grid.Col span={2.5}>
+          <Box style={{ textAlign: "left" }}>{props.right_component}</Box>
+        </Grid.Col>
 
-          {/* create map button  or right_component*/}
-          <Grid.Col span={2.5}>
-            <Box style={{ textAlign: "left" }}>
-              {props.right_component}
-            </Box>
-          </Grid.Col>
-
-          {/* user profile */}
-          <Grid.Col span='content'>
-            <Box
-              id="user-profile"
-              style={{display: "flex", justifyContent: "flex-end", paddingRight: "20px"}}
-            >
-              <Menu>
-                <Menu.Target>
-                  <Avatar color="blue" radius="xl" className="cursor-pointer">
-                    {user.name.charAt(0)}
-                  </Avatar>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>
-                    <Text size="xl" lh="xl" c="#36454F">
-                      Hello, {user.name}
-                    </Text>
-                  </Menu.Label>
-                  <Menu.Divider />
-                  <Menu.Label>Account Management</Menu.Label>
-                  <Link to="/myMaps" className="text-no-underline">
-                    <Menu.Item
-                      leftSection={
-                        <IconMap style={{ width: rem(14), height: rem(14) }} />
-                      }
-                    >
-                      <Text>Your Maps</Text>
-                    </Menu.Item>
-                  </Link>
+        {/* user profile */}
+        <Grid.Col span="content">
+          <Box
+            id="user-profile"
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              paddingRight: "20px",
+            }}
+          >
+            <Menu>
+              <Menu.Target>
+                <Avatar color="blue" radius="xl" className="cursor-pointer">
+                  {user.name.charAt(0)}
+                </Avatar>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Label>
+                  <Text size="xl" lh="xl" c="#36454F">
+                    Hello, {user.name}
+                  </Text>
+                </Menu.Label>
+                <Menu.Divider />
+                <Menu.Label>Account Management</Menu.Label>
+                <Link to="/myMaps" className="text-no-underline">
                   <Menu.Item
                     leftSection={
-                      <IconLogout style={{ width: rem(14), height: rem(14) }} />
+                      <IconMap style={{ width: rem(14), height: rem(14) }} />
                     }
-                    onClick={handelLogOut}
                   >
-                    Logout
+                    <Text>Your Maps</Text>
                   </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            </Box>
-          </Grid.Col>
-        </Grid>
+                </Link>
+                <Menu.Item
+                  leftSection={
+                    <IconLogout style={{ width: rem(14), height: rem(14) }} />
+                  }
+                  onClick={handelLogOut}
+                >
+                  Logout
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Box>
+        </Grid.Col>
+      </Grid>
     </div>
   );
 }
 
+interface createMapProps {
+  opened: boolean
+  close: () => void
+}
+function CreateMapModalTest(props: createMapProps) {
+  
+  return(
+    <>
+    {
+      props.opened && <CreateMapModal opened={props.opened} onClose={props.close}/>
+    }
+    </>
+  )
+
+  /*
+
+   <>
+          {opened && <CreateMapModal opened={opened} onClose={close}/>}
+        </>
+
+  */
+}
 
 /*
  * This is the default Navbar for most pages.
  * It has calls the modularized BaseNavbar and inputs the data required for
  *  a generalized navbar
  */
-export default function NavBar(){
+export default function NavBar() {
   // This is the hook that controls the modal
   // Open is responsible for opening the modal
   // Close is responsible for closing the modal
   const [opened, { open, close }] = useDisclosure(false);
-
   return (
     <BaseNavbar
-      modals= {
-        /* This is the modal that will open when the user clicks on the create map*/
-        <CreateMapModal opened={opened} onClose={close}></CreateMapModal>
+      /* This is the modal that will open when the user clicks on the create map*/
+      modals={
+        <CreateMapModal opened={opened} onClose={close}/>
       }
-      center_component={<SearchBar/>}
-      right_component={<CreateMap open={open}/>}
+      center_component={<SearchBar />}
+      right_component={<CreateMap open={open} />}
     />
-  )
-};
+  );
+}
 
 function SearchBar() {
   // This is the hook that controls the search bar
@@ -181,18 +200,15 @@ function SearchBar() {
       onKeyDown={handleKeyPress}
       onChange={(e) => setSearch(e.target.value)}
     />
-  )
+  );
 }
 
-function CreateMap(props: any){
+function CreateMap(props: any) {
   return (
-    <Box
-      ta="right"
-    >
+    <Box ta="right">
       <Button radius="xl" id="createMapButton" onClick={props.open}>
         + Create Map
       </Button>
     </Box>
   );
 }
-
