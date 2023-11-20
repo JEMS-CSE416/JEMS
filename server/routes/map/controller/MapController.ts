@@ -106,7 +106,38 @@ const queryMaps = async (req: Request, res: Response) => {
  * @returns a map object
  * @returns error status code
  */
-const getMap = async (req: Request, res: Response) => {};
+const getMap = async (req: Request, res: Response) => {
+  /* Get collection of maps */
+  const mapModel = await getMapModel();
+  const map_id = req.params.id;
+  const token: string = req.query.session_token?.toString();
+  const creator_id: string = req.query.creator_id?.toString();
+  let tokenVerified = false;
+  let tokenUserID = "";
+
+  /* CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER */
+  if (!token) {
+    // TODO: Verify the token
+    tokenVerified = true;
+    if (!tokenVerified) {
+      return res
+        .status(401)
+        .send("Error 401: Unauthorized. Your token is invalid.");
+    }
+
+    /* Get the user ID from the token (this is the user that is logged in) */
+    // TODO: Get the user ID from the token. The token is the user ID for now
+    tokenUserID = token.split(" ")[1];
+  }
+
+  /* Check map exists */
+  const map = await mapModel.findById(map_id);
+  if(!map) {
+    return res.status(404).send("Error 404: Map not found");
+  }
+
+  return res.status(200).send(map);
+};
 
 /**
  * Duplicates an existing map into the database
