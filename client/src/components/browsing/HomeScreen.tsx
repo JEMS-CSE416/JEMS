@@ -68,10 +68,10 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                {yourMaps.map((map) => (
+                {yourMaps.map((map,i) => (
                   <Grid.Col span={cardSpan}>
                     <Link to="/selected">
-                      <MapCard name={map.mapName} description={map.description} isPrivate={!map.public} map={map} />
+                      <MapCard id={`MyMapCard${i+1}`} name={map.mapName} description={map.description} isPrivate={!map.public} map={map} />
                     </Link>
                   </Grid.Col>
                 ))}
