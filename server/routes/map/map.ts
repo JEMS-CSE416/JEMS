@@ -177,7 +177,7 @@ mapRouter.get("/", queryMaps);
 
 /**
  * @swagger
- * /api/maps/{id}:
+ * /api/maps/{id}/:
  *   get:
  *     summary: Gets a map
  *     tags: [Maps]
