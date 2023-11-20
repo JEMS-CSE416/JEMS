@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { connect, model } from "mongoose";
+import { connect, model, Types } from "mongoose";
 import { Map, mapSchema } from "./MapSchema";
 import { ObjectId } from "mongodb";
 import * as dotenv from "dotenv";
@@ -157,39 +157,49 @@ const duplicateMap = async (req: Request, res: Response) => {
     }
   }
 
-  let duplicateMap: { [key: string]: any } = {
-    _id: new ObjectId(),
+  const duplicateMap = {
+    ...map.toObject(),
     mapName: map_name,
     description: description,
     public: isPublic,
-    creatorId: new ObjectId(tokenUserID),
+    creatorId: new Types.ObjectId(tokenUserID),
     creationDate: new Date().toISOString(),
+    _id: new Types.ObjectId(),
   };
 
-  if (map.colorType) {
-    duplicateMap.colorType = map.colorType;
-  }
-  if (map.displayStrings) {
-    duplicateMap.displayStrings = map.displayStrings;
-  }
-  if (map.displayNumerics) {
-    duplicateMap.displayNumerics = map.displayNumerics;
-  }
-  if (map.displayLegend) {
-    duplicateMap.displayLegend = map.displayLegend;
-  }
-  if (map.displayPointers) {
-    duplicateMap.displayPointers = map.displayPointers;
-  }
-  if (map.thumbnail) {
-    duplicateMap.thumbnail = map.thumbnail;
-  }
-  if (map.regions) {
-    duplicateMap.regions = map.regions;
-  }
-  if (map.legend) {
-    duplicateMap.legend = map.legend;
-  }
+  // let duplicateMap: { [key: string]: any } = {
+  //   _id: new ObjectId(),
+  //   mapName: map_name,
+  //   description: description,
+  //   public: isPublic,
+  //   creatorId: new ObjectId(tokenUserID),
+  //   creationDate: new Date().toISOString(),
+  // };
+
+  // if (map.colorType) {
+  //   duplicateMap.colorType = map.colorType;
+  // }
+  // if (map.displayStrings) {
+  //   duplicateMap.displayStrings = map.displayStrings;
+  // }
+  // if (map.displayNumerics) {
+  //   duplicateMap.displayNumerics = map.displayNumerics;
+  // }
+  // if (map.displayLegend) {
+  //   duplicateMap.displayLegend = map.displayLegend;
+  // }
+  // if (map.displayPointers) {
+  //   duplicateMap.displayPointers = map.displayPointers;
+  // }
+  // if (map.thumbnail) {
+  //   duplicateMap.thumbnail = map.thumbnail;
+  // }
+  // if (map.regions) {
+  //   duplicateMap.regions = map.regions;
+  // }
+  // if (map.legend) {
+  //   duplicateMap.legend = map.legend;
+  // }
 
   /* Duplicate the map */
   const newMap = new mapModel(duplicateMap);
@@ -206,7 +216,7 @@ const duplicateMap = async (req: Request, res: Response) => {
  * @returns a map
  */
 const createMap = async (req: Request, res: Response) => {
-  console.log("inside create map")
+  console.log("inside create map");
   const MapModel = await getMapModel();
   const mapStr = req.body.map_file_content;
   console.log(mapStr);

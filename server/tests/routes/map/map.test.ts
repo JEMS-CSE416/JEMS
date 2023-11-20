@@ -177,6 +177,17 @@ describe("testing the api/map route", () => {
         expect(response.body).toHaveProperty("mapName");
         expect(response.body).toHaveProperty("description");
         expect(response.body).toHaveProperty("public");
+
+
+        // check response.body.creatorId == token
+        expect(response.body.creatorId).toEqual(token);
+        // check response.body.mapName == map_name
+        expect(response.body.mapName).toEqual(map_name);
+        // check response.body.description == description
+        expect(response.body.description).toEqual(description);
+        // check response.body.public == isPublic
+        expect(response.body.public).toEqual(false);
+
       });
 
       test("with an invalid map ID, it should return a specific error and return 400", async () => {
