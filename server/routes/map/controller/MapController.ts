@@ -120,6 +120,7 @@ const duplicateMap = async (req: Request, res: Response) => {
   const map_id = req.body.map_id;
   const map_name = req.body.map_name;
   const description = req.body.description;
+  const isPublic = req.body.public;
   const token = req.headers.authorization;
 
   /* CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER */
@@ -156,23 +157,42 @@ const duplicateMap = async (req: Request, res: Response) => {
     }
   }
 
-  /* Duplicate the map */
-  const newMap = new mapModel({
+  let duplicateMap: { [key: string]: any } = {
     _id: new ObjectId(),
     mapName: map_name,
     description: description,
-    public: false,
-    colorType: map.colorType,
-    creationDate: new Date().toISOString(),
-    displayStrings: map.displayStrings,
-    displayNumerics: map.displayNumerics,
-    displayLegend: map.displayLegend,
-    displayPointers: map.displayPointers,
-    thumbnail: map.thumbnail,
-    regions: map.regions,
-    legend: map.legend,
+    public: isPublic,
     creatorId: new ObjectId(tokenUserID),
-  });
+    creationDate: new Date().toISOString(),
+  };
+
+  if (map.colorType) {
+    duplicateMap.colorType = map.colorType;
+  }
+  if (map.displayStrings) {
+    duplicateMap.displayStrings = map.displayStrings;
+  }
+  if (map.displayNumerics) {
+    duplicateMap.displayNumerics = map.displayNumerics;
+  }
+  if (map.displayLegend) {
+    duplicateMap.displayLegend = map.displayLegend;
+  }
+  if (map.displayPointers) {
+    duplicateMap.displayPointers = map.displayPointers;
+  }
+  if (map.thumbnail) {
+    duplicateMap.thumbnail = map.thumbnail;
+  }
+  if (map.regions) {
+    duplicateMap.regions = map.regions;
+  }
+  if (map.legend) {
+    duplicateMap.legend = map.legend;
+  }
+
+  /* Duplicate the map */
+  const newMap = new mapModel(duplicateMap);
 
   await newMap.save();
 

@@ -39,8 +39,8 @@ export interface Map {
 
 // Schema
 const imageSchema = new Schema<Image>({
-    imageUrl: {type: String, required: true},
-    imageType: {type: String, required: true}
+    imageUrl: {type: String},
+    imageType: {type: String}
 })
 
 const regionSchema = new Schema<Region>({
@@ -64,12 +64,12 @@ export const mapSchema = new Schema<Map>({
     description: {type: String, required: true},
     creationDate: {type: Date, required: true},
     public: {type: Boolean, required: true},
-    colorType: {type: String, required: true},
-    displayStrings: {type: Boolean, required: true},
-    displayNumerics: {type: Boolean, required: true},
-    displayLegend: {type: Boolean, required: true},
-    displayPointers: {type: Boolean, required: true},
-    thumbnail: {type: imageSchema, required: true},
-    regions: {type: Map, of: [regionSchema], required: true},
-    legend: {type: legendSchema, required: true},
+    colorType: {type: String},
+    displayStrings: {type: Boolean},
+    displayNumerics: {type: Boolean},
+    displayLegend: {type: Boolean},
+    displayPointers: {type: Boolean},
+    thumbnail: {type: imageSchema},
+    regions: {type: Map, of: [regionSchema]},
+    legend: {type: legendSchema},
 });
