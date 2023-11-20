@@ -16,6 +16,7 @@ export default function Canvas() {
 
     for (const group in jemsJSON.regions) {
       const regionGroup = jemsJSON.regions[group];
+      console.log(regionGroup)
       regionGroup.forEach((region: any) => {
         const feature: any = {
           type: "Feature",
@@ -29,7 +30,7 @@ export default function Canvas() {
           },
           geometry: {
             type: "Polygon",
-            coordinates: [region.coordinate],
+            coordinates: [region.coordinates],
           },
         };
 
