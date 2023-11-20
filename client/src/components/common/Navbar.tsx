@@ -39,7 +39,7 @@ export function BaseNavbar(props: NavbarProps) {
   // User that we get from the backend.
   // For now we'll pretend we have it hardcoded here
   const user = {
-    name: "Michelle Man",
+    name: "Monkey D. Luffy",
     avatar: "https://avatars.githubusercontent.com/u/132554",
   };
 
@@ -124,29 +124,6 @@ export function BaseNavbar(props: NavbarProps) {
       </Grid>
     </div>
   );
-}
-
-interface createMapProps {
-  opened: boolean
-  close: () => void
-}
-function CreateMapModalTest(props: createMapProps) {
-  
-  return(
-    <>
-    {
-      props.opened && <CreateMapModal opened={props.opened} onClose={props.close}/>
-    }
-    </>
-  )
-
-  /*
-
-   <>
-          {opened && <CreateMapModal opened={opened} onClose={close}/>}
-        </>
-
-  */
 }
 
 /*

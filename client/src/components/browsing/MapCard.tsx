@@ -1,6 +1,6 @@
 import { Card, Image, Text, Badge, Group, Button, Menu } from "@mantine/core";
 import "./css/mapCard.css";
-import React, { ReactNode } from "react";
+import React from "react";
 import { IconDots } from "@tabler/icons-react";
 import { Map } from "../../utils/models/Map";
 

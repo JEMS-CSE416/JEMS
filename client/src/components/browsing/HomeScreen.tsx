@@ -1,12 +1,11 @@
 import "./css/homeScreen.css";
-import { Group, Text, Stack, Box, Button, Image, Grid } from "@mantine/core";
+import { Group, Text, Stack, Box, Grid } from "@mantine/core";
 import MapCard from "../browsing/MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
-import ellipses from "../../assets/images/ellipses.png";
 import { getMaps } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
 
