@@ -112,7 +112,6 @@ const getMap = async (req: Request, res: Response) => {
   const map_id = req.query.id?.toString();
   const token: string = req.query.session_token?.toString();
   const creator_id: string = req.query.creator_id?.toString();
-  const is_map_private: string = req.query.private?.toString();
   let tokenVerified = false;
   let tokenUserID = "";
 
