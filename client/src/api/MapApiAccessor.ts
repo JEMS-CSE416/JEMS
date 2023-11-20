@@ -1,7 +1,8 @@
 import { Map, ErrorMap } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
 
-const mapsUrl = BACKEND_URL + "/api/maps/";
+
+const mapsUrl = BACKEND_URL + "/api/maps/"
 
 export async function getMap(id: string): Promise<Map> {
   // TODO: replace this with an actual getMap endpoint
@@ -15,7 +16,14 @@ interface MapQueryParams {
   creatorId?: string;
   session_token?: string;
 }
-export async function getMaps({mapName,isPrivate,creatorId, session_token}:MapQueryParams): Promise<Map[]> {
+
+export async function getMaps({
+  mapName,
+  isPrivate,
+  creatorId,
+  session_token,
+}: MapQueryParams): Promise<Map[]> {
+
   try {
     const searchParams = {} as any;
 
@@ -23,11 +31,10 @@ export async function getMaps({mapName,isPrivate,creatorId, session_token}:MapQu
     if (mapName) searchParams.map_name = mapName;
     if (isPrivate) searchParams.private = isPrivate;
     if (creatorId) searchParams.creator_id = creatorId;
-    
 
     // Replace with your API endpoint
     const response = await fetch(
-      mapsUrl + "?" + new URLSearchParams(searchParams),
+      mapsUrl + "query/?" + new URLSearchParams(searchParams),
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -50,3 +57,4 @@ export async function getMaps({mapName,isPrivate,creatorId, session_token}:MapQu
   }
   return Promise.reject("Error fetching maps");
 }
+

@@ -71,7 +71,7 @@ const HomePage = () => {
                 {yourMaps.map((map) => (
                   <Grid.Col span={cardSpan}>
                     <Link to="/selected">
-                      <MapCard name={map.mapName} description={map.description} isPrivate={!map.public} />
+                      <MapCard name={map.mapName} description={map.description} isPrivate={!map.public} map={map} />
                     </Link>
                   </Grid.Col>
                 ))}
@@ -104,6 +104,7 @@ const HomePage = () => {
                       isPrivate={!map.public}
                       name={map["mapName"]}
                       description={map.description}
+                      map={map}
                     />
                   </Grid.Col>
                 ))}
