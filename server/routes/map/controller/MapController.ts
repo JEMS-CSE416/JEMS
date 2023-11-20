@@ -127,7 +127,7 @@ const getMap = async (req: Request, res: Response) => {
 
     /* Get the user ID from the token (this is the user that is logged in) */
     // TODO: Get the user ID from the token. The token is the user ID for now
-    tokenUserID = token.split(" ")[1];
+    tokenUserID = token;
   }
 
   /* Check map exists */

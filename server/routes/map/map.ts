@@ -177,7 +177,7 @@ mapRouter.get("/", queryMaps);
 
 /**
  * @swagger
- * /{id}:
+ * /api/maps/{id}:
  *   get:
  *     summary: Gets a map
  *     tags: [Maps]
@@ -195,15 +195,6 @@ mapRouter.get("/", queryMaps);
  *         name: session_token
  *         schema:
  *            type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: Object
- *             properties:
- *               map_file_content:
- *                 $ref: '#/components/schemas/Map'
  *     responses:
  *       200:
  *         description: the map was retrieved
