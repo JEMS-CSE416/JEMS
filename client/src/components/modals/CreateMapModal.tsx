@@ -1,10 +1,11 @@
-import { Divider, Modal, Button, Textarea, TextInput, Box, Select, Group, Stack } from "@mantine/core";
+import { Divider, Modal, Button, Textarea, TextInput, Box, Select, Group, Stack, Grid, Alert } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import FileDropZone from "../common/FileDropZone";
 import { geoJsonConvert, handleKml, handleZip } from "../../utils/geojson-convert";
 import { getFileType } from "../../utils/global_utils";
+import "./css/CreateMapModal.css";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -236,11 +237,23 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 
   // This function is used to display the file name after it's uploaded
   const previews = () => {
-    return (
-      <div>
-        {file && <p>Uploaded file: {file.name}</p>}
-      </div>
-    );
+    if(file) {
+      return (
+        <div>
+          <Alert
+            color="blue"
+            title="Uploaded File"
+            style={{ marginBottom: "10px" }}
+            withCloseButton
+            onClose={() => setFile(null)}
+            className="file-preview"
+          >
+            {file && <p>{file.name}</p>}
+          </Alert>
+          
+        </div>
+      );
+    }
   };
 
   return (
@@ -251,7 +264,57 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
       >
         <Box style={{ margin: "20px" }}>
           <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>
-            <Group>
+            <Grid gutter="xl">
+              <Grid.Col span={5}>
+                <TextInput
+                  label="Map Name"
+                  description="Enter a name to describe your map"
+                  placeholder="Map of Grand Line"
+                  style={{ width: "100%", marginBottom: "20px"}}
+                  data-autofocus
+                  withAsterisk 
+                  {...form.getInputProps("mapName")}
+                />
+                <Textarea
+                  label="Map Description"
+                  description="Enter a description to describe your map"
+                  placeholder="This is a map of the Grand Line"
+                  style={{ width: "100%", marginBottom: "20px"}}
+                  variant="filled"
+                  data-autofocus
+                  withAsterisk
+                  {...form.getInputProps("description")}
+                />
+                <Select
+                  label="Visibility"
+                  data={["Public", "Private"]}
+                  style={{ width: "100%", marginBottom: "20px"}}
+                  withAsterisk
+                  {...form.getInputProps("visibility")}
+                />
+              </Grid.Col>
+              <Grid.Col span={7}>
+                <FileDropZone onFilesDrop={handleFilesDrop}/>
+                <Stack justify="space-between">
+                  {previews()}
+                </Stack>
+                <Divider label="OR" labelPosition="center" style={{margin: "10px 0"}}/>
+                <Select
+                  label="Template"
+                  data={[
+                    "String Label Map",
+                    "Color Label Map",
+                    "Numeric Label",
+                    "Choropleth Map",
+                    "Pointer Label",
+                  ]}
+                  disabled={file ? true : false}
+                  style={{ width: "90%" }}
+                  {...form.getInputProps("template")}
+                />
+              </Grid.Col>
+            </Grid>
+            {/* <Group>
               <Box style={{ width: "40%" }}>
                 <Stack justify="flex-start">
                   <TextInput
@@ -304,9 +367,9 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                   />
                 </Stack>
               </Box>
-            </Group>
+            </Group> */}
 
-            <Group justify="flex-end" mt="md">
+            <Group justify="flex-end" mt="xl">
               <Button type="submit">Submit</Button>
             </Group>
           </form>
