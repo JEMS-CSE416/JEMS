@@ -1,4 +1,4 @@
-import { Divider, Modal, Button, Textarea, TextInput,Box,Select, Group, Stack} from "@mantine/core";
+import { Divider, Modal, Button, Textarea, TextInput, Box, Select, Group, Stack } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -104,34 +104,40 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 
   // This function gets the request body for GeoJSON
   function getGeoJsonRequest(geojson: any) {
-    // Create the request body
-    const req = {
-      map_file_content: {
-        creatorId: form.values.creatorId,
-        mapName: form.values.mapName,
-        description: form.values.description,
-        creationDate: new Date().toISOString(),
-        public: form.values.visibility === "Public" ? true : false,
-        template: form.values.template,
-        colorType: getColorType(form.values.template),
-        displayStrings: false,
-        displayNumerics: false,
-        displayLegend: false,
-        displayPointers: false,
-        thumbnail: {
-          imageUrl: "",
-          imageType: "",
-        },
-        regions: getRegions(geojson),
-        legend: {
-          colorLegend: {
+    if (file) {
+      const filename = file.name;
+      // Create the request body
+      const req = {
+        map_file_content: {
+          creatorId: form.values.creatorId,
+          mapName: form.values.mapName,
+          description: form.values.description,
+          creationDate: new Date().toISOString(),
+          public: form.values.visibility === "Public" ? true : false,
+          template: form.values.template,
+          colorType: getColorType(form.values.template),
+          displayStrings: false,
+          displayNumerics: false,
+          displayLegend: false,
+          displayPointers: false,
+          thumbnail: {
+            imageUrl: "",
+            imageType: "",
           },
-          choroplethLegend: {
+          regions: {
+            [filename]: getRegions(geojson),
+          },
+          legend: {
+            colorLegend: {
+            },
+            choroplethLegend: {
+            }
           }
-        }
-      },
-    };
-    return req;
+        },
+      };
+      console.log("req for geojson: ", req);
+      return req;
+    }
   }
 
   // Handle form submission and close the modal
@@ -300,23 +306,23 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
               </Box>
             </Group>
 
-          <Group justify="flex-end" mt="md">
-            <Button type="submit">Submit</Button>
-          </Group>
-        </form>
-      </Box>
-    </Modal>
+            <Group justify="flex-end" mt="md">
+              <Button type="submit">Submit</Button>
+            </Group>
+          </form>
+        </Box>
+      </Modal>
     </>
   );
 };
 
 // wrap it in a conditional loading
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
-  return(
+  return (
     <>
-    {
-      opened && <CreateMapModalBase opened={opened} onClose={onClose}/>
-    }
+      {
+        opened && <CreateMapModalBase opened={opened} onClose={onClose} />
+      }
     </>
   )
 }
