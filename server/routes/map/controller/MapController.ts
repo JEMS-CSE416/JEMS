@@ -112,6 +112,7 @@ const getMap = async (req: Request, res: Response) => {
   const map_id = req.query.id?.toString();
   const token: string = req.query.session_token?.toString();
   const creator_id: string = req.query.creator_id?.toString();
+  const is_map_private: string = req.query.private?.toString();
   let tokenVerified = false;
   let tokenUserID = "";
 
@@ -122,7 +123,7 @@ const getMap = async (req: Request, res: Response) => {
     if (!tokenVerified) {
       return res
         .status(401)
-        .send("Error 401: Unauthorized. Your token is invalid.");
+        .send("testError 401: Unauthorized. Your token is invalid.");
     }
 
     /* Get the user ID from the token (this is the user that is logged in) */
@@ -136,7 +137,23 @@ const getMap = async (req: Request, res: Response) => {
     return res.status(404).send("Error 404: Map not found");
   }
 
-  return res.status(200).send(map);
+  /* Check maps private status */
+  if (map.public == false) {
+    /* Private Map */
+    if (map.creatorId.toString() == tokenUserID) {
+      /* check if the user is authenticated */
+      return res.status(200).send(map);
+    }
+    return res
+      .status(401)
+      .send("Error 401: Unauthorized. Your token is invalid.");
+  } else if (map.public == true) {
+    /* Public Map */
+    return res.status(200).send(map);
+  } else {
+    /* Private status not specified*/
+    return res.status(400).send("Error 400: Bad Request. Private status not specified.");
+  }
 };
 
 /**

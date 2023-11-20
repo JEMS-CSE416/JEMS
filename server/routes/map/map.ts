@@ -195,6 +195,10 @@ mapRouter.get("/query", queryMaps);
  *         name: session_token
  *         schema:
  *            type: string
+*       - in: query
+ *         name: private
+ *         schema:
+ *            type: boolean
  *     responses:
  *       200:
  *         description: the map was retrieved
@@ -202,6 +206,12 @@ mapRouter.get("/query", queryMaps);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Map'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
  *
  *       401:
  *         description: Unauthorized
