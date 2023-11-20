@@ -1,19 +1,34 @@
 import { Card, Image, Text, Badge, Group, Button, Menu } from "@mantine/core";
 import "./css/mapCard.css";
-import ellipses from "../../assets/images/ellipses.png";
-import React, { ReactNode } from "react";
+import React from "react";
 import { IconDots } from "@tabler/icons-react";
+import { Map } from "../../utils/models/Map";
 
 type MapCardProps = {
   name?: string;
   description?: string;
-  isPrivate: boolean;
+  isPrivate?: boolean;
   id?: string;
+  map?: Map;
 };
 
-const MapCard: React.FC<MapCardProps> = ({ name, description,isPrivate, id}) => {
+const MapCard: React.FC<MapCardProps> = ({
+  name,
+  description,
+  isPrivate,
+  id,
+  map,
+}) => {
+
   return (
-    <Card id={id} shadow="sm" padding="xl" radius="md" withBorder className="card">
+    <Card
+      id={id}
+      shadow="sm"
+      padding="xl"
+      radius="md"
+      withBorder
+      className="card"
+    >
       <Card.Section>
         <Image
           src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"

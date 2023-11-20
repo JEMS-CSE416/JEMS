@@ -1,12 +1,11 @@
 import "./css/homeScreen.css";
-import { Group, Text, Stack, Box, Button, Image, Grid } from "@mantine/core";
+import { Group, Text, Stack, Box, Grid } from "@mantine/core";
 import MapCard from "../browsing/MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
-import ellipses from "../../assets/images/ellipses.png";
 import { getMaps } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
 
@@ -68,10 +67,10 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                {yourMaps.map((map) => (
+                {yourMaps.map((map,i) => (
                   <Grid.Col span={cardSpan}>
                     <Link to="/selected">
-                      <MapCard name={map.mapName} description={map.description} isPrivate={!map.public} />
+                      <MapCard id={`MyMapCard${i+1}`} name={map.mapName} description={map.description} isPrivate={!map.public} map={map} />
                     </Link>
                   </Grid.Col>
                 ))}
@@ -104,6 +103,7 @@ const HomePage = () => {
                       isPrivate={!map.public}
                       name={map["mapName"]}
                       description={map.description}
+                      map={map}
                     />
                   </Grid.Col>
                 ))}
