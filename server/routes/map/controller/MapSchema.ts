@@ -33,7 +33,7 @@ export interface Map {
   displayLegend: boolean;
   displayPointers: boolean;
   thumbnail: Image;
-  regions: { [key: string]: Types.Array<Region> };
+  regions: Array<Region>;
   legend: Legend;
 }
 
@@ -44,13 +44,13 @@ const imageSchema = new Schema<Image>({
 })
 
 const regionSchema = new Schema<Region>({
-    regionName: {type: String, required: true},
+    regionName: {type: String},
     coordinate: {type: [[Number]], required: true},
-    stringLabel: {type: String, required: true},
-    stringOffset:  {type: [Number], required: true},
-    numericLabel: {type: Number, required: true},
-    numericUnit: {type: String, required: true},
-    color: {type: String, required: true},
+    stringLabel: {type: String},
+    stringOffset:  {type: [Number]},
+    numericLabel: {type: Number},
+    numericUnit: {type: String},
+    color: {type: String},
 })
 
 const legendSchema = new Schema<Legend>({
@@ -70,6 +70,6 @@ export const mapSchema = new Schema<Map>({
     displayLegend: {type: Boolean},
     displayPointers: {type: Boolean},
     thumbnail: {type: imageSchema},
-    regions: {type: Map, of: [regionSchema]},
+    regions: {type: [regionSchema]},
     legend: {type: legendSchema},
 });

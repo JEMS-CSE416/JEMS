@@ -11,14 +11,21 @@ import {
   Image,
   AspectRatio,
 } from "@mantine/core";
-import { FileDropZone } from "../common/FileDropZone";
+import FileDropZone from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
 import { useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
+import { useState } from "react";
 
 // The base Settings modal with all the logic
 function SettingsMapModalBase(){
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+
+  const [files, setFiles] = useState<File>();
+
+  const handleFilesDrop = (droppedFiles: File) => {
+    setFiles(droppedFiles);
+  };
 
   // Form state that we'll use as default values for now
   const form = useForm({
@@ -88,7 +95,7 @@ function SettingsMapModalBase(){
               <Divider orientation="vertical" />
               <Box style={{ width: "55%" }}>
                 <Stack>
-                  <FileDropZone />
+                  <FileDropZone onFilesDrop={handleFilesDrop}/>
                     <AspectRatio ratio={20/9}>
                     <Image
                       src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"

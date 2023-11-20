@@ -25,4 +25,7 @@ yarn-error.log*
 # cypress
 cypress/screenshots/
 
+# sandbox
+sandbox/
+
 .fuse_hidden*

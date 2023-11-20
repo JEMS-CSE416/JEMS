@@ -206,8 +206,10 @@ const duplicateMap = async (req: Request, res: Response) => {
  * @returns a map
  */
 const createMap = async (req: Request, res: Response) => {
+  console.log("inside create map")
   const MapModel = await getMapModel();
   const mapStr = req.body.map_file_content;
+  console.log(mapStr);
   const map = new MapModel(mapStr);
   map
     .save()
