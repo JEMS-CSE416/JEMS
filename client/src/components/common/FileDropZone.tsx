@@ -1,6 +1,6 @@
 import { Group, Text, rem } from '@mantine/core';
-import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { IconUpload, IconPhoto } from '@tabler/icons-react';
+import { Dropzone } from '@mantine/dropzone';
 
 interface FileDropZoneProps {
   onFilesDrop: (file: File) => void;
