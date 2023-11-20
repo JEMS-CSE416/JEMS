@@ -1,43 +1,41 @@
 import "./css/homeScreen.css";
-import { Group, Text, Stack, Box, Button, Image, Grid } from "@mantine/core";
+import { Group, Text, Stack, Box, Grid } from "@mantine/core";
 import MapCard from "../browsing/MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
-import ellipses from "../../assets/images/ellipses.png";
+import { getMaps } from "../../api/MapApiAccessor";
+import { Map } from "../../utils/models/Map";
 
 const HomePage = () => {
-  const [maps, setMaps] = useState([]);
+  const [maps, setMaps] = useState<Map[]>([]);
+  const [yourMaps, setYourMaps] = useState<Map[]>([]);
 
   useEffect(() => {
     getPublicMaps();
+    getYourMaps();
   }, []);
 
   const getPublicMaps = async () => {
     try {
-      // Replace with your API endpoint
-      const apiUrl = "https://dev-jems-api.miguelmaramara.com/api/maps/?private=false";
+      const responseData = await getMaps({ isPrivate: false });
+      console.log("Public Maps fetched successfully:", responseData);
+      setMaps(responseData);
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+  };
 
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+  const getYourMaps = async () => {
+    try {
+      const responseData = await getMaps({
+        session_token: "652daf32e2225cdfeceea14f",
+        creatorId: "652daf32e2225cdfeceea14f",
       });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("Data updated successfully:", responseData);
-        setMaps(responseData);
-      } else {
-        console.error(
-          "Error updating data:",
-          response.status,
-          response.statusText
-        );
-      }
+      console.log("Your Maps fetched successfully:", responseData);
+      setYourMaps(responseData);
     } catch (error) {
       console.error("Error updating data:", error);
     }
@@ -69,26 +67,13 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard id="MyMapCard1" isPrivate={false} />
-                  </Link>
-                </Grid.Col>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard id="MyMapCard2" isPrivate={false} />
-                  </Link>
-                </Grid.Col>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard id="MyMapCard3" isPrivate={false} />
-                  </Link>
-                </Grid.Col>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard id="MyMapCard4" isPrivate={false} />
-                  </Link>
-                </Grid.Col>
+                {yourMaps.map((map,i) => (
+                  <Grid.Col span={cardSpan}>
+                    <Link to="/selected">
+                      <MapCard id={`MyMapCard${i+1}`} name={map.mapName} description={map.description} isPrivate={!map.public} map={map} />
+                    </Link>
+                  </Grid.Col>
+                ))}
               </Grid>
             </Stack>
           </Box>
@@ -112,13 +97,14 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                {
-                maps.map((map) => (
-                  // <Group className="border" justify="flex-start" grow>
-                  //   {maps}
-                  // </Group>
+                {maps.map((map) => (
                   <Grid.Col span={cardSpan}>
-                      <MapCard isPrivate={false} name={map["mapName"]}></MapCard>
+                    <MapCard
+                      isPrivate={!map.public}
+                      name={map["mapName"]}
+                      description={map.description}
+                      map={map}
+                    />
                   </Grid.Col>
                 ))}
               </Grid>

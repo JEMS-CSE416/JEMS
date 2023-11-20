@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { connect, model } from "mongoose";
+import { connect, model, Types } from "mongoose";
 import { Map, mapSchema } from "./MapSchema";
 import { ObjectId } from "mongodb";
 import * as dotenv from "dotenv";
@@ -145,7 +145,100 @@ const getMap = async (req: Request, res: Response) => {
  * @param res
  * @returns a map
  */
-const duplicateMap = async (req: Request, res: Response) => {};
+const duplicateMap = async (req: Request, res: Response) => {
+  // takes in map id, map name, and description, and session token
+  const mapModel = await getMapModel();
+  const map_id = req.body.map_id;
+  const map_name = req.body.map_name;
+  const description = req.body.description;
+  const isPublic = req.body.public;
+  const token = req.headers.authorization;
+
+  /* CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER */
+  if (!token) {
+    return res.status(401).send("Error 401: Unauthorized");
+  }
+
+  /* Verify the token */
+  const tokenVerified = true;
+  if (!tokenVerified) {
+    return res
+      .status(401)
+      .send("Error 401: Unauthorized. Your token is invalid.");
+  }
+
+  /* Get the user ID from the token (this is the user that is logged in) */
+  // TODO: Get the user ID from the token. The token is the user ID for now
+  const tokenUserID = token.split(" ")[1]; // we split token bc theres a bearer in front of it
+  // CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER
+
+  /* Check if the map exists */
+  const map = await mapModel.findById(map_id);
+  if (!map) {
+    return res.status(404).send("Error 404: Map not found");
+  }
+
+  /* Is this private map? If so can this user duplicate this map? */
+  if (!map.public) {
+    // check if this map belongs to this user.
+    if (map.creatorId.toString() !== tokenUserID) {
+      return res
+        .status(401)
+        .send("Error 401: Unauthorized. Not your map to duplicate.");
+    }
+  }
+
+  const duplicateMap = {
+    ...map.toObject(),
+    mapName: map_name,
+    description: description,
+    public: isPublic,
+    creatorId: new Types.ObjectId(tokenUserID),
+    creationDate: new Date().toISOString(),
+    _id: new Types.ObjectId(),
+  };
+
+  // let duplicateMap: { [key: string]: any } = {
+  //   _id: new ObjectId(),
+  //   mapName: map_name,
+  //   description: description,
+  //   public: isPublic,
+  //   creatorId: new ObjectId(tokenUserID),
+  //   creationDate: new Date().toISOString(),
+  // };
+
+  // if (map.colorType) {
+  //   duplicateMap.colorType = map.colorType;
+  // }
+  // if (map.displayStrings) {
+  //   duplicateMap.displayStrings = map.displayStrings;
+  // }
+  // if (map.displayNumerics) {
+  //   duplicateMap.displayNumerics = map.displayNumerics;
+  // }
+  // if (map.displayLegend) {
+  //   duplicateMap.displayLegend = map.displayLegend;
+  // }
+  // if (map.displayPointers) {
+  //   duplicateMap.displayPointers = map.displayPointers;
+  // }
+  // if (map.thumbnail) {
+  //   duplicateMap.thumbnail = map.thumbnail;
+  // }
+  // if (map.regions) {
+  //   duplicateMap.regions = map.regions;
+  // }
+  // if (map.legend) {
+  //   duplicateMap.legend = map.legend;
+  // }
+
+  /* Duplicate the map */
+  const newMap = new mapModel(duplicateMap);
+
+  await newMap.save();
+
+  return res.status(201).send(newMap);
+};
 
 /**
  * Adds a new map into the database
@@ -154,8 +247,10 @@ const duplicateMap = async (req: Request, res: Response) => {};
  * @returns a map
  */
 const createMap = async (req: Request, res: Response) => {
+  console.log("inside create map");
   const MapModel = await getMapModel();
   const mapStr = req.body.map_file_content;
+  console.log(req.body);
   const map = new MapModel(mapStr);
   map
     .save()

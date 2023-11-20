@@ -11,7 +11,8 @@ const app = express()
 app.use(cors())
 
 // Setup Map router
-app.use(express.json())
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 
 // Setup Map router
 app.use('/api/maps', mapRouter)

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useParams, useLocation} from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./css/searchedMapsScreen.css";
 import NavBar from "../common/Navbar";
@@ -7,7 +7,8 @@ import Footer from "../common/Footer";
 import { Box, Text, Group, Stack, Image } from "@mantine/core";
 import nothingHere from "../../assets/images/NothingHere.svg";
 import MapCard from "./MapCard";
-
+import { getMaps } from "../../api/MapApiAccessor";
+import { Map } from "../../utils/models/Map";
 const NothingHere = () => {
   return (
     <Stack align="center" id="nothingHereStack">
@@ -25,45 +26,25 @@ const NothingHere = () => {
 const SearchedMapsScreen = () => {
   const { search } = useParams();
   const location = useLocation();
-  const [maps, setMaps] = useState([]);
+  const [maps, setMaps] = useState<Map[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const queryForMaps = async () => {
       try {
-        const apiUrl =
-          "http://143.198.28.153:3000/api/maps/?" +
-          new URLSearchParams({
-            private: "false",
-            map_name: `${search}`, // there is a bug in the backend where it cannot handle spaces in the query string
-          });
-        console.log(apiUrl);
-        const response = await fetch(apiUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+        const responseData = await getMaps({
+          isPrivate: false,
+          mapName: `${search}`,
         });
-
-        if (response.ok) {
-          const responseData = await response.json();
-          console.log("maps fetched successfully:", responseData);
-          setMaps(responseData);
-        } else {
-          console.error(
-            "Error fetching data:",
-            response.status,
-            response.statusText
-          );
-        }
+        console.log("Maps searched successfully:", responseData);
+        setMaps(responseData);
       } catch (error) {
-        console.error("Error fetching maps:", error);
+        console.error("Error searching for maps:", error);
       }
     };
 
     queryForMaps();
   }, [search, location.state]);
-
 
   if (!search) {
     navigate("/");
