@@ -219,7 +219,7 @@ const createMap = async (req: Request, res: Response) => {
   console.log("inside create map");
   const MapModel = await getMapModel();
   const mapStr = req.body.map_file_content;
-  console.log(mapStr);
+  console.log(req.body);
   const map = new MapModel(mapStr);
   map
     .save()
