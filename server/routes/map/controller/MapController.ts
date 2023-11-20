@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { connect, model } from "mongoose";
+import { connect, model, Types } from "mongoose";
 import { Map, mapSchema } from "./MapSchema";
 import { ObjectId } from "mongodb";
 import * as dotenv from "dotenv";
@@ -106,7 +106,54 @@ const queryMaps = async (req: Request, res: Response) => {
  * @returns a map object
  * @returns error status code
  */
-const getMap = async (req: Request, res: Response) => {};
+const getMap = async (req: Request, res: Response) => {
+  /* Get collection of maps */
+  const mapModel = await getMapModel();
+  const map_id = req.query.id?.toString();
+  const token: string = req.query.session_token?.toString();
+  const creator_id: string = req.query.creator_id?.toString();
+  let tokenVerified = false;
+  let tokenUserID = "";
+
+  /* CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER */
+  if (!token) {
+    // TODO: Verify the token
+    tokenVerified = true;
+    if (!tokenVerified) {
+      return res
+        .status(401)
+        .send("testError 401: Unauthorized. Your token is invalid.");
+    }
+
+    /* Get the user ID from the token (this is the user that is logged in) */
+    // TODO: Get the user ID from the token. The token is the user ID for now
+    tokenUserID = token;
+  }
+
+  /* Check map exists */
+  const map = await mapModel.findById(map_id);
+  if(!map) {
+    return res.status(404).send("Error 404: Map not found");
+  }
+
+  /* Check maps private status */
+  if (map.public == false) {
+    /* Private Map */
+    if (map.creatorId.toString() == tokenUserID) {
+      /* check if the user is authenticated */
+      return res.status(200).send(map);
+    }
+    return res
+      .status(401)
+      .send("Error 401: Unauthorized. Your token is invalid.");
+  } else if (map.public == true) {
+    /* Public Map */
+    return res.status(200).send(map);
+  } else {
+    /* Private status not specified*/
+    return res.status(400).send("Error 400: Bad Request. Private status not specified.");
+  }
+};
 
 /**
  * Duplicates an existing map into the database
@@ -157,39 +204,49 @@ const duplicateMap = async (req: Request, res: Response) => {
     }
   }
 
-  let duplicateMap: { [key: string]: any } = {
-    _id: new ObjectId(),
+  const duplicateMap = {
+    ...map.toObject(),
     mapName: map_name,
     description: description,
     public: isPublic,
-    creatorId: new ObjectId(tokenUserID),
+    creatorId: new Types.ObjectId(tokenUserID),
     creationDate: new Date().toISOString(),
+    _id: new Types.ObjectId(),
   };
 
-  if (map.colorType) {
-    duplicateMap.colorType = map.colorType;
-  }
-  if (map.displayStrings) {
-    duplicateMap.displayStrings = map.displayStrings;
-  }
-  if (map.displayNumerics) {
-    duplicateMap.displayNumerics = map.displayNumerics;
-  }
-  if (map.displayLegend) {
-    duplicateMap.displayLegend = map.displayLegend;
-  }
-  if (map.displayPointers) {
-    duplicateMap.displayPointers = map.displayPointers;
-  }
-  if (map.thumbnail) {
-    duplicateMap.thumbnail = map.thumbnail;
-  }
-  if (map.regions) {
-    duplicateMap.regions = map.regions;
-  }
-  if (map.legend) {
-    duplicateMap.legend = map.legend;
-  }
+  // let duplicateMap: { [key: string]: any } = {
+  //   _id: new ObjectId(),
+  //   mapName: map_name,
+  //   description: description,
+  //   public: isPublic,
+  //   creatorId: new ObjectId(tokenUserID),
+  //   creationDate: new Date().toISOString(),
+  // };
+
+  // if (map.colorType) {
+  //   duplicateMap.colorType = map.colorType;
+  // }
+  // if (map.displayStrings) {
+  //   duplicateMap.displayStrings = map.displayStrings;
+  // }
+  // if (map.displayNumerics) {
+  //   duplicateMap.displayNumerics = map.displayNumerics;
+  // }
+  // if (map.displayLegend) {
+  //   duplicateMap.displayLegend = map.displayLegend;
+  // }
+  // if (map.displayPointers) {
+  //   duplicateMap.displayPointers = map.displayPointers;
+  // }
+  // if (map.thumbnail) {
+  //   duplicateMap.thumbnail = map.thumbnail;
+  // }
+  // if (map.regions) {
+  //   duplicateMap.regions = map.regions;
+  // }
+  // if (map.legend) {
+  //   duplicateMap.legend = map.legend;
+  // }
 
   /* Duplicate the map */
   const newMap = new mapModel(duplicateMap);
@@ -206,7 +263,7 @@ const duplicateMap = async (req: Request, res: Response) => {
  * @returns a map
  */
 const createMap = async (req: Request, res: Response) => {
-  console.log("inside create map")
+  console.log("inside create map");
   const MapModel = await getMapModel();
   const mapStr = req.body.map_file_content;
   console.log(req.body);
