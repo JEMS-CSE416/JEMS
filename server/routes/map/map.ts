@@ -173,11 +173,11 @@ const mapRouter = Router();
  *               type: string
  *
  */
-mapRouter.get("/", queryMaps);
+mapRouter.get("/query", queryMaps);
 
-mapRouter.get("/:id", getMap);
+mapRouter.get("/get/:id", getMap);
 
-mapRouter.post("/:id", updateMap);
+mapRouter.post("/update/:id", updateMap);
 
 mapRouter.post("/duplicate", duplicateMap);
 
@@ -221,6 +221,6 @@ mapRouter.post("/duplicate", duplicateMap);
  */
 mapRouter.put("/", createMap);
 
-mapRouter.post("/:id", deleteMap);
+mapRouter.delete("/:id", deleteMap);
 
 export default mapRouter;

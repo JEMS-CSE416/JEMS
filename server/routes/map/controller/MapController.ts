@@ -26,32 +26,37 @@ const queryMaps = async (req: Request, res: Response) => {
   const map_name: string = req.query.map_name?.toString();
   const map_private: string = req.query.private?.toString();
   const creator_id: string = req.query.creator_id?.toString();
-  const session_token: string = req.query.session_token?.toString();
+  const token: string = req.query.session_token?.toString(); // TODO: session token should be in the header not the query
 
-  let loggedIn_user: string;
-  let authed = false;
+  let tokenVerified = false;
+  let tokenUserID = "";
   let query: { [key: string]: any } = {};
 
-  /* first check if requiest has session token */
-  if (session_token) {
-    // if session token is provided
-    // do some auth here
-    if (session_token !== null) {
-      // check for auth here this is temporary. we'll use the user id for now
-      authed = true;
-      loggedIn_user = session_token;
+  /* Does the request have a token? */
+  if (token) {
+    // TODO: Verify the token
+    tokenVerified = true;
+    if (!tokenVerified) {
+      return res
+        .status(401)
+        .send("Error 401: Unauthorized. Your token is invalid.");
     }
+
+    /* Get the user ID from the token (this is the user that is logged in) */
+    // TODO: Get the user ID from the token. The token is the user ID for now
+    tokenUserID = token;
   }
 
   /* does the request want private maps too? */
   if (map_private == "true") {
-    // if the request is authorized then proceed to add private maps into the search
-    // otherwise send back 401 because request is not authrized to find maps without logging in.
-    if (authed) {
-      query.public = false;
-    } else {
-      return res.status(401).send("Error 401: Unauthorized");
+    // want private maps
+    if (!tokenVerified) {
+      // check if the user is authenticated
+      return res
+        .status(401)
+        .send("Error 401: Unauthorized. Your token is invalid.");
     }
+    query.public = false;
   } else if (map_private == "false") {
     // want public maps
     query.public = true;
@@ -62,7 +67,7 @@ const queryMaps = async (req: Request, res: Response) => {
     query.mapName = map_name;
   }
 
-  /* does the requestr want to search by creator id as well? */
+  /* does the request want to search by creator id as well? */
   if (creator_id) {
     // first check if the creator id is even valid
     if (ObjectId.isValid(creator_id)) {
@@ -74,23 +79,23 @@ const queryMaps = async (req: Request, res: Response) => {
   /** Now that we've gone through the different fields that you can search by,
    * ask mongodb for the results and filter out maps that the user can't recieve.
    * e.g if they're logged in but requests all private maps. in this case we'll only give them back what they own.
-   * 
-   * 
+   *
+   *
    * If we're here and all the fields are still empty (meaning that the request was sent with no query parameters)
-   * then FOR NOW we just return everything regardless who sent the request. 
+   * then FOR NOW we just return all public maps.
    */
   if (Object.keys(query).length > 0) {
     let result_maps = await mapModel.find(query);
 
     let allowed_to_send_back = result_maps.filter((map: Map) =>
-      map.public || (authed && map.creatorId.toString() === loggedIn_user)
+      map.public || (tokenVerified && map.creatorId.toString() === tokenUserID)
         ? true
         : false
     );
 
     res.send(allowed_to_send_back);
   } else {
-    res.send(await mapModel.find({}));
+    res.send(await mapModel.find({ public: true }));
   }
 };
 
@@ -109,7 +114,90 @@ const getMap = async (req: Request, res: Response) => {};
  * @param res
  * @returns a map
  */
-const duplicateMap = async (req: Request, res: Response) => {};
+const duplicateMap = async (req: Request, res: Response) => {
+  // takes in map id, map name, and description, and session token
+  const mapModel = await getMapModel();
+  const map_id = req.body.map_id;
+  const map_name = req.body.map_name;
+  const description = req.body.description;
+  const isPublic = req.body.public;
+  const token = req.headers.authorization;
+
+  /* CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER */
+  if (!token) {
+    return res.status(401).send("Error 401: Unauthorized");
+  }
+
+  /* Verify the token */
+  const tokenVerified = true;
+  if (!tokenVerified) {
+    return res
+      .status(401)
+      .send("Error 401: Unauthorized. Your token is invalid.");
+  }
+
+  /* Get the user ID from the token (this is the user that is logged in) */
+  // TODO: Get the user ID from the token. The token is the user ID for now
+  const tokenUserID = token.split(" ")[1]; // we split token bc theres a bearer in front of it
+  // CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER
+
+  /* Check if the map exists */
+  const map = await mapModel.findById(map_id);
+  if (!map) {
+    return res.status(404).send("Error 404: Map not found");
+  }
+
+  /* Is this private map? If so can this user duplicate this map? */
+  if (!map.public) {
+    // check if this map belongs to this user.
+    if (map.creatorId.toString() !== tokenUserID) {
+      return res
+        .status(401)
+        .send("Error 401: Unauthorized. Not your map to duplicate.");
+    }
+  }
+
+  let duplicateMap: { [key: string]: any } = {
+    _id: new ObjectId(),
+    mapName: map_name,
+    description: description,
+    public: isPublic,
+    creatorId: new ObjectId(tokenUserID),
+    creationDate: new Date().toISOString(),
+  };
+
+  if (map.colorType) {
+    duplicateMap.colorType = map.colorType;
+  }
+  if (map.displayStrings) {
+    duplicateMap.displayStrings = map.displayStrings;
+  }
+  if (map.displayNumerics) {
+    duplicateMap.displayNumerics = map.displayNumerics;
+  }
+  if (map.displayLegend) {
+    duplicateMap.displayLegend = map.displayLegend;
+  }
+  if (map.displayPointers) {
+    duplicateMap.displayPointers = map.displayPointers;
+  }
+  if (map.thumbnail) {
+    duplicateMap.thumbnail = map.thumbnail;
+  }
+  if (map.regions) {
+    duplicateMap.regions = map.regions;
+  }
+  if (map.legend) {
+    duplicateMap.legend = map.legend;
+  }
+
+  /* Duplicate the map */
+  const newMap = new mapModel(duplicateMap);
+
+  await newMap.save();
+
+  return res.status(201).send(newMap);
+};
 
 /**
  * Adds a new map into the database
@@ -146,6 +234,49 @@ const updateMap = async (req: Request, res: Response) => {};
  * @param req request
  * @param res response
  */
-const deleteMap = async (req: Request, res: Response) => {};
+const deleteMap = async (req: Request, res: Response) => {
+  const mapModel = await getMapModel();
+
+  const map_id = req.params.id;
+
+  const token = req.headers.authorization;
+
+  /* CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER */
+  if (!token) {
+    return res.status(401).send("Error 401: Unauthorized");
+  }
+
+  /* Verify the token */
+  const tokenVerified = true;
+  if (!tokenVerified) {
+    return res
+      .status(401)
+      .send("Error 401: Unauthorized. Your token is invalid.");
+  }
+
+  /* Get the user ID from the token (this is the user that is logged in) */
+  // TODO: Get the user ID from the token. The token is the user ID for now
+  const tokenUserID = token.split(" ")[1]; // we split token bc theres a bearer in front of it
+  // CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER
+
+  /* Check if the map exists */
+  const map = await mapModel.findById(map_id);
+  if (!map) {
+    return res.status(404).send("Error 404: Map not found");
+  }
+
+  /* Check if the user is the owner of the map */
+  if (map.creatorId.toString() !== tokenUserID) {
+    return res
+      .status(401)
+      .send("Error 401: Unauthorized. You do not own this map.");
+  }
+
+  /* Delete the map */
+  await map.deleteOne();
+
+  /* Return success */
+  return res.status(204).send();
+};
 
 export { queryMaps, getMap, createMap, duplicateMap, updateMap, deleteMap };

@@ -11,7 +11,8 @@ interface CreateMapModalProps {
   onClose: () => void;
 }
 
-const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+// The base create map modal with all the logic
+const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
 
@@ -299,14 +300,25 @@ const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
               </Box>
             </Group>
 
-            <Group justify="flex-end" mt="md">
-              <Button type="submit">Submit</Button>
-            </Group>
-          </form>
-        </Box>
-      </Modal>
+          <Group justify="flex-end" mt="md">
+            <Button type="submit">Submit</Button>
+          </Group>
+        </form>
+      </Box>
+    </Modal>
     </>
   );
 };
+
+// wrap it in a conditional loading
+const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+  return(
+    <>
+    {
+      opened && <CreateMapModalBase opened={opened} onClose={onClose}/>
+    }
+    </>
+  )
+}
 
 export default CreateMapModal;
