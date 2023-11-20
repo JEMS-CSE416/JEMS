@@ -175,7 +175,60 @@ const mapRouter = Router();
  */
 mapRouter.get("/query", queryMaps);
 
-mapRouter.get("/get/:id", getMap);
+/**
+ * @swagger
+ * /api/maps/{id}/:
+ *   get:
+ *     summary: Gets a map
+ *     tags: [Maps]
+ *     parameters:        
+ *       - in: query
+ *         name: id
+ *         type: integer
+ *         required: true
+ *         description: Numeric ID of the map to get.
+ *       - in: query
+ *         name: creator_id
+ *         schema: 
+ *            type: string
+ *       - in: query
+ *         name: session_token
+ *         schema:
+ *            type: string
+*       - in: query
+ *         name: private
+ *         schema:
+ *            type: boolean
+ *     responses:
+ *       200:
+ *         description: the map was retrieved
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Map'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ * 
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *
+ */
+mapRouter.get("/:id", getMap);
 
 mapRouter.post("/update/:id", updateMap);
 
