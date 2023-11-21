@@ -1,13 +1,33 @@
 import { Map, ErrorMap } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
 
+const mapsUrl = BACKEND_URL + "/api/maps/";
+const mapUrl = BACKEND_URL + "/api/maps/:id/";
 
-const mapsUrl = BACKEND_URL + "/api/maps/"
+interface GetMapParams {
+  id: string;
+  creatorId: string;
+}
 
-export async function getMap(id: string): Promise<Map> {
-  // TODO: replace this with an actual getMap endpoint
-  console.log("TODO: REMOVE PLACEHOLDER IN GETMAP", id);
-  return Promise.resolve(ErrorMap);
+/* Get a single map with the map with the map id */
+export async function getMap({ id, creatorId }: GetMapParams): Promise<Map> {
+  // TODO: Change creatorId with session_token when authentication is implemented
+  try {
+    const res = await fetch(mapUrl + "?id=" + id, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (res.ok) {
+      const resData = await res.json();
+      console.log("Data updated successfully:", resData);
+      return resData;
+    } else {
+      console.error("Error updating data:", res.status, res.statusText);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return Promise.reject("Error fetching maps");
 }
 
 interface MapQueryParams {
@@ -23,7 +43,6 @@ export async function getMaps({
   creatorId,
   session_token,
 }: MapQueryParams): Promise<Map[]> {
-
   try {
     const searchParams = {} as any;
 
@@ -57,4 +76,3 @@ export async function getMaps({
   }
   return Promise.reject("Error fetching maps");
 }
-
