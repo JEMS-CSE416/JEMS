@@ -14,7 +14,7 @@ import DuplicateMapModal from "../modals/DuplicateMapModal";
 const HomePage = () => {
   const [maps, setMaps] = useState<Map[]>([]);
   const [yourMaps, setYourMaps] = useState<Map[]>([]);
-
+  const [selectedMapToDuplicate, setSelectedMapToDuplicate] = useState<Map>();
   const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const HomePage = () => {
     try {
       const responseData = await getMaps({ isPrivate: false });
       console.log("Public Maps fetched successfully:", responseData);
-      setMaps(responseData.splice(0, 6));
+      setMaps(responseData.splice(0, 8));
     } catch (error) {
       console.error("Error updating data:", error);
     }
@@ -39,11 +39,17 @@ const HomePage = () => {
         creatorId: "652daf32e2225cdfeceea14f",
       });
       console.log("Your Maps fetched successfully:", responseData);
-      setYourMaps(responseData.splice(0, 6));
+      setYourMaps(responseData.splice(0, 8));
     } catch (error) {
       console.error("Error updating data:", error);
     }
   };
+
+  const handleSelectMapToDuplicate = (map:Map) => {
+    console.log("Selected map to duplicate:", map);
+    setSelectedMapToDuplicate(map);
+    setDuplicateModal.open();
+  }
 
 
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
@@ -53,6 +59,7 @@ const HomePage = () => {
       <DuplicateMapModal
         opened={duplicateModalOpened}
         onClose={setDuplicateModal.close}
+        map={selectedMapToDuplicate}
       />
       <NavBar></NavBar>
       <div id="content">
@@ -85,6 +92,7 @@ const HomePage = () => {
                         description={map.description}
                         isPrivate={!map.public}
                         map={map}
+                        duplicateAction={() => {handleSelectMapToDuplicate(map)}}
                       />
                     </Link>
                   </Grid.Col>
@@ -119,7 +127,7 @@ const HomePage = () => {
                       name={map["mapName"]}
                       description={map.description}
                       map={map}
-                      duplicateModalTrigger={setDuplicateModal}
+                      duplicateAction={() => {handleSelectMapToDuplicate(map)}}
                     />
                   </Grid.Col>
                 ))}

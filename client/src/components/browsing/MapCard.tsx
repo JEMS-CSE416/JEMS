@@ -12,11 +12,7 @@ type MapCardProps = {
   isPrivate?: boolean;
   id?: string;
   map?: Map;
-  duplicateModalTrigger?: {
-    readonly open: () => void;
-    readonly close: () => void;
-    readonly toggle: () => void;
-  };
+  duplicateAction?: () => void;
   downloadAs?: (format: "PNG" | "JPEG" | "JEMS") => void;
 };
 
@@ -26,12 +22,11 @@ const MapCard: React.FC<MapCardProps> = ({
   isPrivate,
   id,
   map,
-  duplicateModalTrigger,
+  duplicateAction,
   downloadAs,
 }) => {
-
   const navigate = useNavigate();
-  
+
   // splices the createdAt string to show how long ago was it made.
   // for example: 2023-10-16T21:46:26.858+00:00 -> Created 5 minutes ago
   function formatDate(dateString: string): string {
@@ -60,7 +55,7 @@ const MapCard: React.FC<MapCardProps> = ({
         {name}
       </Text>
       <Text size="9px" ta="left">
-        Luffy • {formatDate(map?.creationDate.toISOString() ?? "")}
+        Luffy • {formatDate(map?.creationDate ?? "")}
       </Text>
       <Text size="10px" ta="left" id="mapDescription" lineClamp={4}>
         {description}
@@ -85,11 +80,18 @@ const MapCard: React.FC<MapCardProps> = ({
             offset={4}
           >
             <Menu.Target>
-              <IconDots
-                height={20}
-                color="black"
-                style={{ cursor: "pointer" }}
-              />
+              <Button variant="subtle" size="compact-xs" onClick={
+                (e)=> {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+                }>
+                <IconDots
+                  height={20}
+                  color="black"
+                  style={{ cursor: "pointer" }}
+                />
+              </Button>
             </Menu.Target>
             <Menu.Dropdown>
               {/* <Menu.Label>Application</Menu.Label> */}
@@ -120,7 +122,7 @@ const MapCard: React.FC<MapCardProps> = ({
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
-                  duplicateModalTrigger?.open();
+                  duplicateAction?.();
                 }}
               >
                 Duplicate
