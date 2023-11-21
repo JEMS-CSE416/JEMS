@@ -1,14 +1,50 @@
 import "./css/myMaps.css";
 import { Text, Pagination, Stack, Box, Group, Grid } from "@mantine/core";
-import { Link } from "react-router-dom";
 import MapCard from "./MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
-const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
+import { useEffect, useState } from "react";
+import { Map } from "../../utils/models/Map";
+import { getMaps } from "../../api/MapApiAccessor";
+import { useDisclosure } from "@mantine/hooks";
+import DuplicateMapModal from "../modals/DuplicateMapModal";
 
+const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 function MyMaps() {
+  const [yourMaps, setYourMaps] = useState<Map[]>([]);
+  const [selectedMapToDuplicate, setSelectedMapToDuplicate] = useState<Map>();
+  const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
+  useEffect(() => {
+    // fetch maps data from backend
+    getYourMaps();
+  }, []);
+
+  const getYourMaps = async () => {
+    try {
+      const responseData = await getMaps({
+        session_token: "652daf32e2225cdfeceea14f",
+        creatorId: "652daf32e2225cdfeceea14f",
+      });
+      console.log("Your Maps fetched successfully:", responseData);
+      setYourMaps(responseData);
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+  };
+
+  const handleSelectMapToDuplicate = (map: Map) => {
+    console.log("Selected map to duplicate:", map);
+    setSelectedMapToDuplicate(map);
+    setDuplicateModal.open();
+  };
+
   return (
     <>
+      <DuplicateMapModal
+        opened={duplicateModalOpened}
+        onClose={setDuplicateModal.close}
+        map={selectedMapToDuplicate}
+      />
       <NavBar />
       <div id="content">
         <Stack>
@@ -26,41 +62,20 @@ function MyMaps() {
                 </Text>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard isPrivate={false}></MapCard>
-                  </Link>
-                </Grid.Col>
-
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard isPrivate={false}></MapCard>
-                  </Link>
-                </Grid.Col>
-
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard isPrivate={false}></MapCard>
-                  </Link>
-                </Grid.Col>
-
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard isPrivate={false}></MapCard>
-                  </Link>
-                </Grid.Col>
-
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard isPrivate={false}></MapCard>
-                  </Link>
-                </Grid.Col>
-
-                <Grid.Col span={cardSpan}>
-                  <Link to="/selected">
-                    <MapCard isPrivate={false}></MapCard>
-                  </Link>
-                </Grid.Col>
+                {yourMaps.map((map) => (
+                  <Grid.Col span={cardSpan}>
+                    <MapCard
+                      id={map._id}
+                      name={map.mapName}
+                      description={map.description}
+                      isPrivate={!map.public}
+                      map={map}
+                      duplicateAction={() => {
+                        handleSelectMapToDuplicate(map);
+                      }}
+                    />
+                  </Grid.Col>
+                ))}
               </Grid>
             </Stack>
           </Box>

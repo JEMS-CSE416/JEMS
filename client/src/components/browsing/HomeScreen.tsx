@@ -85,16 +85,14 @@ const HomePage = () => {
               <Grid style={{ textAlign: "initial" }}>
                 {yourMaps.map((map, i) => (
                   <Grid.Col span={cardSpan}>
-                    <Link to="/selected">
                       <MapCard
-                        id={`MyMapCard${i + 1}`}
+                        id={map._id}
                         name={map.mapName}
                         description={map.description}
                         isPrivate={!map.public}
                         map={map}
                         duplicateAction={() => {handleSelectMapToDuplicate(map)}}
                       />
-                    </Link>
                   </Grid.Col>
                 ))}
               </Grid>
@@ -123,6 +121,7 @@ const HomePage = () => {
                 {maps.map((map) => (
                   <Grid.Col span={cardSpan}>
                     <MapCard
+                      id={map._id}
                       isPrivate={!map.public}
                       name={map["mapName"]}
                       description={map.description}
