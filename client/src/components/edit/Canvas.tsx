@@ -5,6 +5,7 @@ import { useEditContext } from "../../context/EditContextProvider";
 
 export default function Canvas() {
   const editPageState = useEditContext();
+
   console.log(editPageState, "remove me");
 
   // Convert JEMS JSON to GeoJSON
@@ -60,7 +61,7 @@ export default function Canvas() {
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        <GeoJSON data={JSON.parse(convertedGeoJSON)} />
+        <GeoJSON key={convertedGeoJSON} data={JSON.parse(convertedGeoJSON)} />
         <Legend />
       </MapContainer>
     </>
