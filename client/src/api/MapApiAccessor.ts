@@ -77,7 +77,11 @@ export async function duplicateMap({
   try {
     const res = await fetch(mapsUrl + "duplicate", {
       method: "POST",
-      headers: {"Authorization": "Bearer " + creatorId},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + creatorId
+      },
+      body: JSON.stringify({ map_id: mapId }),
     });
     console.log(res);
   } catch (error) {

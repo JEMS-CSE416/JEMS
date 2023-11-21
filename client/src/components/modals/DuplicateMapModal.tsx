@@ -120,6 +120,8 @@ function callDuplicateMapApi(selectedMap: Map) {
   const mapId = selectedMap._id.toString();
   // TO-DO Replace creatorId with session token in the future
   const creatorId = selectedMap.creatorId.toString();
+  console.log(mapId);
+  console.log(creatorId);
   duplicateMap({mapId, creatorId});
 }
 
