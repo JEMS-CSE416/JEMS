@@ -11,6 +11,9 @@ import React from "react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { useSelectedMap } from "../selectedcard/SelectedCardPage";
+import { Map } from "../../utils/models/Map";
+import { duplicateMap } from "../../api/MapApiAccessor";
 
 interface DuplicateMapModalProps {
   opened: boolean;
@@ -22,6 +25,8 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
   opened,
   onClose,
 }) => {
+  const selectedMap = useSelectedMap();
+
   const form = useForm({
     initialValues: {
       mapName: "",
@@ -99,6 +104,7 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
                 id="duplicate-modal-submit-button"
                 type="submit"
                 style={{ marginLeft: "auto" }}
+                onClick={() => callDuplicateMapApi(selectedMap)}
               >
                 Make copy
               </Button>
@@ -109,6 +115,13 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
     </>
   );
 };
+
+function callDuplicateMapApi(selectedMap: Map) {
+  const mapId = selectedMap._id.toString();
+  // TO-DO Replace creatorId with session token in the future
+  const creatorId = selectedMap.creatorId.toString();
+  duplicateMap({mapId, creatorId});
+}
 
 // wrap it in a conditional loading
 const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({

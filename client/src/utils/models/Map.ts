@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 // Document interface
 export interface Image {
     imageUrl: string;
@@ -20,6 +22,7 @@ export interface Region {
 }
 
 export interface Map {
+  _id: Types.ObjectId;
   creatorId: string;
   mapName: string;
   description: string;
@@ -35,6 +38,7 @@ export interface Map {
 }
 
 export const ErrorMap = {
+    "_id": new Types.ObjectId("655accf2e56c41345c10d811"),
     "creatorId": "652daf32e2225cdfeceea17f",
     "mapName": "ERROR/TEST Map",
     "description": "This map is a testing map. See either in an error or in a testing/hard-coded version of code.",

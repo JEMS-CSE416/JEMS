@@ -1,12 +1,23 @@
 import { Map, ErrorMap } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
 
+const mapsUrl = BACKEND_URL + "/api/maps/";
 
-const mapsUrl = BACKEND_URL + "/api/maps/"
+interface GetMapParams {
+  mapId: string;
+  creatorId: string;
+}
 
-export async function getMap(id: string): Promise<Map> {
+export async function getMap({ mapId, creatorId }: GetMapParams): Promise<Map> {
+  try {
+    const res = await fetch(mapsUrl + mapId + "?creatorId=" + creatorId, {
+      method: "GET",
+    });
+  } catch (error) {
+    console.error("Error updating data:", error);
+  }
   // TODO: replace this with an actual getMap endpoint
-  console.log("TODO: REMOVE PLACEHOLDER IN GETMAP", id);
+  console.log("TODO: REMOVE PLACEHOLDER IN GETMAP", mapId);
   return Promise.resolve(ErrorMap);
 }
 
@@ -23,7 +34,6 @@ export async function getMaps({
   creatorId,
   session_token,
 }: MapQueryParams): Promise<Map[]> {
-
   try {
     const searchParams = {} as any;
 
@@ -52,9 +62,26 @@ export async function getMaps({
         response.statusText
       );
     }
+  } catch (error) {}
+  return Promise.reject("Error fetching maps");
+}
+interface duplicateMapParams {
+  mapId: string;
+  creatorId: string;
+}
+
+export async function duplicateMap({
+  mapId,
+  creatorId,
+}: duplicateMapParams): Promise<Map> {
+  try {
+    const res = await fetch(mapsUrl + "duplicate", {
+      method: "POST",
+      headers: {"Authorization": "Bearer " + creatorId},
+    });
+    console.log(res);
   } catch (error) {
     console.error("Error updating data:", error);
   }
-  return Promise.reject("Error fetching maps");
+  return Promise.reject("Error fetching maps in duplicateMap API Accessor");
 }
-
