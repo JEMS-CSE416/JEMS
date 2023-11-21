@@ -20,19 +20,20 @@ export interface Region {
 }
 
 export interface Map {
-  creatorId: string;
-  mapName: string;
-  description: string;
-  public: boolean;
-  colorType: string;
-  displayStrings: boolean;
-  displayNumerics: boolean;
-  displayLegend: boolean;
-  displayPointers: boolean;
-  thumbnail: Image;
-  regions: { [key: string]: Region[] };
-  legend: Legend;
-}
+    creatorId: string;
+    mapName: string;
+    description: string;
+    creationDate: Date;
+    public: boolean;
+    colorType: string;
+    displayStrings: boolean;
+    displayNumerics: boolean;
+    displayLegend: boolean;
+    displayPointers: boolean;
+    thumbnail: Image;
+    regions: { [key: string]: Region[] };
+    legend: Legend;
+  }
 
 export const ErrorMap = {
     "creatorId": "652daf32e2225cdfeceea17f",

@@ -22,6 +22,7 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/shapefile": "^0.6.1",
+    "date-fns": "^2.30.0",
     "geojson": "^0.5.0",
     "jszip": "^3.10.1",
     "leaflet": "^1.9.4",

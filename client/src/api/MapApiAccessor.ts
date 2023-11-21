@@ -7,7 +7,7 @@ const mapsUrl = BACKEND_URL + "/api/maps/"
 export async function getMap(id: string): Promise<Map> {
   // TODO: replace this with an actual getMap endpoint
   console.log("TODO: REMOVE PLACEHOLDER IN GETMAP", id);
-  return Promise.resolve(ErrorMap);
+  return Promise.reject("Error fetching map");
 }
 
 interface MapQueryParams {

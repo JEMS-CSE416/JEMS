@@ -8,10 +8,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { getMaps } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
+import { useDisclosure } from "@mantine/hooks";
+import DuplicateMapModal from "../modals/DuplicateMapModal";
 
 const HomePage = () => {
   const [maps, setMaps] = useState<Map[]>([]);
   const [yourMaps, setYourMaps] = useState<Map[]>([]);
+
+  const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
 
   useEffect(() => {
     getPublicMaps();
@@ -22,7 +26,7 @@ const HomePage = () => {
     try {
       const responseData = await getMaps({ isPrivate: false });
       console.log("Public Maps fetched successfully:", responseData);
-      setMaps(responseData);
+      setMaps(responseData.splice(0, 6));
     } catch (error) {
       console.error("Error updating data:", error);
     }
@@ -35,16 +39,21 @@ const HomePage = () => {
         creatorId: "652daf32e2225cdfeceea14f",
       });
       console.log("Your Maps fetched successfully:", responseData);
-      setYourMaps(responseData);
+      setYourMaps(responseData.splice(0, 6));
     } catch (error) {
       console.error("Error updating data:", error);
     }
   };
 
+
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 
   return (
     <>
+      <DuplicateMapModal
+        opened={duplicateModalOpened}
+        onClose={setDuplicateModal.close}
+      />
       <NavBar></NavBar>
       <div id="content">
         <Stack>
@@ -67,10 +76,16 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                {yourMaps.map((map,i) => (
+                {yourMaps.map((map, i) => (
                   <Grid.Col span={cardSpan}>
                     <Link to="/selected">
-                      <MapCard id={`MyMapCard${i+1}`} name={map.mapName} description={map.description} isPrivate={!map.public} map={map} />
+                      <MapCard
+                        id={`MyMapCard${i + 1}`}
+                        name={map.mapName}
+                        description={map.description}
+                        isPrivate={!map.public}
+                        map={map}
+                      />
                     </Link>
                   </Grid.Col>
                 ))}
@@ -104,6 +119,7 @@ const HomePage = () => {
                       name={map["mapName"]}
                       description={map.description}
                       map={map}
+                      duplicateModalTrigger={setDuplicateModal}
                     />
                   </Grid.Col>
                 ))}
