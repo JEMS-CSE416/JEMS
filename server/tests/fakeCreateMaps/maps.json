@@ -19,7 +19,7 @@
         "dummyGroup": [
           {
             "regionName": "dummyName",
-            "coordinate": [
+            "coordinates": [
               [0, 0],
               [1, 1]
             ],
@@ -63,7 +63,7 @@
         "anotherGroup": [
           {
             "regionName": "differentName",
-            "coordinate": [
+            "coordinates": [
               [1, 0],
               [2, 1]
             ],
@@ -107,7 +107,7 @@
         "regionGroup": [
           {
             "regionName": "Region Three",
-            "coordinate": [
+            "coordinates": [
               [5, 3],
               [8, 4]
             ],
@@ -151,7 +151,7 @@
         "someGroup": [
           {
             "regionName": "Some Region",
-            "coordinate": [
+            "coordinates": [
               [3, 4],
               [6, 7]
             ],
@@ -195,7 +195,7 @@
         "fourthGroup": [
           {
             "regionName": "Fourth Region",
-            "coordinate": [
+            "coordinates": [
               [7, 9],
               [10, 12]
             ],

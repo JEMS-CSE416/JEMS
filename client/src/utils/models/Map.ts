@@ -13,7 +13,7 @@ export interface Legend {
 
 export interface Region {
     regionName: string;
-    coordinate: Number[][]
+    coordinates: Number[][]
     stringLabel: string;
     stringOffset: Number[];
     numericLabel: Number;
@@ -56,7 +56,7 @@ export const ErrorMap = {
         "testGroup1": [
             {
                 "regionName": "dummyName1",
-                "coordinate": [
+                "coordinates": [
                     [
                         0,
                         0
@@ -77,7 +77,7 @@ export const ErrorMap = {
             },
             {
                 "regionName": "dummyName2",
-                "coordinate": [
+                "coordinates": [
                     [
                         0,
                         0
@@ -100,7 +100,7 @@ export const ErrorMap = {
         "testGroup2": [
             {
                 "regionName": "dummyName1",
-                "coordinate": [
+                "coordinates": [
                     [
                         0,
                         0
@@ -121,7 +121,7 @@ export const ErrorMap = {
             },
             {
                 "regionName": "dummyName2",
-                "coordinate": [
+                "coordinates": [
                     [
                         0,
                         0
