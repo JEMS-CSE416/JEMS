@@ -26,30 +26,30 @@
  *           type: string
  *         mapName:
  *           type: string
- *         description: 
+ *         description:
  *           type: string
- *         creationDate: 
+ *         creationDate:
  *           type: string
  *           format: date
- *         public: 
+ *         public:
  *           type: boolean
- *         colorType: 
+ *         colorType:
  *           type: string
- *         displayStrings: 
+ *         displayStrings:
  *           type: boolean
- *         displayNumerics: 
+ *         displayNumerics:
  *           type: boolean
- *         displayLegend: 
+ *         displayLegend:
  *           type: boolean
- *         displayPointers: 
+ *         displayPointers:
  *           type: boolean
- *         thumbnail: 
+ *         thumbnail:
  *           $ref: '#/components/schemas/Image'
  *         regions:
  *           type: array
  *           items:
  *             $ref: '#/components/schemas/Region'
- *         legend: 
+ *         legend:
  *           $ref: '#/components/schemas/Legend'
  *
  *     Legend:
@@ -78,7 +78,7 @@
  *           format: url
  *         imageType:
  *           type: string
- *         
+ *
  *     Region:
  *       type: object
  *       required:
@@ -142,13 +142,13 @@ const mapRouter = Router();
  *            type: boolean
  *       - in: query
  *         name: creator_id
- *         schema: 
+ *         schema:
  *            type: string
  *       - in: query
  *         name: session_token
  *         schema:
  *            type: string
- * 
+ *
  *     responses:
  *       200:
  *         description: List of maps
@@ -181,7 +181,7 @@ mapRouter.get("/query", queryMaps);
  *   get:
  *     summary: Gets a map
  *     tags: [Maps]
- *     parameters:        
+ *     parameters:
  *       - in: query
  *         name: id
  *         type: integer
@@ -189,13 +189,13 @@ mapRouter.get("/query", queryMaps);
  *         description: Numeric ID of the map to get.
  *       - in: query
  *         name: creator_id
- *         schema: 
+ *         schema:
  *            type: string
  *       - in: query
  *         name: session_token
  *         schema:
  *            type: string
-*       - in: query
+ *       - in: query
  *         name: private
  *         schema:
  *            type: boolean
@@ -219,7 +219,7 @@ mapRouter.get("/query", queryMaps);
  *           application/json:
  *             schema:
  *               type: string
- * 
+ *
  *       404:
  *         description: Not Found
  *         content:
@@ -232,8 +232,82 @@ mapRouter.get("/:id", getMap);
 
 mapRouter.post("/update/:id", updateMap);
 
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ * /api/maps/duplicate:
+ *   post:
+ *     summary: Duplicates a map
+ *     tags: [Maps]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               map_id:
+ *                 type: string
+ *               map_name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               public:
+ *                 type: boolean
+ *               colorType:
+ *                 type: string
+ *               displayStrings:
+ *                 type: boolean
+ *               displayNumerics:
+ *                 type: boolean
+ *               displayLegend:
+ *                 type: boolean
+ *               displayPointers:
+ *                 type: boolean
+ *               thumbnail:
+ *                 $ref: '#/components/schemas/Image'
+ *               legend:
+ *                 $ref: '#/components/schemas/Legend'
+ *
+ *               creator_id:
+ *                 type: string
+ *             required:
+ *               - map_id
+ *               - map_name
+ *               - description
+ *               - public
+ *     responses:
+ *       201:
+ *         description: the map was duplicated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Map'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ */
 mapRouter.post("/duplicate", duplicateMap);
-
 
 /**
  * @swagger
