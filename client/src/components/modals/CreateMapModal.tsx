@@ -50,17 +50,46 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 
   // This function parses and grabs regions properties from GeoJSON
   const getRegions = (geojson: any) => {
-    let regions = [];
+    let regions = [] as any[];
+    console.log("getregions input", geojson)
     if (geojson && geojson.features) {
-      regions = geojson.features.map((feature: any) => ({
-        regionName: feature.properties.name || feature.properties.NAME,
-        coordinates: feature.geometry.coordinates,
-        stringLabel: "",
-        stringOffset: [0],
-        numericLabel: 0,
-        numericUnit: "",
-        color: "",
-      }));
+      let counter = 0;
+
+      geojson.features.forEach((feature: any) => {
+        // switchcase that will convert different features in different ways
+        console.log("feature:", feature)
+        switch(feature.geometry.type){
+          case "Polygon":
+            regions.push ({
+                regionName: feature.properties.name || feature.properties.NAME,
+                coordinates: feature.geometry.coordinates[0],
+                stringLabel: "",
+                stringOffset: [0],
+                numericLabel: 0,
+                numericUnit: "",
+                color: "",
+              })
+            
+            break;
+          case "GeometryCollection":
+            feature.geometry.geometries.forEach((geometry: any) =>{
+              regions.push ({
+                  regionName: "untitled region " + counter++,
+                  coordinates: geometry.coordinates[0],
+                  stringLabel: "",
+                  stringOffset: [0],
+                  numericLabel: 0,
+                  numericUnit: "",
+                  color: "",
+                })
+              })
+            
+            break;
+          default:
+            console.log("unsupported type:", feature);
+        }
+
+        });
     }
     console.log("Regions", regions)
     return regions;
