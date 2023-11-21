@@ -55,7 +55,7 @@ const MapCard: React.FC<MapCardProps> = ({
         {name}
       </Text>
       <Text size="9px" ta="left">
-        Luffy • {formatDate(map?.creationDate ?? "")}
+        Luffy • {formatDate(map?.creationDate ?? "2023-11-20T02:57:13.344+00:00")}
       </Text>
       <Text size="10px" ta="left" id="mapDescription" lineClamp={4}>
         {description}
