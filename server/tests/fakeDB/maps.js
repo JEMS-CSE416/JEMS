@@ -20,7 +20,7 @@ module.exports = [
       regionA: [
         {
           regionName: "Region A",
-          coordinate: [
+          coordinates: [
             [10, 20],
             [30, 40],
             [50, 60],
@@ -33,7 +33,7 @@ module.exports = [
         },
         {
           regionName: "Region A-2",
-          coordinate: [
+          coordinates: [
             [15, 25],
             [35, 45],
             [55, 65],
@@ -48,7 +48,7 @@ module.exports = [
       regionB: [
         {
           regionName: "Region B",
-          coordinate: [
+          coordinates: [
             [100, 200],
             [300, 400],
             [500, 600],
@@ -93,7 +93,7 @@ module.exports = [
       regionA: [
         {
           regionName: "Region A",
-          coordinate: [
+          coordinates: [
             [10, 20],
             [30, 40],
             [50, 60],
@@ -106,7 +106,7 @@ module.exports = [
         },
         {
           regionName: "Region A-2",
-          coordinate: [
+          coordinates: [
             [15, 25],
             [35, 45],
             [55, 65],
@@ -121,7 +121,7 @@ module.exports = [
       regionB: [
         {
           regionName: "Region B",
-          coordinate: [
+          coordinates: [
             [100, 200],
             [300, 400],
             [500, 600],
@@ -166,7 +166,7 @@ module.exports = [
       regionA: [
         {
           regionName: "Region E",
-          coordinate: [
+          coordinates: [
             [210, 310],
             [410, 510],
             [610, 710],
@@ -179,7 +179,7 @@ module.exports = [
       regionB: [
         {
           regionName: "Region F",
-          coordinate: [
+          coordinates: [
             [220, 320],
             [420, 520],
             [620, 720],
@@ -217,7 +217,7 @@ module.exports = [
       regionA: [
         {
           regionName: "Region G",
-          coordinate: [
+          coordinates: [
             [310, 410],
             [510, 610],
             [710, 810],
@@ -230,7 +230,7 @@ module.exports = [
       regionB: [
         {
           regionName: "Region H",
-          coordinate: [
+          coordinates: [
             [320, 420],
             [520, 620],
             [720, 820],
@@ -267,7 +267,7 @@ module.exports = [
       regionA: [
         {
           regionName: "Region A",
-          coordinate: [
+          coordinates: [
             [10, 20],
             [30, 40],
             [50, 60],
@@ -280,7 +280,7 @@ module.exports = [
         },
         {
           regionName: "Region A-2",
-          coordinate: [
+          coordinates: [
             [15, 25],
             [35, 45],
             [55, 65],
@@ -295,7 +295,7 @@ module.exports = [
       regionB: [
         {
           regionName: "Region B",
-          coordinate: [
+          coordinates: [
             [100, 200],
             [300, 400],
             [500, 600],
