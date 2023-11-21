@@ -258,22 +258,23 @@ mapRouter.post("/update/:id", updateMap);
  *               description:
  *                 type: string
  *               public:
- *                 type: string
- *               creator_id:
- *                 type: string
+ *                 type: boolean
  *               colorType:
  *                 type: string
  *               displayStrings:
- *                 type: string
+ *                 type: boolean
  *               displayNumerics:
- *                 type: string
+ *                 type: boolean
  *               displayLegend:
- *                 type: string
+ *                 type: boolean
  *               displayPointers:
- *                 type: string
+ *                 type: boolean
  *               thumbnail:
- *                 type: string
+ *                 $ref: '#/components/schemas/Image'
  *               legend:
+ *                 $ref: '#/components/schemas/Legend'
+ *
+ *               creator_id:
  *                 type: string
  *             required:
  *               - map_id
