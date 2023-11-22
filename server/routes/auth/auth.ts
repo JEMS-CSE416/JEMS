@@ -7,7 +7,7 @@
  * components:
  *   schemas:
  *     Map:
- *       type: object
+ *       type: Object
  *       required:
  *         - email
  *         - displayName
@@ -55,7 +55,18 @@ const authRouter = Router();
  * 
  *     responses:
  *       200:
- *         description: Successfully logged in
+ *         description: Successfully signed up in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                 id:
+ *                   type: string
+ *                 displayName:
+ *                   type: string
  *          
  *       400:
  *         description: Bad Request
@@ -88,6 +99,17 @@ authRouter.put("/signup", signUp);
  *     responses:
  *       200:
  *         description: Successfully logged in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                 id:
+ *                   type: string
+ *                 displayName:
+ *                   type: string
  *          
  *       400:
  *         description: Bad Request

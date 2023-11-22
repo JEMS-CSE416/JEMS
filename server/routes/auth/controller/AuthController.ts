@@ -80,7 +80,11 @@ export const login = async (req: any, res: Response) => {
       if(err) return res.status(400).send("bad save")
 
       // return 200 status code
-      return res.status(200).send();
+      return res.status(200).json({
+        id: user._id,
+        displayName: user.displayName,
+        email: user.email
+      }).send();
     })
 
   })
