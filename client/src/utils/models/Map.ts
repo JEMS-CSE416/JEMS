@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 // Document interface
 export interface Image {
     imageUrl: string;

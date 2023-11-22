@@ -71,8 +71,41 @@ export async function getMaps({
         response.statusText
       );
     }
+  } catch (error) {}
+  return Promise.reject("Error fetching maps");
+}
+interface duplicateMapParams {
+  mapId: string;
+  mapName: string;
+  description: string;
+  isPublic: string;
+  creatorId: string;
+}
+
+export async function duplicateMap({
+  mapId,
+  mapName,
+  description,
+  isPublic,
+  creatorId,
+}: duplicateMapParams) {
+  try {
+    // TODO: replace with mapsurl when live server is up
+    const res = await fetch(mapsUrl + "duplicate/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + creatorId,
+      },
+      body: JSON.stringify({
+        map_id: mapId,
+        map_name: mapName,
+        description: description,
+        public: isPublic,
+      }),
+    });
+    console.log(res);
   } catch (error) {
     console.error("Error updating data:", error);
   }
-  return Promise.reject("Error fetching maps");
 }
