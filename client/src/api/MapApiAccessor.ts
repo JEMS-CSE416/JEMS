@@ -91,7 +91,7 @@ export async function duplicateMap({
 }: duplicateMapParams) {
   try {
     // TODO: replace with mapsurl when live server is up
-    const res = await fetch("http://localhost:443/api/maps/" + "duplicate/", {
+    const res = await fetch(mapsUrl + "duplicate/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
