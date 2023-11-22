@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import SplashScreen from "./components/common/SplashScreen";
 import HomeScreen from "./components/browsing/HomeScreen";
 import Discover from "./components/browsing/Discover";
@@ -19,7 +19,7 @@ function App() {
           <Route path="/myMaps" element={<MyMaps />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/edit/:id?" element={<Edit />} />
-          <Route path="/maps/search/:search?" element={<SearchedMaps/>} />
+          <Route path="/maps/search/:search?" element={<SearchedMaps />} />
         </Routes>
       </BrowserRouter>
     </div>

@@ -13,7 +13,7 @@ interface Legend {
 
 interface Region {
     regionName: string;
-    coordinate: Types.Array<Types.Array<Number>>;
+    coordinates: Types.Array<Types.Array<Number>>;
     stringLabel: string;
     stringOffset: Types.Array<Number>;
     numericLabel: Number;
@@ -33,7 +33,7 @@ export interface Map {
   displayLegend: boolean;
   displayPointers: boolean;
   thumbnail: Image;
-  regions: { [key: string]: Types.Array<Region> };
+  regions: { [key: string]: Region[] };
   legend: Legend;
 }
 
@@ -44,13 +44,13 @@ const imageSchema = new Schema<Image>({
 })
 
 const regionSchema = new Schema<Region>({
-    regionName: {type: String, required: true},
-    coordinate: {type: [[Number]], required: true},
-    stringLabel: {type: String, required: true},
-    stringOffset:  {type: [Number], required: true},
-    numericLabel: {type: Number, required: true},
-    numericUnit: {type: String, required: true},
-    color: {type: String, required: true},
+    regionName: {type: String},
+    coordinates: {type: [[Number]], required: true},
+    stringLabel: {type: String},
+    stringOffset:  {type: [Number]},
+    numericLabel: {type: Number},
+    numericUnit: {type: String},
+    color: {type: String},
 })
 
 const legendSchema = new Schema<Legend>({
@@ -70,6 +70,6 @@ export const mapSchema = new Schema<Map>({
     displayLegend: {type: Boolean},
     displayPointers: {type: Boolean},
     thumbnail: {type: imageSchema},
-    regions: {type: Map, of: [regionSchema]},
+    regions: {type: {}, of: [regionSchema]},
     legend: {type: legendSchema},
 });

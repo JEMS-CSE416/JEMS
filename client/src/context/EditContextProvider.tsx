@@ -16,7 +16,7 @@ interface EditContextProviderProps {
 
 interface EditPageState {
   map: Map;
-  selectedRegion ?: String;
+  selectedRegion?: String;
   modal: String
 }
 
@@ -36,7 +36,7 @@ const initState = {
 }
 
 export const EditContext = createContext<EditPageState>(initState);
-export const EditDispatchContext = createContext<React.Dispatch<Action>>(() => {});
+export const EditDispatchContext = createContext<React.Dispatch<Action>>(() => { });
 
 /*
  * EditContextProvider component.
@@ -52,17 +52,38 @@ export function EditContextProvider(props: EditContextProviderProps) {
   const [editPageState, dispatch] = useReducer(editReducer, initState);
 
   // initialize the map by pulling it from the backend
-  useEffect(
-    () => {
-      // TODO: replace with code to actually query the map
-      const newMap = ErrorMap;
-      newMap.mapName = "Title for a newly initialized Map"
+  useEffect(() => {
+    console.log("1--------------------")
+
+    fetchMap();
+  }, []);
+
+  console.log("2--------------------")
+
+  const fetchMap = async () => {
+    // Replace with your API endpoint and map ID
+    const apiUrl = "http://localhost:443/api/maps/{id}/?id=";
+    const mapId = props.map_id; 
+    console.log("3--------------------")
+    console.log(mapId)
+
+    try {
+      console.log(`fetching map for id: ${mapId}`);
+      const res = await fetch(`${apiUrl}${mapId}`);
+      console.log("4--------------------")
+      console.log(res.body)
+      if (!res.ok) {
+        throw new Error(res.statusText);
+      }
+      const newMap = await res.json();
       dispatch({
         type: "init_map",
         map: newMap
-      })
-    }, []
-  )
+      });
+    } catch (error) {
+      console.error("Error fetching map:", error);
+    }
+  };
 
 
   return (
@@ -76,8 +97,8 @@ export function EditContextProvider(props: EditContextProviderProps) {
 
 // TODO: change any action
 // This function handles all of the changes to the edit page state
-function editReducer(state: EditPageState, action: any): EditPageState{
-  switch (action.type){
+function editReducer(state: EditPageState, action: any): EditPageState {
+  switch (action.type) {
     case 'init_map':
       // Make sure you create a new state, rather than modify the old one
       // Creating new state ensures that componenents will re-render
@@ -95,10 +116,10 @@ function editReducer(state: EditPageState, action: any): EditPageState{
   return state;
 }
 
-export function useEditContext(){
+export function useEditContext() {
   return useContext(EditContext);
 }
 
-export function useEditDispatchContext(){
+export function useEditDispatchContext() {
   return useContext(EditDispatchContext);
 }

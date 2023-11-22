@@ -11,7 +11,7 @@ export interface Legend {
 
 export interface Region {
     regionName: string;
-    coordinate: Number[][]
+    coordinates: Number[][]
     stringLabel: string;
     stringOffset: Number[];
     numericLabel: Number;
@@ -20,23 +20,27 @@ export interface Region {
 }
 
 export interface Map {
-  creatorId: string;
-  mapName: string;
-  description: string;
-  public: boolean;
-  colorType: string;
-  displayStrings: boolean;
-  displayNumerics: boolean;
-  displayLegend: boolean;
-  displayPointers: boolean;
-  thumbnail: Image;
-  regions: { [key: string]: Region[] };
-  legend: Legend;
-}
+    _id: string;
+    creatorId: string;
+    mapName: string;
+    description: string;
+    creationDate: string;
+    public: boolean;
+    colorType: string;
+    displayStrings: boolean;
+    displayNumerics: boolean;
+    displayLegend: boolean;
+    displayPointers: boolean;
+    thumbnail: Image;
+    regions: { [key: string]: Region[] };
+    legend: Legend;
+  }
 
 export const ErrorMap = {
+    "_id": "ERROR/TEST Map",
     "creatorId": "652daf32e2225cdfeceea17f",
     "mapName": "ERROR/TEST Map",
+    "creationDate": "2021-04-01T00:00:00.000Z",
     "description": "This map is a testing map. See either in an error or in a testing/hard-coded version of code.",
     "public": true,
     "colorType": "Color",
@@ -52,7 +56,7 @@ export const ErrorMap = {
         "testGroup1": [
             {
                 "regionName": "dummyName1",
-                "coordinate": [
+                "coordinates": [
                     [
                         0,
                         0
@@ -73,7 +77,7 @@ export const ErrorMap = {
             },
             {
                 "regionName": "dummyName2",
-                "coordinate": [
+                "coordinates": [
                     [
                         0,
                         0
@@ -96,7 +100,7 @@ export const ErrorMap = {
         "testGroup2": [
             {
                 "regionName": "dummyName1",
-                "coordinate": [
+                "coordinates": [
                     [
                         0,
                         0
@@ -117,7 +121,7 @@ export const ErrorMap = {
             },
             {
                 "regionName": "dummyName2",
-                "coordinate": [
+                "coordinates": [
                     [
                         0,
                         0
