@@ -90,7 +90,7 @@ export async function duplicateMap({
       },
       body: JSON.stringify({
         map_id: mapId,
-        mapName: mapName,
+        map_name: mapName,
         description: description,
         public: isPublic,
       }),
