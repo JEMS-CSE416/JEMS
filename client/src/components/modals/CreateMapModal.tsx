@@ -6,6 +6,7 @@ import FileDropZone from "../common/FileDropZone";
 import { geoJsonConvert, handleKml, handleZip } from "../../utils/geojson-convert";
 import { getFileType } from "../../utils/global_utils";
 import "./css/CreateMapModal.css";
+import { BACKEND_URL } from "../../utils/constants";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -210,7 +211,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
     console.log(req);
 
     // Replace with your API endpoint
-    const apiUrl = "http://localhost:443/api/maps";
+    const apiUrl = BACKEND_URL+"/api/maps";
 
     await fetch(apiUrl, {
       method: "PUT",

@@ -1,17 +1,21 @@
 import "./css/homeScreen.css";
 import { Group, Text, Stack, Box, Grid } from "@mantine/core";
-import MapCard from "../browsing/MapCard";
+import MapCard from "./MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
-import { Link } from "react-router-dom";
+import { Link, Route } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getMaps } from "../../api/MapApiAccessor";
+import { getMap } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
+import SelectedCardPage from "../selectedcard/SelectedCardPage";
+import { map } from "cypress/types/bluebird";
 import { useDisclosure } from "@mantine/hooks";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
 
 const HomePage = () => {
+  const [map, setMap] = useState<Map>();
   const [maps, setMaps] = useState<Map[]>([]);
   const [yourMaps, setYourMaps] = useState<Map[]>([]);
   const [selectedMapToDuplicate, setSelectedMapToDuplicate] = useState<Map>();
@@ -22,6 +26,16 @@ const HomePage = () => {
     getYourMaps();
   }, []);
 
+  // Create a getMap function that takes in a mapId and returns the map object
+  const getMap = async () => {
+    try {
+      const res = await getMap()
+    }
+    catch (error) {
+      console.error("Error updating data:", error);
+    }
+  }
+
   const getPublicMaps = async () => {
     try {
       const responseData = await getMaps({ isPrivate: false });
@@ -30,6 +44,10 @@ const HomePage = () => {
     } catch (error) {
       console.error("Error updating data:", error);
     }
+    console.log('wewaksd');
+    yourMaps.map((map, i) => (console.log(map)));
+
+    // MAP HAS THE _ID!!!!!
   };
 
   const getYourMaps = async () => {
@@ -53,7 +71,6 @@ const HomePage = () => {
 
 
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
-
   return (
     <>
       <DuplicateMapModal
@@ -91,7 +108,6 @@ const HomePage = () => {
                         description={map.description}
                         isPrivate={!map.public}
                         map={map}
-                        duplicateAction={() => {handleSelectMapToDuplicate(map)}}
                       />
                   </Grid.Col>
                 ))}
@@ -118,7 +134,7 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                {maps.map((map) => (
+                {maps.map((map) => ( 
                   <Grid.Col span={cardSpan}>
                     <MapCard
                       id={map._id}

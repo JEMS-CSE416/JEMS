@@ -2,14 +2,12 @@ import { Request, Response } from "express";
 import { connect, model, Types } from "mongoose";
 import { Map, mapSchema } from "./MapSchema";
 import { ObjectId } from "mongodb";
-import * as dotenv from "dotenv";
 
 /**
  * Connects to the mongodb server and returns a queriable object
  * @returns
  */
 async function getMapModel() {
-  dotenv.config();
   await connect(process.env.MONGO_DB_CONNECTION_STRING);
   return model("Map", mapSchema);
 }

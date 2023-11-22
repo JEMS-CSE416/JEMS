@@ -11,7 +11,9 @@ import React from "react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
+import { useSelectedMap } from "../selectedcard/SelectedCardPage";
 import { Map } from "../../utils/models/Map";
+import { duplicateMap } from "../../api/MapApiAccessor";
 
 interface DuplicateMapModalProps {
   opened: boolean;
@@ -25,6 +27,8 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
   onClose,
   map,
 }) => {
+  const selectedMap = useSelectedMap();
+
   const form = useForm({
     initialValues: {
       mapName: "",
@@ -135,6 +139,14 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
                 id="duplicate-modal-submit-button"
                 type="submit"
                 style={{ marginLeft: "auto" }}
+                onClick={() =>
+                  callDuplicateMapApi(
+                    selectedMap,
+                    form.values.mapName,
+                    form.values.description,
+                    form.values.visibility.toString()
+                  )
+                }
               >
                 Make copy
               </Button>
@@ -145,6 +157,19 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
     </>
   );
 };
+
+function callDuplicateMapApi(
+  selectedMap: Map,
+  mapName: string,
+  description: string,
+  isPublic: string
+) {
+  const mapId = selectedMap._id.toString();
+  // TO-DO Replace creatorId with session token in the future
+  const creatorId = selectedMap.creatorId.toString();
+  isPublic == "Public" ? (isPublic = "true") : (isPublic = "false");
+  duplicateMap({ mapId, mapName, description, isPublic, creatorId });
+}
 
 // wrap it in a conditional loading
 const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({
