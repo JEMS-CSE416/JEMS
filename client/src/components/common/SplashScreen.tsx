@@ -104,7 +104,7 @@ const SplashScreen = () => {
                         style={{ width: "90%" }}
                       />
                       <h1>
-                        Premium Map Creation/Editing Software that’s really good
+                        Premium Map Creation/Editing Software that’s really good!!!
                       </h1>
                       <Button id="splash-button" onClick={handleOpenLoginModal}>
                         Get Started
