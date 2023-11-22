@@ -11,11 +11,15 @@ import { getMap } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
 import SelectedCardPage from "../selectedcard/SelectedCardPage";
 import { map } from "cypress/types/bluebird";
+import { useDisclosure } from "@mantine/hooks";
+import DuplicateMapModal from "../modals/DuplicateMapModal";
 
 const HomePage = () => {
   const [map, setMap] = useState<Map>();
   const [maps, setMaps] = useState<Map[]>([]);
   const [yourMaps, setYourMaps] = useState<Map[]>([]);
+  const [selectedMapToDuplicate, setSelectedMapToDuplicate] = useState<Map>();
+  const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
 
   useEffect(() => {
     getPublicMaps();
@@ -36,7 +40,7 @@ const HomePage = () => {
     try {
       const responseData = await getMaps({ isPrivate: false });
       console.log("Public Maps fetched successfully:", responseData);
-      setMaps(responseData);
+      setMaps(responseData.splice(0, 8));
     } catch (error) {
       console.error("Error updating data:", error);
     }
@@ -53,15 +57,27 @@ const HomePage = () => {
         creatorId: "652daf32e2225cdfeceea14f",
       });
       console.log("Your Maps fetched successfully:", responseData);
-      setYourMaps(responseData);
+      setYourMaps(responseData.splice(0, 8));
     } catch (error) {
       console.error("Error updating data:", error);
     }
   };
 
+  const handleSelectMapToDuplicate = (map:Map) => {
+    console.log("Selected map to duplicate:", map);
+    setSelectedMapToDuplicate(map);
+    setDuplicateModal.open();
+  }
+
+
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
   return (
     <>
+      <DuplicateMapModal
+        opened={duplicateModalOpened}
+        onClose={setDuplicateModal.close}
+        map={selectedMapToDuplicate}
+      />
       <NavBar></NavBar>
       <div id="content">
         <Stack>

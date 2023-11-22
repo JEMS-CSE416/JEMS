@@ -22,25 +22,27 @@ export interface Region {
 }
 
 export interface Map {
-  _id: Types.ObjectId;
-  creatorId: string;
-  mapName: string;
-  description: string;
-  public: boolean;
-  colorType: string;
-  displayStrings: boolean;
-  displayNumerics: boolean;
-  displayLegend: boolean;
-  displayPointers: boolean;
-  thumbnail: Image;
-  regions: { [key: string]: Region[] };
-  legend: Legend;
-}
+    _id: string;
+    creatorId: string;
+    mapName: string;
+    description: string;
+    creationDate: string;
+    public: boolean;
+    colorType: string;
+    displayStrings: boolean;
+    displayNumerics: boolean;
+    displayLegend: boolean;
+    displayPointers: boolean;
+    thumbnail: Image;
+    regions: { [key: string]: Region[] };
+    legend: Legend;
+  }
 
 export const ErrorMap = {
-    "_id": new Types.ObjectId("655accf2e56c41345c10d811"),
+    "_id": "ERROR/TEST Map",
     "creatorId": "652daf32e2225cdfeceea17f",
     "mapName": "ERROR/TEST Map",
+    "creationDate": "2021-04-01T00:00:00.000Z",
     "description": "This map is a testing map. See either in an error or in a testing/hard-coded version of code.",
     "public": true,
     "colorType": "Color",

@@ -1,8 +1,10 @@
 import { Card, Image, Text, Badge, Group, Button, Menu } from "@mantine/core";
 import "./css/mapCard.css";
 import React from "react";
+import { formatDistanceToNow } from "date-fns";
 import { IconDots } from "@tabler/icons-react";
 import { Map } from "../../utils/models/Map";
+import { useNavigate } from "react-router-dom";
 
 type MapCardProps = {
   name?: string;
@@ -10,6 +12,8 @@ type MapCardProps = {
   isPrivate?: boolean;
   id?: string;
   map?: Map;
+  duplicateAction?: () => void;
+  downloadAs?: (format: "PNG" | "JPEG" | "JEMS") => void;
 };
 
 const MapCard: React.FC<MapCardProps> = ({
@@ -18,7 +22,18 @@ const MapCard: React.FC<MapCardProps> = ({
   isPrivate,
   id,
   map,
+  duplicateAction,
+  downloadAs,
 }) => {
+  const navigate = useNavigate();
+
+  // splices the createdAt string to show how long ago was it made.
+  // for example: 2023-10-16T21:46:26.858+00:00 -> Created 5 minutes ago
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const formattedDate = formatDistanceToNow(date, { addSuffix: true });
+    return `Created ${formattedDate}`;
+  }
 
   return (
     <Card
@@ -40,7 +55,7 @@ const MapCard: React.FC<MapCardProps> = ({
         {name}
       </Text>
       <Text size="9px" ta="left">
-        Luffy • Created 5 minutes ago
+        Luffy • {formatDate(map?.creationDate ?? "2023-11-20T02:57:13.344+00:00")}
       </Text>
       <Text size="10px" ta="left" id="mapDescription" lineClamp={4}>
         {description}
@@ -65,14 +80,17 @@ const MapCard: React.FC<MapCardProps> = ({
             offset={4}
           >
             <Menu.Target>
-              <Button
-                variant="subtle"
-                size="compact-xs"
-                onClick={(e) => {
+              <Button variant="subtle" size="compact-xs" onClick={
+                (e)=> {
                   e.preventDefault();
-                }}
-              >
-                <IconDots height={20} color="black"></IconDots>
+                  e.stopPropagation();
+                }
+                }>
+                <IconDots
+                  height={20}
+                  color="black"
+                  style={{ cursor: "pointer" }}
+                />
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
@@ -80,6 +98,7 @@ const MapCard: React.FC<MapCardProps> = ({
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
+                  downloadAs?.("PNG");
                 }}
               >
                 Download as PNG
@@ -87,6 +106,7 @@ const MapCard: React.FC<MapCardProps> = ({
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
+                  downloadAs?.("JPEG");
                 }}
               >
                 Download as JPG
@@ -94,13 +114,15 @@ const MapCard: React.FC<MapCardProps> = ({
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
+                  downloadAs?.("JEMS");
                 }}
               >
-                Download as JSON
+                Download as JEMS
               </Menu.Item>
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
+                  duplicateAction?.();
                 }}
               >
                 Duplicate

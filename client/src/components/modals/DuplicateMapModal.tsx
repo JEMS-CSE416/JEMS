@@ -18,12 +18,14 @@ import { duplicateMap } from "../../api/MapApiAccessor";
 interface DuplicateMapModalProps {
   opened: boolean;
   onClose: () => void;
+  map?: Map;
 }
 
 // The base duplicate map modal with all the logic
 const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
   opened,
   onClose,
+  map,
 }) => {
   const selectedMap = useSelectedMap();
 
@@ -50,7 +52,40 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
     },
   });
 
-  const handleMakeCopy = () => {
+  const handleMakeCopy = async () => {
+    // console.log("Form values:", form.values);
+    // console.log("Map to duplicate:", map);
+    /*
+    REPLACE THIS LOGIC WITH API ACCESSOR FOR DUPLICATION
+    */
+    try {
+      const data = {
+        map_id: map?._id,
+        map_name: form.values.mapName,
+        description: form.values.description,
+        public: (form.values.visibility == "Public" ? true : false),
+      };
+
+      // Replace with your API endpoint
+      const response = await fetch(
+        "https://dev-jems-api.miguelmaramara.com/api/maps/duplicate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer 652daf32e2225cdfeceea14f", // TODO: replace with actual session token
+          },
+          body: JSON.stringify(data),
+        }
+      );
+    } catch (error) {
+      console.error("Error duplicating map:", error);
+    }
+
+    /*
+    REPLACE THIS LOGIC WITH API ACCESSOR FOR DUPLICATION
+    */
+
     onClose();
     notifications.show({
       icon: <IconCheck />,
@@ -140,9 +175,14 @@ function callDuplicateMapApi(
 const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({
   opened,
   onClose,
+  map,
 }) => {
   return (
-    <>{opened && <DuplicateMapModalBase opened={opened} onClose={onClose} />}</>
+    <>
+      {opened && (
+        <DuplicateMapModalBase opened={opened} onClose={onClose} map={map} />
+      )}
+    </>
   );
 };
 
