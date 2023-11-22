@@ -21,7 +21,7 @@ async function getUserModel() {
  * @returns positive status code
  * @returns error status code
  */
-export const signUp = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const UserModel = await getUserModel();
 
   // Check to see if email is valid
@@ -42,7 +42,7 @@ export const signUp = async (req: Request, res: Response) => {
   // save user
   const user = new UserModel(userObj);
   user.save()
-    .then(() => {login(req, res)})  // run login if user is created
+    .then(() => {login(req, res, next)})  // run login if user is created
     .catch((err) => { res.status(400).send("unable to save user due to " + err)})
 }
 
@@ -53,7 +53,7 @@ export const signUp = async (req: Request, res: Response) => {
  * @returns positive status code
  * @returns error status code
  */
-export const login = async (req: any, res: Response) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
   // check that login is valid
   const UserModel = await getUserModel();
   const user = await UserModel.findOne({email: req.body.email});
@@ -69,23 +69,26 @@ export const login = async (req: any, res: Response) => {
   req.session.regenerate((err: Error) => {
     if(err) return res.status(400).send("bad regen")
 
-    // store objectId in session
-    req.session.user = {}
-    req.session.user.id = user._id
-    req.session.user.displayName = user.displayName
-    req.session.user.email = user.email
+    // store objectId in session  
+    //req.session.user = {}
+    req.session.userid = user._id
+    req.session.userdisplayName = user.displayName
+    req.session.useremail = user.email
 
-    // save session
-    req.session.save( (err: Error) => {
-      if(err) return res.status(400).send("bad save")
-
-      // return 200 status code
+    console.log(req.session)
       return res.status(200).json({
         id: user._id,
         displayName: user.displayName,
         email: user.email
       }).send();
-    })
+    //console.log(req.session)
+    //// save session
+    //req.session.save( (err: Error) => {
+      //if(err) return res.status(400).send("bad save")
+      //console.log("2", req.session)
+
+      //// return 200 status code
+    //})
 
   })
 }
@@ -136,8 +139,10 @@ export const isAuthMiddleWare = async (req: Request, res: Response, next: NextFu
  * @returns error status code
 */
 export const isAuthEndpt = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.session.user) res.status(200).send();
-  else res.status(401).send("Not Authenticated");
+  //console.log(req.session)
+  console.log("req:", req.body)
+  if (req.body.userid != undefined) res.status(200).send();
+  else res.status(401).send("Not Auth");
 }
 
 function checkEmail(email: string):boolean{

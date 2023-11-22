@@ -11,15 +11,27 @@ var cors = require('cors')
 dotenv.config();
 const app = express()
 
+app.set('trust proxy', 1)
 // setup cors
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
 
-// Use the session middleware
-app.use(session({ secret: process.env.SESSION_SECRET, cookie: { maxAge: 60000 }}))
 
 // Setup Map router
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
+
+// Use the session middleware
+app.use(session({
+  secret: 'testsecret',
+  name: "mycookie",
+  cookie: { },
+  saveUninitialized:true,
+  resave:false}
+))
 
 // Setup Map router
 app.use('/api/maps', mapRouter)
@@ -30,6 +42,6 @@ const swaggerSpec = swaggerJSDoc({
     definition: swaggerDocument,
     apis: ['**/routes/**/*.ts']
 });
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/swag/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default app;

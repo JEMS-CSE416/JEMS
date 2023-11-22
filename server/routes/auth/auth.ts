@@ -145,13 +145,22 @@ authRouter.get("/logout/", logout);
 /**
  * @swagger
  * /api/auth/:
- *   get:
+ *   post:
  *     summary: Check if session attatched to user is authenticated
  *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
  * 
  *     responses:
  *       200:
- *         description: Successfully logged out in
+ *         description: authenticated
  *          
  *       400:
  *         description: Bad Request
@@ -161,7 +170,7 @@ authRouter.get("/logout/", logout);
  *               type: string
  *
  */
-authRouter.get("/", isAuthEndpt);
+authRouter.post("/", isAuthEndpt);
 
 /**
  * @swagger
