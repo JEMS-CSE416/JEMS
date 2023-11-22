@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { ErrorMap, Map } from "../utils/models/Map";
-
+import { BACKEND_URL } from "../utils/constants";
 // Types
 enum EditModalEnum {
   NONE = "NONE",
@@ -62,7 +62,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
 
   const fetchMap = async () => {
     // Replace with your API endpoint and map ID
-    const apiUrl = "http://localhost:443/api/maps/{id}/?id=";
+    const apiUrl = BACKEND_URL+"/api/maps/{id}/?id=";
     const mapId = props.map_id; 
     console.log("3--------------------")
     console.log(mapId)
