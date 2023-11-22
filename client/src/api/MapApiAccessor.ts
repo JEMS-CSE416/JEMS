@@ -79,14 +79,14 @@ export async function duplicateMap({
   description,
   isPublic,
   creatorId,
-}: duplicateMapParams): Promise<Map> {
+}: duplicateMapParams) {
   try {
     // TODO: replace with mapsurl when live server is up
-    const res = await fetch("http://localhost:443/api/maps/" + "duplicate", {
+    const res = await fetch("http://localhost:443/api/maps/" + "duplicate/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + creatorId,
+        "Authorization": "Bearer " + creatorId,
       },
       body: JSON.stringify({
         map_id: mapId,
@@ -99,5 +99,4 @@ export async function duplicateMap({
   } catch (error) {
     console.error("Error updating data:", error);
   }
-  return Promise.reject("Error fetching maps in duplicateMap API Accessor");
 }
