@@ -118,11 +118,12 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
 
 function callDuplicateMapApi(selectedMap: Map) {
   const mapId = selectedMap._id.toString();
+  const mapName = selectedMap.mapName.toString();
+  const description = selectedMap.description.toString();
+  const isPublic = selectedMap.public.toString();
   // TO-DO Replace creatorId with session token in the future
   const creatorId = selectedMap.creatorId.toString();
-  console.log(mapId);
-  console.log(creatorId);
-  duplicateMap({mapId, creatorId});
+  duplicateMap({mapId, mapName, description, isPublic, creatorId});
 }
 
 // wrap it in a conditional loading

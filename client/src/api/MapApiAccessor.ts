@@ -67,11 +67,17 @@ export async function getMaps({
 }
 interface duplicateMapParams {
   mapId: string;
+  mapName: string;
+  description: string;
+  isPublic: string;
   creatorId: string;
 }
 
 export async function duplicateMap({
   mapId,
+  mapName,
+  description,
+  isPublic,
   creatorId,
 }: duplicateMapParams): Promise<Map> {
   try {
@@ -80,9 +86,14 @@ export async function duplicateMap({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + creatorId
+        Authorization: "Bearer " + creatorId,
       },
-      body: JSON.stringify({ map_id: mapId }),
+      body: JSON.stringify({
+        map_id: mapId,
+        mapName: mapName,
+        description: description,
+        public: isPublic,
+      }),
     });
     console.log(res);
   } catch (error) {
