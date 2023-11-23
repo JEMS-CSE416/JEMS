@@ -20,7 +20,7 @@ export const useSelectedMap = () => {
 const SelectedCardPage = ({}) => {
   const { id } = useParams();
   const [map, setMap] = useState<Map>();
-  
+
   useEffect(() => {
     // fetch map data from backend
     // set map.

@@ -44,7 +44,8 @@ const MapCard: React.FC<MapCardProps> = ({
       withBorder
       className="card cursor-pointer"
       onClick={(e) => {
-        navigate(`/map/${id}`);
+        // e.stopde
+        navigate(`/map/${id}`, { state: map });
       }}
     >
       <Card.Section>

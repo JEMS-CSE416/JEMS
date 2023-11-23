@@ -4,20 +4,24 @@ import MapCard from "./MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Map } from "../../utils/models/Map";
 import { getMaps } from "../../api/MapApiAccessor";
 import { useDisclosure } from "@mantine/hooks";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
+import { useSelectedMap } from "../selectedcard/SelectedCardPage";
 
 const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 function MyMaps() {
-  const [yourMaps, setYourMaps] = useState<Map[]>([]);
-  const [selectedMapToDuplicate, setSelectedMapToDuplicate] = useState<Map>();
-  const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
   useEffect(() => {
     // fetch maps data from backend
     getYourMaps();
   }, []);
+
+  const [yourMaps, setYourMaps] = useState<Map[]>([]);
+  const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
+
+  const location = useLocation();
 
   const getYourMaps = async () => {
     try {
@@ -33,8 +37,7 @@ function MyMaps() {
   };
 
   const handleSelectMapToDuplicate = (map: Map) => {
-    console.log("Selected map to duplicate:", map);
-    setSelectedMapToDuplicate(map);
+    location.state = map;
     setDuplicateModal.open();
   };
 
@@ -43,7 +46,6 @@ function MyMaps() {
       <DuplicateMapModal
         opened={duplicateModalOpened}
         onClose={setDuplicateModal.close}
-        map={selectedMapToDuplicate}
       />
       <NavBar />
       <div id="content">

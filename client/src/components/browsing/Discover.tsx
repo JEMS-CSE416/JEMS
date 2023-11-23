@@ -1,6 +1,6 @@
 import "./css/myMaps.css";
 import { Text, Pagination, Stack, Box, Group, Grid } from "@mantine/core";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MapCard from "./MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
@@ -16,7 +16,9 @@ function Discover() {
   useEffect(() => {
     getPublicMaps();
   }, []);
-  const [selectedMapToDuplicate, setSelectedMapToDuplicate] = useState<Map>();
+
+  const location = useLocation();
+
   const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
   const [maps, setMaps] = useState<Map[]>([]);
 
@@ -32,7 +34,7 @@ function Discover() {
 
   const handleSelectMapToDuplicate = (map: Map) => {
     console.log("Selected map to duplicate:", map);
-    setSelectedMapToDuplicate(map);
+    location.state = map;
     setDuplicateModal.open();
   };
 
@@ -41,7 +43,6 @@ function Discover() {
       <DuplicateMapModal
         opened={duplicateModalOpened}
         onClose={setDuplicateModal.close}
-        map={selectedMapToDuplicate}
       />
       <NavBar />
       <div id="content">
