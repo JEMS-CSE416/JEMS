@@ -7,11 +7,14 @@ import {
   Button
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-import { useEditContext } from "../../context/EditContextProvider";
+import { group } from "console";
+import React from "react";
+import { EditPageAction, EditPageState, useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
 
 
 export default function Regions(){
   const editPageState = useEditContext();
+  const setEditPageState = useEditDispatchContext();
   return (
     <>
       <Flex
@@ -35,18 +38,14 @@ export default function Regions(){
                 <>
                   <Title order={5} >{groupName}</Title>
                   <Stack gap={0} w="100%">
-                    {regions.map((region) =>
-                      <Button
-                        variant="subtle"
-                        color="black"
-                        fullWidth
-                        pl={15}
-                        justify="left"
-                      > 
-                        <Text>
-                          {region.regionName}
-                        </Text>
-                      </Button>
+                    {regions.map((region, i) => 
+
+                        <RegionButton
+                            groupName={groupName}
+                            i={i}
+                            editPageState={editPageState}
+                            setEditPageState={setEditPageState}
+                            />
                     )}
                   </Stack>
                 </>
@@ -60,3 +59,51 @@ export default function Regions(){
   )
   
 }
+
+
+function RegionButton ( props:{
+    groupName: string,
+    i: number,
+    editPageState: EditPageState,
+    setEditPageState: React.Dispatch<EditPageAction>
+}){
+    const groupName = props.groupName
+    const i = props.i
+    const editPageState = props.editPageState
+    const setEditPageState = props.setEditPageState
+
+ 
+
+    let variant = "subtle"
+    if(groupName === editPageState.selectedRegion?.groupName &&
+        i === editPageState.selectedRegion.i)
+        variant = "filled"
+
+
+
+
+
+   return <Button
+        variant={variant}
+        color="black"
+        fullWidth
+        pl={15}
+        justify="left"
+        onClick= {() => setEditPageState({
+            type: "select_region",
+            selectedRegion:{
+                groupName: groupName,
+                i: i,
+                region: editPageState.map.regions[groupName][i],
+            }
+        })}
+        
+    > 
+        <Text>
+            {editPageState.map.regions[groupName][i].regionName}
+        </Text>
+    </Button>
+}
+
+
+
