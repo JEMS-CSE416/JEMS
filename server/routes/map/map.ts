@@ -230,7 +230,72 @@ mapRouter.get("/query", queryMaps);
  */
 mapRouter.get("/:id", getMap);
 
-mapRouter.post("/update/:id", updateMap);
+/**
+ * @swagger
+ * /api/maps/update/{id}:
+ *   put:
+ *     summary: Updates a map
+ *     tags: [Maps]
+ *     parameters:
+ *      - in: query
+ *        name: id
+ *        type: integer
+ *        required: true
+ *        description: Numeric ID of the map to get.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: Object
+ *             properties:
+ *               map_name:
+ *                 type: string
+ *               public:
+ *                 type: boolean
+ *               description:
+ *                 type: string
+ *               colorType:
+ *                 type: string
+ *               displayStrings:
+ *                 type: boolean
+ *               displayNumerics:
+ *                 type: boolean
+ *               displayLegend:
+ *                 type: boolean
+ *               displayPointers:
+ *                 type: boolean
+ *               thumbnail:
+ *                 $ref: '#/components/schemas/Image'
+ *               regions:
+ *                 type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Region'
+ *               legend:
+ *                 $ref: '#/components/schemas/Legend'
+ * 
+ *     responses:
+ *       200:
+ *         description: the map updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Map'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *
+ */
+mapRouter.put("/update/:id", updateMap);
 
 /**
  * @swagger
