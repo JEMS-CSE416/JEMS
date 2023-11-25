@@ -4,14 +4,23 @@ import { useEffect, useState } from "react";
 import "./css/searchedMapsScreen.css";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
-import { Box, Text, Group, Stack, Image } from "@mantine/core";
+import {
+  Box,
+  Text,
+  Group,
+  Stack,
+  Image,
+  Loader,
+  Pagination,
+  Grid,
+} from "@mantine/core";
 import nothingHere from "../../assets/images/NothingHere.svg";
 import MapCard from "./MapCard";
 import { getMaps } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
 import { useDisclosure } from "@mantine/hooks";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
-
+import { useLoadingData } from "../hooks/useLoadingData";
 const NothingHere = () => {
   return (
     <Stack align="center" id="nothingHereStack">
@@ -26,29 +35,24 @@ const NothingHere = () => {
   );
 };
 
+const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 const SearchedMapsScreen = () => {
   const { search } = useParams();
   const location = useLocation();
   const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
-  const [maps, setMaps] = useState<Map[]>([]);
+  const {
+    data: maps,
+    error,
+    loading,
+  } = useLoadingData<Map[]>(
+    getMaps,
+    [{ isPrivate: false, mapName: `${search}` }],
+    [search, location.state]
+  );
+  const [page, setPage] = useState(1);
+  const [pageTotal, setPageTotal] = useState(8);
+
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const queryForMaps = async () => {
-      try {
-        const responseData = await getMaps({
-          isPrivate: false,
-          mapName: `${search}`,
-        });
-        console.log("Maps searched successfully:", responseData);
-        setMaps(responseData);
-      } catch (error) {
-        console.error("Error searching for maps:", error);
-      }
-    };
-
-    queryForMaps();
-  }, [search, location.state]);
 
   if (!search) {
     navigate("/");
@@ -60,6 +64,12 @@ const SearchedMapsScreen = () => {
     location.state = map;
     setDuplicateModal.open();
   };
+
+  // starting card index
+  const start = (page - 1) * pageTotal;
+
+  // ending card index
+  const end = page * pageTotal;
 
   return (
     <>
@@ -85,14 +95,25 @@ const SearchedMapsScreen = () => {
             </Text>
           </Text>
         </Group>
-        <Group>
-          {maps.length === 0 ? (
+        <Grid style={{ textAlign: "initial" }}>
+          {loading ? (
+            <Grid.Col
+              style={{
+                height: "auto",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Loader color="blue" />
+            </Grid.Col>
+          ) : maps?.length === 0 ? (
             <Box mx="auto">
               <NothingHere />
             </Box>
           ) : (
-            maps.map((map) => (
-              <Group justify="flex-start">
+            maps?.slice(start, end).map((map) => (
+              <Grid.Col span={cardSpan}>
                 <MapCard
                   id={map._id}
                   name={map.mapName}
@@ -103,11 +124,20 @@ const SearchedMapsScreen = () => {
                     handleSelectMapToDuplicate(map);
                   }}
                 />
-              </Group>
+              </Grid.Col>
             ))
           )}
+        </Grid>
+        <Group>
+          <Pagination
+            disabled={loading}
+            total={Math.ceil((maps?.length ?? 0) / pageTotal)}
+            id="pagination"
+            onChange={setPage}
+          />
         </Group>
       </div>
+
       <Footer />
     </>
   );

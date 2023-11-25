@@ -47,6 +47,7 @@ const MapCard: React.FC<MapCardProps> = ({
         // e.stopde
         navigate(`/map/${id}`, { state: map });
       }}
+      style={{height: "300px"}}
     >
       <Card.Section>
         <Image
@@ -61,7 +62,7 @@ const MapCard: React.FC<MapCardProps> = ({
       <Text size="9px" ta="left">
         Luffy • {formatDate(map?.creationDate ?? "2023-11-20T02:57:13.344+00:00")}
       </Text>
-      <Text size="10px" ta="left" id="mapDescription" lineClamp={4}>
+      <Text size="10px" ta="left" id="mapDescription" lineClamp={3}>
         {description}
       </Text>
       <Group justify="space-between" mt="md" mb="xs">
