@@ -17,7 +17,8 @@ import { useState, useEffect } from "react";
  */
 export const useLoadingData = <T = any>(
   fetchDataFunction: (...args: any[]) => Promise<any>,
-  params: any[] = []
+  params: any[] = [],
+  dependencies: any[] = []
 ) => {
   const [data, setData] = useState<T>();
   const [error, setError] = useState<any>(null);
@@ -36,7 +37,7 @@ export const useLoadingData = <T = any>(
       }
     };
     fetchData();
-  }, []);
+  }, dependencies);
 
   return { data, error, loading };
 };
