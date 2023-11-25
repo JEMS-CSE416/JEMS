@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
  * @param params - An array of parameters to pass to the `fetchDataFunction`. This is optional.
  *
  * @returns An object containing the following properties:
- * - `data`: The data fetched from the API. Its type is determined by the type parameter `T`. It's `null` by default and after a successful fetch, it will hold the fetched data.
+ * - `data`: The data fetched from the API. Its type is determined by the type parameter `T`. It's `undefined` by default and after a successful fetch, it will hold the fetched data.
  * - `error`: Any error that occurred while fetching the data. It's `null` by default and if an error occurs during the fetch, it will hold the error.
  * - `loading`: A boolean indicating whether the data is currently being fetched. It's `true` by default and becomes `false` once the data has been fetched.
  *
