@@ -32,7 +32,7 @@ const SelectedCardPage = ({}) => {
 
   return (
     <>
-      <NavBar></NavBar>
+      <NavBar/>
       <div id="content">
         <MapHeader></MapHeader>
         <Canvas></Canvas>
