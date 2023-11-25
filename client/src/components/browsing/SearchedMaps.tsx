@@ -12,6 +12,7 @@ import {
   Image,
   Loader,
   Pagination,
+  Grid,
 } from "@mantine/core";
 import nothingHere from "../../assets/images/NothingHere.svg";
 import MapCard from "./MapCard";
@@ -34,6 +35,7 @@ const NothingHere = () => {
   );
 };
 
+const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 const SearchedMapsScreen = () => {
   const { search } = useParams();
   const location = useLocation();
@@ -93,25 +95,25 @@ const SearchedMapsScreen = () => {
             </Text>
           </Text>
         </Group>
-        <Group>
+        <Grid style={{ textAlign: "initial" }}>
           {loading ? (
-            <Box
+            <Grid.Col
               style={{
-                width: "100%",
+                height: "auto",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
               <Loader color="blue" />
-            </Box>
+            </Grid.Col>
           ) : maps?.length === 0 ? (
             <Box mx="auto">
               <NothingHere />
             </Box>
           ) : (
             maps?.slice(start, end).map((map) => (
-              <Group justify="flex-start">
+              <Grid.Col span={cardSpan}>
                 <MapCard
                   id={map._id}
                   name={map.mapName}
@@ -122,10 +124,10 @@ const SearchedMapsScreen = () => {
                     handleSelectMapToDuplicate(map);
                   }}
                 />
-              </Group>
+              </Grid.Col>
             ))
           )}
-        </Group>
+        </Grid>
         <Group>
           <Pagination
             disabled={loading}
