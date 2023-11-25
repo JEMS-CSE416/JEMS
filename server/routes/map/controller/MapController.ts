@@ -130,7 +130,7 @@ const getMap = async (req: Request, res: Response) => {
 
   /* Check map exists */
   const map = await mapModel.findById(map_id);
-  if(!map) {
+  if (!map) {
     return res.status(404).send("Error 404: Map not found");
   }
 
@@ -149,7 +149,9 @@ const getMap = async (req: Request, res: Response) => {
     return res.status(200).send(map);
   } else {
     /* Private status not specified*/
-    return res.status(400).send("Error 400: Bad Request. Private status not specified.");
+    return res
+      .status(400)
+      .send("Error 400: Bad Request. Private status not specified.");
   }
 };
 
@@ -282,7 +284,52 @@ const createMap = async (req: Request, res: Response) => {
  * @param res
  * @returns a map
  */
-const updateMap = async (req: Request, res: Response) => {};
+const updateMap = async (req: Request, res: Response) => {
+  // TODO: Add security checks in future to double check whether the user accessing is indeed the owner of the map
+  const mapModel = await getMapModel();
+  const map_id = req.query.id;
+  const map_name = req.body.map_name;
+  const isPublic = req.body.public;
+  const description = req.body.description;
+  const colorType = req.body.colorType;
+  const displayStrings = req.body.displayStrings;
+  const displayNumerics = req.body.displayNumerics;
+  const displayLegend = req.body.displayLegend;
+  const displayPointers = req.body.displayPointers;
+  const thumbnail = req.body.thumbnail;
+  const regions = req.body.regions;
+  const legend = req.body.legend;
+  const token = req.headers.authorization;
+
+  /* Check map exists in database */
+  const map = await mapModel.findById(map_id);
+  if (!map) {
+    return res.status(404).send("Error 404: Map not found");
+  }
+  try {
+    const mapUpdateResponse = await mapModel.updateOne(
+      { _id: map_id },
+      {
+        $set: {
+          mapName: map_name,
+          public: isPublic,
+          description: description,
+          colorType: colorType,
+          displayStrings: displayStrings,
+          displayNumerics: displayNumerics,
+          displayLegend: displayLegend,
+          displayPointers: displayPointers,
+          thumbnail: thumbnail,
+          regions: regions,
+          legend: legend,
+        },
+      }
+    );
+    res.status(200).send(mapUpdateResponse);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 /**
  * removes a map from the database
