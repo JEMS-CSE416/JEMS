@@ -9,6 +9,9 @@ import nothingHere from "../../assets/images/NothingHere.svg";
 import MapCard from "./MapCard";
 import { getMaps } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
+import { useDisclosure } from "@mantine/hooks";
+import DuplicateMapModal from "../modals/DuplicateMapModal";
+
 const NothingHere = () => {
   return (
     <Stack align="center" id="nothingHereStack">
@@ -26,6 +29,7 @@ const NothingHere = () => {
 const SearchedMapsScreen = () => {
   const { search } = useParams();
   const location = useLocation();
+  const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
   const [maps, setMaps] = useState<Map[]>([]);
   const navigate = useNavigate();
 
@@ -50,8 +54,19 @@ const SearchedMapsScreen = () => {
     navigate("/");
   }
 
+  const handleSelectMapToDuplicate = (map: Map) => {
+    console.log("Selected map to duplicate:", map);
+    // setSelectedMapToDuplicate(map);
+    location.state = map;
+    setDuplicateModal.open();
+  };
+
   return (
     <>
+      <DuplicateMapModal
+        opened={duplicateModalOpened}
+        onClose={setDuplicateModal.close}
+      />
       <NavBar />
       <div className="container">
         <Group>
@@ -77,8 +92,17 @@ const SearchedMapsScreen = () => {
             </Box>
           ) : (
             maps.map((map) => (
-              <Group justify="flex-start" grow>
-                <MapCard isPrivate={false} name={map["mapName"]} />
+              <Group justify="flex-start">
+                <MapCard
+                  id={map._id}
+                  name={map.mapName}
+                  description={map.description}
+                  isPrivate={!map.public}
+                  map={map}
+                  duplicateAction={() => {
+                    handleSelectMapToDuplicate(map);
+                  }}
+                />
               </Group>
             ))
           )}

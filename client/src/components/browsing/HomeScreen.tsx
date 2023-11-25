@@ -3,7 +3,7 @@ import { Group, Text, Stack, Box, Grid } from "@mantine/core";
 import MapCard from "./MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
-import { Link, Route } from "react-router-dom";
+import { Link, Route, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import { getMaps } from "../../api/MapApiAccessor";
@@ -15,10 +15,10 @@ import { useDisclosure } from "@mantine/hooks";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
 
 const HomePage = () => {
-  const [map, setMap] = useState<Map>();
   const [maps, setMaps] = useState<Map[]>([]);
+  const location = useLocation();
   const [yourMaps, setYourMaps] = useState<Map[]>([]);
-  const [selectedMapToDuplicate, setSelectedMapToDuplicate] = useState<Map>();
+  
   const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
 
   useEffect(() => {
@@ -29,12 +29,11 @@ const HomePage = () => {
   // Create a getMap function that takes in a mapId and returns the map object
   const getMap = async () => {
     try {
-      const res = await getMap()
-    }
-    catch (error) {
+      const res = await getMap();
+    } catch (error) {
       console.error("Error updating data:", error);
     }
-  }
+  };
 
   const getPublicMaps = async () => {
     try {
@@ -42,12 +41,8 @@ const HomePage = () => {
       console.log("Public Maps fetched successfully:", responseData);
       setMaps(responseData.splice(0, 8));
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error("Error fetching Maps:", error);
     }
-    console.log('wewaksd');
-    yourMaps.map((map, i) => (console.log(map)));
-
-    // MAP HAS THE _ID!!!!!
   };
 
   const getYourMaps = async () => {
@@ -63,12 +58,12 @@ const HomePage = () => {
     }
   };
 
-  const handleSelectMapToDuplicate = (map:Map) => {
+  const handleSelectMapToDuplicate = (map: Map) => {
     console.log("Selected map to duplicate:", map);
-    setSelectedMapToDuplicate(map);
+    // setSelectedMapToDuplicate(map);
+    location.state = map;
     setDuplicateModal.open();
-  }
-
+  };
 
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
   return (
@@ -76,7 +71,6 @@ const HomePage = () => {
       <DuplicateMapModal
         opened={duplicateModalOpened}
         onClose={setDuplicateModal.close}
-        map={selectedMapToDuplicate}
       />
       <NavBar></NavBar>
       <div id="content">
@@ -102,15 +96,16 @@ const HomePage = () => {
               <Grid style={{ textAlign: "initial" }}>
                 {yourMaps.map((map, i) => (
                   <Grid.Col span={cardSpan}>
-                    <Link to="/selected" state={map}>
-                      <MapCard
-                        id={map._id.toString()}
-                        name={map.mapName}
-                        description={map.description}
-                        isPrivate={!map.public}
-                        map={map}
-                      />
-                    </Link>
+                    <MapCard
+                      id={map._id}
+                      name={map.mapName}
+                      description={map.description}
+                      isPrivate={!map.public}
+                      map={map}
+                      duplicateAction={() => {
+                        handleSelectMapToDuplicate(map);
+                      }}
+                    />
                   </Grid.Col>
                 ))}
               </Grid>
@@ -136,16 +131,18 @@ const HomePage = () => {
                 </Link>
               </Group>
               <Grid style={{ textAlign: "initial" }}>
-                {maps.map((map) => ( 
+                {maps.map((map) => (
                   <Grid.Col span={cardSpan}>
-                    <Link to="/selected" state={map}>
-                      <MapCard
-                        isPrivate={!map.public}
-                        name={map["mapName"]}
-                        description={map.description}
-                        map={map}
-                      />
-                    </Link>
+                    <MapCard
+                      id={map._id}
+                      isPrivate={!map.public}
+                      name={map["mapName"]}
+                      description={map.description}
+                      map={map}
+                      duplicateAction={() => {
+                        handleSelectMapToDuplicate(map);
+                      }}
+                    />
                   </Grid.Col>
                 ))}
               </Grid>

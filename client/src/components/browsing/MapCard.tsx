@@ -42,7 +42,11 @@ const MapCard: React.FC<MapCardProps> = ({
       padding="xl"
       radius="md"
       withBorder
-      className="card"
+      className="card cursor-pointer"
+      onClick={(e) => {
+        // e.stopde
+        navigate(`/map/${id}`, { state: map });
+      }}
     >
       <Card.Section>
         <Image
@@ -98,6 +102,7 @@ const MapCard: React.FC<MapCardProps> = ({
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   downloadAs?.("PNG");
                 }}
               >
@@ -106,6 +111,7 @@ const MapCard: React.FC<MapCardProps> = ({
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   downloadAs?.("JPEG");
                 }}
               >
@@ -114,6 +120,7 @@ const MapCard: React.FC<MapCardProps> = ({
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   downloadAs?.("JEMS");
                 }}
               >
@@ -122,6 +129,7 @@ const MapCard: React.FC<MapCardProps> = ({
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
+                  e.stopPropagation();
                   duplicateAction?.();
                 }}
               >
