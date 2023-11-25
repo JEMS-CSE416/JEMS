@@ -14,7 +14,6 @@ import { useEditContext } from "../../context/EditContextProvider";
 
 export default function Properties(){
   const editPageState = useEditContext();
-  console.log(editPageState, "remove me");
   return (
     <Box
       style={{
