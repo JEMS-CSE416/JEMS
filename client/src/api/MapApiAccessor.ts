@@ -128,6 +128,7 @@ export async function duplicateMap({
   creatorId,
 }: duplicateMapParams) {
   try {
+    console.log("DUPLICATE MAPPP: ", mapId, mapName, description, isPublic, creatorId)
     // TODO: replace with mapsurl when live server is up
     const res = await fetch(mapsUrl + "duplicate/", {
       method: "POST",
@@ -142,8 +143,7 @@ export async function duplicateMap({
         public: isPublic,
       }),
     });
-    console.log(res);
   } catch (error) {
-    console.error("Error updating data:", error);
+    console.error("Error Duplicating Map:", error);
   }
 }

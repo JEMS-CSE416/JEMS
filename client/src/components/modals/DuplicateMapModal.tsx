@@ -18,17 +18,14 @@ import { duplicateMap } from "../../api/MapApiAccessor";
 interface DuplicateMapModalProps {
   opened: boolean;
   onClose: () => void;
-  map?: Map;
 }
 
 // The base duplicate map modal with all the logic
 const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
   opened,
   onClose,
-  map,
 }) => {
   const selectedMap = useSelectedMap();
-
   const form = useForm({
     initialValues: {
       mapName: "",
@@ -52,32 +49,17 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
     },
   });
 
-  const handleMakeCopy = async () => {
-    // console.log("Form values:", form.values);
-    // console.log("Map to duplicate:", map);
-    /*
-    REPLACE THIS LOGIC WITH API ACCESSOR FOR DUPLICATION
-    */
+  const handleMakeCopy = async (map: Map) => {
     try {
       const data = {
-        map_id: map?._id,
-        map_name: form.values.mapName,
+        mapId: map._id.toString(),
+        mapName: form.values.mapName,
         description: form.values.description,
-        public: (form.values.visibility == "Public" ? true : false),
+        isPublic:
+          form.values.visibility.toString() == "Public" ? "true" : "false",
+        creatorId: map.creatorId, //TODO replace this with actual logged in creator id
       };
-
-      // Replace with your API endpoint
-      const response = await fetch(
-        "https://dev-jems-api.miguelmaramara.com/api/maps/duplicate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer 652daf32e2225cdfeceea14f", // TODO: replace with actual session token
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      await duplicateMap(data);
     } catch (error) {
       console.error("Error duplicating map:", error);
     }
@@ -103,7 +85,7 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
         centered
         size="lg"
       >
-        <form onSubmit={form.onSubmit((values) => handleMakeCopy())}>
+        <form onSubmit={form.onSubmit((values) => handleMakeCopy(selectedMap))}>
           <Box>
             <Stack justify="flex-start">
               <TextInput
@@ -139,14 +121,6 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
                 id="duplicate-modal-submit-button"
                 type="submit"
                 style={{ marginLeft: "auto" }}
-                onClick={() =>
-                  callDuplicateMapApi(
-                    selectedMap,
-                    form.values.mapName,
-                    form.values.description,
-                    form.values.visibility.toString()
-                  )
-                }
               >
                 Make copy
               </Button>
@@ -158,29 +132,15 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
   );
 };
 
-function callDuplicateMapApi(
-  selectedMap: Map,
-  mapName: string,
-  description: string,
-  isPublic: string
-) {
-  const mapId = selectedMap._id.toString();
-  // TO-DO Replace creatorId with session token in the future
-  const creatorId = selectedMap.creatorId.toString();
-  isPublic == "Public" ? (isPublic = "true") : (isPublic = "false");
-  duplicateMap({ mapId, mapName, description, isPublic, creatorId });
-}
-
 // wrap it in a conditional loading
 const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({
   opened,
   onClose,
-  map,
 }) => {
   return (
     <>
       {opened && (
-        <DuplicateMapModalBase opened={opened} onClose={onClose} map={map} />
+        <DuplicateMapModalBase opened={opened} onClose={onClose}/>
       )}
     </>
   );
