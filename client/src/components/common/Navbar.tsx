@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import jemsLogo from "../../assets/images/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useForceUpdate} from "@mantine/hooks";
 import CreateMapModal from "../modals/CreateMapModal";
 import {
   IconLogout,
@@ -148,10 +148,11 @@ export default function NavBar() {
   );
 }
 
+
+
 function SearchBar() {
   // This is the hook that controls the search bar
   const [search, setSearch] = useState("");
-
   // This is the hook that allows us to navigate to different pages
   const navigate = useNavigate();
 
@@ -166,7 +167,8 @@ function SearchBar() {
       // the reason for {state: forceRefresh: true} is because we want
       // to force a refresh of the page incase the user just wants to recieve
       // new updagtes on the results
-      navigate("/maps/search/" + search, { state: { forceRefresh: true } });
+      const searchFor = "/maps/search/" + search
+      navigate(searchFor);
     }
   };
   return (

@@ -11,8 +11,11 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
+import { useSelectedMap } from "../selectedcard/SelectedCardPage";
 
 const MapHeader = () => {
+  const selectedMap = useSelectedMap();
+
   // the download modal state
   const [downloadModalOpened, setDownloadModal] = useDisclosure(false);
   // the duplicate modal state
@@ -45,13 +48,13 @@ const MapHeader = () => {
       )}
 
       <Text fw={500} size="sm" id="creationDate">
-        Created 5 days ago
+        {selectedMap.creationDate}
       </Text>
       <Text fw={700} size="xl" id="title">
-        Best Places to Eat in The East Blue
+        {selectedMap.mapName}
       </Text>
       <Group id="edit">
-        <Link to="/edit" style={{ marginLeft: "auto" }}>
+        <Link to={`/edit/${selectedMap._id}`} style={{ marginLeft: "auto" }}>
           <Button
             leftSection={<IconEdit size={14} />}
             variant="subtle"

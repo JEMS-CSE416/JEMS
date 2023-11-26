@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
-import { ErrorMap, Map } from "../utils/models/Map";
-
+import { ErrorMap, Map, Region } from "../utils/models/Map";
+import { BACKEND_URL } from "../utils/constants";
 // Types
 enum EditModalEnum {
   NONE = "NONE",
@@ -14,16 +14,27 @@ interface EditContextProviderProps {
   map_id?: string // TODO: remove the optional portion
 }
 
-interface EditPageState {
+export interface EditPageState {
   map: Map;
-  selectedRegion?: String;
+  selectedRegion?: {
+    groupName: string;
+    i: number;
+    region: Region;
+    //layer: any;
+  }
   modal: String
 }
 
-interface Action {
+export interface EditPageAction {
   type: String,
   map?: String,
   modal?: String,
+  selectedRegion?: {
+    groupName: string;
+    i: number;
+    region: Region;
+    //layer: any;
+  }
 }
 
 
@@ -36,7 +47,7 @@ const initState = {
 }
 
 export const EditContext = createContext<EditPageState>(initState);
-export const EditDispatchContext = createContext<React.Dispatch<Action>>(() => { });
+export const EditDispatchContext = createContext<React.Dispatch<EditPageAction>>(() => { });
 
 /*
  * EditContextProvider component.
@@ -62,7 +73,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
 
   const fetchMap = async () => {
     // Replace with your API endpoint and map ID
-    const apiUrl = "http://localhost:443/api/maps/{id}/?id=";
+    const apiUrl = BACKEND_URL+"/api/maps/{id}/?id=";
     const mapId = props.map_id; 
     console.log("3--------------------")
     console.log(mapId)
@@ -110,6 +121,18 @@ function editReducer(state: EditPageState, action: any): EditPageState {
       return {
         ...state,
         modal: Object.values(EditModalEnum).includes(action.modal) ? action.modal : "NONE"
+      }
+    case 'select_region':
+      const selectedRegion = {
+          i: action.selectedRegion.i,
+          groupName: action.selectedRegion.groupName,
+          region: action.selectedRegion.region,
+          //layer: action.selectedRegion.layer,
+        }
+
+      return {
+        ...state,
+        selectedRegion: selectedRegion
       }
   }
 

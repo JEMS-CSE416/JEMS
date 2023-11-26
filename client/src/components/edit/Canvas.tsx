@@ -1,50 +1,18 @@
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Legend from "./Legend";
-import { useEditContext } from "../../context/EditContextProvider";
+import { EditPageAction, EditPageState, useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
+import { Layer } from "leaflet";
+import { Feature } from "geojson";
+import attachSelectionEvents from "./leaflet/selection";
+import { convertToGeoJSON } from "./utils/jemsconvert";
+import React from "react";
+import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
 
 export default function Canvas() {
   const editPageState = useEditContext();
-
-  console.log(editPageState, "remove me");
-
-  // Convert JEMS JSON to GeoJSON
-  function convertToGeoJSON(jemsJSON: any): string {
-    const geoJSON: any = {
-      type: "FeatureCollection",
-      features: [],
-    };
-
-    for (const group in jemsJSON.regions) {
-      const regionGroup = jemsJSON.regions[group];
-      console.log(regionGroup)
-      regionGroup.forEach((region: any) => {
-        const feature: any = {
-          type: "Feature",
-          properties: {
-            name: region.regionName,
-            stringLabel: region.stringLabel,
-            stringOffset: region.stringOffset,
-            numericLabel: region.numericLabel,
-            numericUnit: region.numericUnit,
-            color: region.color,
-          },
-          geometry: {
-            type: "Polygon",
-            coordinates: [region.coordinates],
-          },
-        };
-
-        geoJSON.features.push(feature);
-      });
-    }
-
-    return JSON.stringify(geoJSON);
-  }
-
+  const setEditPageState = useEditDispatchContext();
   const convertedGeoJSON = convertToGeoJSON(editPageState.map);
-  console.log("====================================================")
-  console.log(JSON.parse(convertedGeoJSON));
 
   return (
     <>
@@ -61,10 +29,53 @@ export default function Canvas() {
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        <GeoJSON key={convertedGeoJSON} data={JSON.parse(convertedGeoJSON)} />
+        <GeoJSON
+            key={JSON.stringify(editPageState)}
+            data={JSON.parse(convertedGeoJSON)} 
+            onEachFeature={
+              (region, layer) => onEachRegion(region, layer, editPageState, setEditPageState)
+            }
+            style={(region) => initStyleFunction(region, editPageState)}
+                
+        />
         <Legend />
       </MapContainer>
     </>
   )
 }
+
+// This function will be applied to each feature in the geojson aka each region
+// on the map
+function onEachRegion(
+  region: Feature, layer: Layer,
+  editPageState: EditPageState,
+  setEditPageState: React.Dispatch<EditPageAction>){
+
+  // attatch selection functionality to each region
+  attachSelectionEvents(region, layer, editPageState, setEditPageState);
+}
+
+function initStyleFunction(region: any, editPageState: EditPageState){
+  if(region.properties.i === editPageState.selectedRegion?.i &&
+     region.properties.groupName === editPageState.selectedRegion?.groupName
+    ){
+    return {
+      ...SELECTED_STYLE,
+      fillColor: "#8eb8fa",
+      fillOpacity: 1,
+      color: "#000000",
+    }
+  }else {
+    return {
+      ...UNSELECTED_STYLE,
+      fillColor: "#8eb8fa",
+      fillOpacity: 1,
+      color: "#6996db",
+    }
+  }
+
+
+}
+
+
 
