@@ -36,6 +36,7 @@ export interface Map {
     thumbnail: Image;
     regions: { [key: string]: Region[] };
     legend: Legend;
+    visibility?: string;
   }
 
 export const ErrorMap = {

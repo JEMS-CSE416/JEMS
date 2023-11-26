@@ -14,11 +14,11 @@ import FileDropZone from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
 import { useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
 import { useState } from "react";
-import { uploadImage} from "../../api/SpacesApiAccessor";
+import { uploadImage } from "../../api/SpacesApiAccessor";
 import { getFileType } from "../../utils/global_utils";
 import { updateMap } from "../../api/MapApiAccessor";
 import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 // The base Settings modal with all the logic
 function SettingsMapModalBase() {
@@ -50,6 +50,7 @@ function SettingsMapModalBase() {
         }
         return null;
       },
+
     },
   });
 
@@ -58,31 +59,44 @@ function SettingsMapModalBase() {
     if (file) {
       // Set the file path in the DO space with the creatorId and mapId
       const filePath = `map_images/${form.values.creatorId}/${form.values._id}`;
-      
+
       // Upload the image to the DO space
       const imageUrl = await uploadImage(file, filePath);
 
-      // Update the edit page state image url
+      // Update the edit page state 
+      editPageState.map.mapName = form.values.mapName;
+      editPageState.map.description = form.values.description;
+      editPageState.map.public = form.values.visibility === "Public" ? true : false;
       editPageState.map.thumbnail.imageUrl = imageUrl;
       editPageState.map.thumbnail.imageType = getFileType(imageUrl);
-      
+
       console.log(editPageState.map, "updated editPageState.map");
-      setEditPageState({ type: "update_map", map: editPageState.map});
-      
-      // Update the map in the database
-      updateMap({map: editPageState.map}).then((res) => {
-        console.log(res);
-      });
+      setEditPageState({ type: "update_map", map: editPageState.map });
+
+      try {
+        // Update the map in the database
+        const responseData = await updateMap({ map: editPageState.map });
+        console.log("Map updated successfully:", responseData);
+
+        // Show a notification
+        notifications.show({
+          icon: <IconCheck />,
+          title: 'Your map has been updated!',
+          message: 'Yay an updated map :D',
+        });
+      } catch (error) {
+        console.log(error);
+
+        // Show a notification
+        notifications.show({
+          icon: <IconX />,
+          title: 'Error updating map',
+          message: 'Please try again',
+        });
+      }
 
       // Close the modal
       setEditPageState({ type: "change_modal", modal: "NONE" })
-
-      // Show a notification
-      notifications.show({
-        icon: <IconCheck />,
-        title: 'Your map has been updated!',
-        message: 'Yay an updated map :D',
-      })
     }
   };
 
@@ -96,7 +110,7 @@ function SettingsMapModalBase() {
           alt="Norway"
         />
       );
-    }else if (editPageState.map.thumbnail.imageUrl) {
+    } else if (editPageState.map.thumbnail.imageUrl) {
       return (
         <Image
           src={editPageState.map.thumbnail.imageUrl}
@@ -140,7 +154,7 @@ function SettingsMapModalBase() {
                 />
                 <Select
                   label="Visibility"
-                  placeholder="Public"
+                  placeholder={editPageState.map.public ? "Public" : "Private"}
                   data={["Public", "Private"]}
                   style={{ width: "100%" }}
                   withAsterisk
