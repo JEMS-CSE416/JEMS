@@ -9,8 +9,8 @@ const spacesEndpoint = new Endpoint('https://nyc3.digitaloceanspaces.com'); // R
 async function getS3Client() {
     const s3 = new S3({
         endpoint: spacesEndpoint,
-        accessKeyId: "DO00MMUPXEDVMB8CV2FV", // TO-DO: Remove direct access key
-        secretAccessKey: "d76qlX1sDndpZ3623VuAUXp4SwP3mN1GcCewRvUjAGo", // TO-DO: Remove direct secret key
+        accessKeyId: process.env.REACT_APP_SPACES_KEY, // TO-DO: Remove direct access key
+        secretAccessKey: process.env.REACT_APP_SPACES_SECRET, // TO-DO: Remove direct secret key
     });
     return s3;
 }

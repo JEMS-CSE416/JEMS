@@ -147,3 +147,23 @@ export async function duplicateMap({
     console.error("Error Duplicating Map:", error);
   }
 }
+
+export async function createMap(req: any) {
+  try {
+    const res = await fetch(mapsUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req)
+    });
+    if (res.ok) {
+      const resData = await res.json();
+      console.log("Map created successfully:", resData);
+      return resData;
+    } else {
+      console.error("Error updating data:", res.status, res.statusText);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return Promise.reject("Error creating map");
+}

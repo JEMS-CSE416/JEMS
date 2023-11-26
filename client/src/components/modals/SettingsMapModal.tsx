@@ -13,22 +13,18 @@ import {
 import FileDropZone from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
 import { useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
-import { useState, useEffect } from "react";
-import { uploadImage, getImage, deleteImage} from "../../api/SpacesApiAccessor";
+import { useState } from "react";
+import { uploadImage} from "../../api/SpacesApiAccessor";
 import { getFileType } from "../../utils/global_utils";
+import { updateMap } from "../../api/MapApiAccessor";
+import { notifications } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons-react";
 
 // The base Settings modal with all the logic
 function SettingsMapModalBase() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
-
   const [file, setFile] = useState<File>();
-
-  useEffect(() => {
-    if (file) {
-      console.log(file);
-    }
-  }, [file]);
 
   const handleFilesDrop = (droppedFiles: File) => {
     setFile(droppedFiles);
@@ -59,9 +55,6 @@ function SettingsMapModalBase() {
 
   // This function is used to handle the form submission
   const handleFormSubmit = async () => {
-    // You can add your form submission logic here
-    // For now, we'll just log the form values
-    console.log(form.values);
     if (file) {
       // Set the file path in the DO space with the creatorId and mapId
       const filePath = `map_images/${form.values.creatorId}/${form.values._id}`;
@@ -69,13 +62,27 @@ function SettingsMapModalBase() {
       // Upload the image to the DO space
       const imageUrl = await uploadImage(file, filePath);
 
-      // Update the map image url in the database
+      // Update the edit page state image url
       editPageState.map.thumbnail.imageUrl = imageUrl;
       editPageState.map.thumbnail.imageType = getFileType(imageUrl);
       
       console.log(editPageState.map, "updated editPageState.map");
-      
       setEditPageState({ type: "update_map", map: editPageState.map});
+      
+      // Update the map in the database
+      updateMap({map: editPageState.map}).then((res) => {
+        console.log(res);
+      });
+
+      // Close the modal
+      setEditPageState({ type: "change_modal", modal: "NONE" })
+
+      // Show a notification
+      notifications.show({
+        icon: <IconCheck />,
+        title: 'Your map has been updated!',
+        message: 'Yay an updated map :D',
+      })
     }
   };
 
@@ -89,15 +96,15 @@ function SettingsMapModalBase() {
           alt="Norway"
         />
       );
+    }else if (editPageState.map.thumbnail.imageUrl) {
+      return (
+        <Image
+          src={editPageState.map.thumbnail.imageUrl}
+          radius="md"
+          alt="Norway"
+        />
+      );
     }
-  };
-
-  const handleImageGet = () => {
-    const imageURL = 'apple.png'
-    deleteImage(imageURL).then((res) => {
-      console.log(res);
-    }
-    );
   };
 
   return (

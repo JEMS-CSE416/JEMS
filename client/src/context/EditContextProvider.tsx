@@ -64,25 +64,19 @@ export function EditContextProvider(props: EditContextProviderProps) {
 
   // initialize the map by pulling it from the backend
   useEffect(() => {
-    console.log("1--------------------")
 
     fetchMap();
   }, []);
 
-  console.log("2--------------------")
 
   const fetchMap = async () => {
     // Replace with your API endpoint and map ID
     const apiUrl = BACKEND_URL+"/api/maps/{id}/?id=";
     const mapId = props.map_id; 
-    console.log("3--------------------")
-    console.log(mapId)
 
     try {
       console.log(`fetching map for id: ${mapId}`);
       const res = await fetch(`${apiUrl}${mapId}`);
-      console.log("4--------------------")
-      console.log(res.body)
       if (!res.ok) {
         throw new Error(res.statusText);
       }
@@ -123,7 +117,7 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         modal: Object.values(EditModalEnum).includes(action.modal) ? action.modal : "NONE"
       }
     case 'update_map':
-      console.log("updating map")
+      console.log("updating map state")
       console.log(action.map)
       return {
         ...state,
