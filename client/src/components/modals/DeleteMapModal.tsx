@@ -1,7 +1,10 @@
 import React from "react";
 import { Modal, Button, Group } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
+import { deleteMap } from "../../api/MapApiAccessor";
+import { useSelectedMap } from "../selectedcard/SelectedCardPage";
 
 interface DeleteMapModalProps {
   opened: boolean;
@@ -9,13 +12,32 @@ interface DeleteMapModalProps {
 }
 
 const DeleteMapModal: React.FC<DeleteMapModalProps> = ({ opened, onClose }) => {
-  const handleConfirm = () => {
+  const selectedMap = useSelectedMap();
+  const navigate = useNavigate();
+
+  const handleConfirm = async () => {
+    const mapId = selectedMap._id.toString();
+
+    //TO-DO replace this with actual logged in creator id
+    const creatorId = selectedMap.creatorId.toString();
+   
+    try {
+      await deleteMap(mapId, creatorId)
+      navigate('/home');
+      notifications.show({
+        icon: <IconCheck />,
+        title: 'Your map has been deleted!',
+        message: 'Bye bye map :(',
+      });
+    } catch (err) {
+      console.log(err);
+      notifications.show({
+        icon: <IconX />,
+        title: 'Error deleting map',
+        message: 'Please try again',
+      });
+    }
     onClose();
-    notifications.show({
-      icon: <IconCheck />,
-      title: 'Your map has been deleted!',
-      message: 'Bye bye map :(',
-    })
   }
 
   return (
