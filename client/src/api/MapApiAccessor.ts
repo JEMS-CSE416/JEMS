@@ -1,9 +1,9 @@
 import { Map, ErrorMap } from "../utils/models/Map";
 import { BACKEND_URL, LOCAL_BACKEND_URL } from "../utils/constants";
 
-const mapsUrl = LOCAL_BACKEND_URL + "/api/maps/";
+const mapsUrl = BACKEND_URL + "/api/maps/";
 const mapUrl = BACKEND_URL + "/api/maps/:id/";
-const updateMapURL = LOCAL_BACKEND_URL + "/api/maps/update/:id/";
+const updateMapURL = BACKEND_URL + "/api/maps/update/:id/";
 
 interface GetMapParams {
   id: string;

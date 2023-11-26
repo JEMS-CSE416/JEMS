@@ -248,7 +248,7 @@ mapRouter.get("/:id", getMap);
  *           schema:
  *             type: Object
  *             properties:
- *               map_name:
+ *               mapName:
  *                 type: string
  *               public:
  *                 type: boolean
