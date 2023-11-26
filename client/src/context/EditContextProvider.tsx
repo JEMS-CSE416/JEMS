@@ -22,7 +22,7 @@ interface EditPageState {
 
 interface Action {
   type: String,
-  map?: String,
+  map?: Map,
   modal?: String,
 }
 
@@ -110,6 +110,13 @@ function editReducer(state: EditPageState, action: any): EditPageState {
       return {
         ...state,
         modal: Object.values(EditModalEnum).includes(action.modal) ? action.modal : "NONE"
+      }
+    case 'update_map':
+      console.log("updating map")
+      console.log(action.map)
+      return {
+        ...state,
+        map: action.map ?? ErrorMap
       }
   }
 

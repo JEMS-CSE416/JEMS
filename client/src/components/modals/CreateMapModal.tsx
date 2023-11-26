@@ -324,7 +324,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 />
               </Grid.Col>
               <Grid.Col span={7}>
-                <FileDropZone onFilesDrop={handleFilesDrop}/>
+                <FileDropZone fileUploadType="MAP_UPLOAD" onFilesDrop={handleFilesDrop}/>
                 <Stack justify="space-between">
                   {previews()}
                 </Stack>
