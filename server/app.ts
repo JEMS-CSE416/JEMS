@@ -13,14 +13,7 @@ const app = express()
 
 app.set('trust proxy', 1)
 // setup cors
-app.use(cors({
-  origin: [
-    'http://localhost:3000', 
-    'https://orca-app-tcqol.ondigitalocean.app/',
-    'https://monkfish-app-ricf2.ondigitalocean.app/'
-  ],
-  credentials: true,
-}))
+app.use(cors())
 
 
 // Setup Map router
