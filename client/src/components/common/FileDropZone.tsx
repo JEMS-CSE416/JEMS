@@ -1,9 +1,7 @@
 import { Group, Text, rem } from '@mantine/core';
 import { IconUpload, IconPhoto } from '@tabler/icons-react';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import { useLocation } from 'react-router-dom';
 import { MAP_TYPES } from '../../utils/global_utils';
-import { el } from 'date-fns/locale';
 
 interface FileDropZoneProps {
   fileUploadType: string;
@@ -43,10 +41,10 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ fileUploadType, onFilesDrop
 
         <div>
           <Text size="xl" inline>
-            Drag files here or click to select file
+            Drag a file here or click to select file
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
-            Attach a SHP/DBF file in a .zip. Files over 5mb are not supported.
+            Files over 5mb are not supported.
           </Text>
         </div>
       </Group>
