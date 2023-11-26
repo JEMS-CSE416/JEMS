@@ -16,7 +16,8 @@ import PasswordRecoveryModal from "../modals/splashScreenModals/PasswordRecovery
 import SignupModal from "../modals/splashScreenModals/SignupModal";
 import { useState } from "react";
 
-const SplashScreen = () => {
+const SplashScreen = (state?: {passState?: boolean;}) => {
+
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openPasswordRecoveryModal, setOpenPasswordRecoveryModal] =
     useState(false);

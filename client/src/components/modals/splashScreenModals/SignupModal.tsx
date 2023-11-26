@@ -9,7 +9,19 @@ import {
 import jemsLogo from "../../../assets/images/logo.png";
 import "./css/splashScreenModals.css";
 import SplashScreenModalTemplate from "./SplashScreenModalTemplate";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { signup } from "../../../api/AuthApiAccesor";
+import { useSetAuthContext } from "../../../context/AuthContextProvider";
+
+interface SignUpState{
+  email: string
+  password: string
+  password2: string
+  displayName: string
+  emailErr?: string
+  passErr?: string
+}
 
 interface SignupModalProps {
   onOpenLoginModal: () => void;
@@ -23,6 +35,53 @@ const SignupModal: React.FC<SignupModalProps> = ({
   function handleCloseSignupOpenLoginModal() {
     onCloseSignupModal();
     onOpenLoginModal();
+  }
+
+  const setAuthcontext = useSetAuthContext();
+  const navigate = useNavigate();
+  const [signupState, setsignupState] = useState({email: "", password: "", password2: "", displayName: ""} as SignUpState)
+
+  function handleSignUp() {
+
+    // Check for email and pass nulling
+    const errState = {...signupState} as SignUpState
+    if(signupState.email === "")
+      errState.emailErr = "Email is a required field"
+    if(signupState.password === "")
+      errState.passErr = "Password is a required field"
+    if(signupState.password2 === "")
+      errState.passErr = "Password is a required field"
+    if(errState.passErr !== "" || errState.emailErr !== ""){
+      setsignupState(errState);
+      return
+    }
+
+    signup({
+      email: signupState.email,
+      password: signupState.password,
+      displayName: signupState.displayName
+    })
+      .then(
+        (json) => {
+          setAuthContext({user: json});
+          navigate('/home/');
+        }
+      ).catch(
+        (err) => {
+          console.log(err)
+          if((err as string).includes('email') || (err as string).includes('password') )
+            setLoginState({
+                ...loginState,
+                passErr: "Sorry, your username or password is incorrect. Please try again",
+                emailErr: "Sorry, your username or password is incorrect. Please try again"
+              });
+          else
+            console.log(err)
+        }
+        
+      )
+
+    
   }
 
   return (
@@ -39,6 +98,8 @@ const SignupModal: React.FC<SignupModalProps> = ({
           required
           className="splashScreenInput"
           ta={"left"}
+          error={signupState.emailErr ?? undefined}
+          onChange={(e) => setsignupState({...signupState, email:e.currentTarget.value,  emailErr:""})}
         />
         <br />
 
@@ -47,6 +108,8 @@ const SignupModal: React.FC<SignupModalProps> = ({
           required
           className="splashScreenInput"
           ta={"left"}
+          //error={signupState.emailErr ?? undefined}
+          onChange={(e) => setsignupState({...signupState, displayName:e.currentTarget.value})}
         />
         <br />
 
@@ -55,6 +118,8 @@ const SignupModal: React.FC<SignupModalProps> = ({
           required
           className="splashScreenInput"
           ta={"left"}
+          error={signupState.passErr ?? undefined}
+          onChange={(e) => setsignupState({...signupState, password:e.currentTarget.value,  passErr:""})}
         />
         <br />
 
@@ -63,6 +128,8 @@ const SignupModal: React.FC<SignupModalProps> = ({
           required
           className="splashScreenInput"
           ta={"left"}
+          error={signupState.passErr ?? undefined}
+          onChange={(e) => setsignupState({...signupState, password2:e.currentTarget.value,  passErr:""})}
         />
         <br />
 
@@ -78,9 +145,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
           </div>
 
           <div id="loginButtonDiv">
-            <Link to="/home">
               <Button> Signup </Button>
-            </Link>
           </div>
         </Group>
       </SplashScreenModalTemplate>

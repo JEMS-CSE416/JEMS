@@ -9,18 +9,34 @@ import {
 import jemsLogo from "../../../assets/images/logo.png";
 import "./css/splashScreenModals.css";
 import SplashScreenModalTemplate from "./SplashScreenModalTemplate";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useSetAuthContext } from "../../../context/AuthContextProvider";
+import { forgotPass, login } from "../../../api/AuthApiAccesor";
+import { useNavigate } from "react-router-dom";
 
 interface LoginModalProps {
   onCloseLoginModal: () => void;
   onOpenPasswordRecoveryModal: () => void;
   onOpenSignupModal: () => void;
 }
+
+interface LoginState{
+  email: string
+  password: string
+  emailErr?: string
+  passErr?: string
+}
+
+
 const LoginModal: React.FC<LoginModalProps> = ({
   onCloseLoginModal,
   onOpenPasswordRecoveryModal,
   onOpenSignupModal,
 }) => {
+  const setAuthContext = useSetAuthContext();
+  const [loginState, setLoginState] = useState({email: "", password: ""} as LoginState)
+  const navigate = useNavigate();
+
   // closes login modal and opens password recovery modal
   function handleCloseLoginOpenPasswordRecoveryModal() {
     onCloseLoginModal();
@@ -33,6 +49,72 @@ const LoginModal: React.FC<LoginModalProps> = ({
     onOpenSignupModal();
   }
 
+  function handleLogin() {
+    // Check for email and pass nulling
+    const errState = {...loginState} as LoginState
+    if(loginState.email === "")
+      errState.emailErr = "Email is a required field"
+    if(loginState.password === "")
+      errState.passErr = "Password is a required field"
+    if(errState.passErr !== "" || errState.emailErr !== ""){
+      setLoginState(errState);
+      return
+    }
+
+
+    // Attempt login
+    login({email: loginState.email, password: loginState.password})
+      .then(
+        (json) => {
+          setAuthContext({user: json});
+          navigate('/home/');
+        }
+      ).catch(
+        (err) => {
+          console.log(err)
+          if((err as string).includes('email') || (err as string).includes('password') )
+            setLoginState({
+                ...loginState,
+                passErr: "Sorry, your username or password is incorrect. Please try again",
+                emailErr: "Sorry, your username or password is incorrect. Please try again"
+              });
+          else
+            console.log(err)
+        }
+        
+      )
+
+    
+  }
+
+  function handleforgotPass() {
+    // Check for email and pass nulling
+    const errState = {...loginState} as LoginState
+    if(loginState.email === "")
+      errState.emailErr = "Email is a required field"
+    if(errState.emailErr !== ""){
+      setLoginState(errState);
+      return
+    }
+
+
+    // Attempt login
+    forgotPass(loginState.email)
+      .then(
+        () => {
+          navigate('/');
+        }
+      ).catch(
+        (err) => {
+          console.log(err)
+        }
+        
+      )
+    onCloseLoginModal();
+
+    
+  }
+
   return (
     <>
       <SplashScreenModalTemplate onCloseLoginModal={onCloseLoginModal}>
@@ -41,17 +123,23 @@ const LoginModal: React.FC<LoginModalProps> = ({
           Login
         </Text>
         <br />
-        <TextInput label="Email" required id="loginEmailInput" ta={"left"} />
+        <TextInput label="Email" required id="loginEmailInput" ta={"left"} 
+          error={loginState.emailErr ?? undefined}
+          onChange={(e) => setLoginState({...loginState, email:e.currentTarget.value,  emailErr:""})}
+        />
         <br />
         <PasswordInput
+          id="loginPasswordInput"
           label="Password"
           required
           className="loginPasswordInput"
           ta={"left"}
+          error={loginState.passErr ?? undefined}
+          onChange={(e) => setLoginState({...loginState, password:e.currentTarget.value, passErr:""})}
         />
         <div id="cursorToFinger">
           <Text
-            onClick={handleCloseLoginOpenPasswordRecoveryModal}
+            onClick={handleforgotPass}
             ta={"left"}
             id="splashScreenModalRedirect"
           >
@@ -72,18 +160,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
             </Text>
           </div>
           <div id="loginButtonDiv">
-            <Link to={"/home"}>
-              <Button onClick={checkFields} id="loginButton">Login</Button>
-            </Link>
+            <Button onClick={() => handleLogin()} id="loginButton">Login</Button>
           </div>
         </Group>
       </SplashScreenModalTemplate>
     </>
   );
 };
-function checkFields() {
-  const email = document.getElementById("loginEmailInput");
-  const pass = document.getElementById("loginPasswordInput");
-  console.log("TODO: delete log when email and pass are used" + email + pass);
-}
 export default LoginModal;
+
+
+
