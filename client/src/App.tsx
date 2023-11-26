@@ -15,7 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<SplashScreen />} />
           <Route path="/home" element={<HomeScreen />} />
-          <Route path="/selected" element={<SelectedCardPage />} />
+          <Route path="/map/:id" element={<SelectedCardPage />} />
           <Route path="/myMaps" element={<MyMaps />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/edit/:id?" element={<Edit />} />

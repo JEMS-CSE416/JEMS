@@ -54,7 +54,7 @@ const MapHeader = () => {
         {selectedMap.mapName}
       </Text>
       <Group id="edit">
-        <Link to="/edit" style={{ marginLeft: "auto" }}>
+        <Link to={`/edit/${selectedMap._id}`} style={{ marginLeft: "auto" }}>
           <Button
             leftSection={<IconEdit size={14} />}
             variant="subtle"

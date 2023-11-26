@@ -3,6 +3,7 @@ import { BACKEND_URL } from "../utils/constants";
 
 const mapsUrl = BACKEND_URL + "/api/maps/";
 const mapUrl = BACKEND_URL + "/api/maps/:id/";
+const updateMapURL = BACKEND_URL + "/api/maps/update/:id/";
 
 interface GetMapParams {
   id: string;
@@ -28,6 +29,43 @@ export async function getMap({ id, creatorId }: GetMapParams): Promise<Map> {
     console.log(error);
   }
   return Promise.reject("Error fetching maps");
+}
+
+interface updateMapParams {
+  map: Map;
+}
+
+/* Update a map by passing in a Map object, which must contain the map id*/
+export async function updateMap({map} : updateMapParams) {
+  try {
+    const res = await fetch(updateMapURL + "?id=" + map._id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        mapName: map._id,
+        public: map.public,
+        description: map.description,
+        colorType: map.colorType,
+        displayStrings: map.displayStrings,
+        displayNumerics: map.displayNumerics,
+        displayLegend: map.displayLegend,
+        displayPointers: map.displayPointers,
+        thumbnail: map.thumbnail,
+        regions: map.regions,
+        legend: map.legend,
+      }),
+    });
+    if(res.ok) {
+      const resData = await res.json();
+      console.log("Data updated successfully:", resData);
+    }
+    else {
+      console.error("Error updating data:", res.status, res.statusText);
+    }
+  }
+  catch(error) {
+    console.log(error);
+  }
 }
 
 interface MapQueryParams {
@@ -90,6 +128,7 @@ export async function duplicateMap({
   creatorId,
 }: duplicateMapParams) {
   try {
+    console.log("DUPLICATE MAPPP: ", mapId, mapName, description, isPublic, creatorId)
     // TODO: replace with mapsurl when live server is up
     const res = await fetch(mapsUrl + "duplicate/", {
       method: "POST",
@@ -104,8 +143,7 @@ export async function duplicateMap({
         public: isPublic,
       }),
     });
-    console.log(res);
   } catch (error) {
-    console.error("Error updating data:", error);
+    console.error("Error Duplicating Map:", error);
   }
 }
