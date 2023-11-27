@@ -11,7 +11,7 @@ import "./css/splashScreenModals.css";
 import SplashScreenModalTemplate from "./SplashScreenModalTemplate";
 import { useState } from "react";
 import { useSetAuthContext } from "../../../context/AuthContextProvider";
-import { forgotPass, isAuthenticated, login } from "../../../api/AuthApiAccesor";
+import { forgotPass, login } from "../../../api/AuthApiAccesor";
 import { useNavigate } from "react-router-dom";
 
 interface LoginModalProps {
@@ -75,7 +75,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       ).catch(
         (err) => {
           console.log(err)
-          if((err as string).includes('email') || (err as string).includes('password') )
+          if(err instanceof String && ((err as string).includes('email') || (err as string).includes('password')))
             setLoginState({
                 ...loginState,
                 passErr: "Sorry, your username or password is incorrect. Please try again",

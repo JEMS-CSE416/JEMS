@@ -1,5 +1,4 @@
 import {
-  Divider,
   Modal,
   Button,
   Textarea,
@@ -7,24 +6,28 @@ import {
   Box,
   Select,
   Group,
-  Stack,
   Image,
   AspectRatio,
+  Grid,
 } from "@mantine/core";
 import FileDropZone from "../common/FileDropZone";
 import { useForm } from "@mantine/form";
 import { useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
 import { useState } from "react";
+import { uploadImage } from "../../api/SpacesApiAccessor";
+import { getFileType } from "../../utils/global_utils";
+import { updateMap } from "../../api/MapApiAccessor";
+import { notifications } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 // The base Settings modal with all the logic
-function SettingsMapModalBase(){
+function SettingsMapModalBase() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
-
-  const [files, setFiles] = useState<File>();
+  const [file, setFile] = useState<File>();
 
   const handleFilesDrop = (droppedFiles: File) => {
-    setFiles(droppedFiles);
+    setFile(droppedFiles);
   };
 
   // Form state that we'll use as default values for now
@@ -47,66 +50,124 @@ function SettingsMapModalBase(){
         }
         return null;
       },
+
     },
   });
+
+  // This function is used to handle the form submission
+  const handleFormSubmit = async () => {
+    if (file) {
+      // Set the file path in the DO space with the creatorId and mapId
+      const filePath = `map_images/${form.values.creatorId}/${form.values._id}`;
+
+      // Upload the image to the DO space
+      const imageUrl = await uploadImage(file, filePath);
+
+      // Update the edit page state 
+      editPageState.map.mapName = form.values.mapName;
+      editPageState.map.description = form.values.description;
+      editPageState.map.public = form.values.visibility === "Public" ? true : false;
+      editPageState.map.thumbnail.imageUrl = imageUrl;
+      editPageState.map.thumbnail.imageType = getFileType(imageUrl);
+
+      console.log(editPageState.map, "updated editPageState.map");
+      setEditPageState({ type: "update_map", map: editPageState.map });
+
+      try {
+        // Update the map in the database
+        const responseData = await updateMap({ map: editPageState.map });
+        console.log("Map updated successfully:", responseData);
+
+        // Show a notification
+        notifications.show({
+          icon: <IconCheck />,
+          title: 'Your map has been updated!',
+          message: 'Yay an updated map :D',
+        });
+      } catch (error) {
+        console.log(error);
+
+        // Show a notification
+        notifications.show({
+          icon: <IconX />,
+          title: 'Error updating map',
+          message: 'Please try again',
+        });
+      }
+
+      // Close the modal
+      setEditPageState({ type: "change_modal", modal: "NONE" })
+    }
+  };
+
+  // This function is used to display the image preview after the user uploads an image
+  const previews = () => {
+    if (file) {
+      return (
+        <Image
+          src={URL.createObjectURL(file)}
+          radius="md"
+          alt="Norway"
+        />
+      );
+    } else if (editPageState.map.thumbnail.imageUrl) {
+      return (
+        <Image
+          src={editPageState.map.thumbnail.imageUrl}
+          radius="md"
+          alt="Norway"
+        />
+      );
+    }
+  };
 
   return (
     <>
       <Modal id="settings-modal"
         opened={editPageState.modal === "MAP_SETTINGS"}
-        onClose={() => setEditPageState({type:"change_modal", modal:"NONE"})}
+        onClose={() => setEditPageState({ type: "change_modal", modal: "NONE" })}
         title="Create Map"
         centered size="70%"
       >
         <Box style={{ margin: "20px" }}>
-          <form>
-            <Group>
-              <Box style={{ width: "40%" }}>
-                <Stack justify="flex-start">
-                  <TextInput
-                    label="Map Name"
-                    description="Enter a name to describe your map"
-                    placeholder={editPageState.map.mapName}
-                    style={{ width: "100%" }}
-                    data-autofocus
-                    withAsterisk
-                    {...form.getInputProps("mapName")}
-                  />
-                  <Textarea
-                    label="Map Description"
-                    description="Enter a description to describe your map"
-                    placeholder={editPageState.map.description}
-                    style={{ width: "100%" }}
-                    variant="filled"
-                    data-autofocus
-                    withAsterisk
-                    {...form.getInputProps("description")}
-                  />
-                  <Select
-                    label="Visibility"
-                    placeholder="Public"
-                    data={["Public", "Private"]}
-                    style={{ width: "100%" }}
-                    withAsterisk
-                    {...form.getInputProps("visibility")}
-                  />
-                </Stack>
-              </Box>
-              <Divider orientation="vertical" />
-              <Box style={{ width: "55%" }}>
-                <Stack>
-                  <FileDropZone onFilesDrop={handleFilesDrop}/>
-                    <AspectRatio ratio={20/9}>
-                    <Image
-                      src="https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80"
-                      radius="md"
-                      alt="Norway"
-                    />
-                    </AspectRatio>
-                </Stack>
-              </Box>
-            </Group>
-
+          <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>
+            <Grid gutter="xl">
+              <Grid.Col span={5}>
+                <TextInput
+                  label="Map Name"
+                  description="Enter a name to describe your map"
+                  placeholder={editPageState.map.mapName}
+                  style={{ width: "100%" }}
+                  data-autofocus
+                  withAsterisk
+                  {...form.getInputProps("mapName")}
+                />
+                <Textarea
+                  label="Map Description"
+                  description="Enter a description to describe your map"
+                  placeholder={editPageState.map.description}
+                  style={{ width: "100%" }}
+                  variant="filled"
+                  data-autofocus
+                  withAsterisk
+                  {...form.getInputProps("description")}
+                />
+                <Select
+                  label="Visibility"
+                  placeholder={editPageState.map.public ? "Public" : "Private"}
+                  data={["Public", "Private"]}
+                  style={{ width: "100%" }}
+                  withAsterisk
+                  {...form.getInputProps("visibility")}
+                />
+              </Grid.Col>
+              <Grid.Col span={7}>
+                <FileDropZone fileUploadType="IMAGE_UPLOAD" onFilesDrop={handleFilesDrop} />
+                <AspectRatio ratio={20 / 9}>
+                  {previews()}
+                </AspectRatio>
+              </Grid.Col>
+            </Grid>
             <Group justify="flex-end" mt="md">
               <Button type="submit">Submit</Button>
             </Group>
@@ -119,11 +180,11 @@ function SettingsMapModalBase(){
 
 
 // wrap it in a conditional loading 
-export function SettingsMapModal(){
+export function SettingsMapModal() {
   const editPageState = useEditContext();
-  return(
+  return (
     <>
-      { editPageState.modal === "MAP_SETTINGS" && <SettingsMapModalBase/>}
+      {editPageState.modal === "MAP_SETTINGS" && <SettingsMapModalBase />}
     </>
   )
 }

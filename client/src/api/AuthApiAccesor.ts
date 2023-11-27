@@ -1,8 +1,12 @@
 import { User } from "../utils/models/User";
-import { BACKEND_URL } from "../utils/constants";
-import { useAuthContext, useSetAuthContext } from "../context/AuthContextProvider";
+import { BACKEND_URL, LOCAL_BACKEND_URL } from "../utils/constants";
 
-const authUrl = BACKEND_URL + "/api/auth";
+let authUrl = ""
+if(process.env.REACT_APP_PROCESS_STAGE === 'prod')
+  authUrl = BACKEND_URL + "/api/auth";
+else if (process.env.REACT_APP_PROCESS_STAGE === 'dev')
+  authUrl = LOCAL_BACKEND_URL + "/api/auth";
+
 
 /**
   * Signup and login a user
@@ -38,7 +42,7 @@ export function signup(user: {email: string, password: string, displayName: stri
   */
 export function login(user: {email: string, password: string}): Promise<User> {
   return new Promise((resolve, reject) =>{
-
+    console.log( `url: ${authUrl}/login/`);
     fetch(`${authUrl}/login/`, { // First fetch sign up
       method: "post",
       headers: { "Content-Type": "application/json" },

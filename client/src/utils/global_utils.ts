@@ -16,3 +16,12 @@ export function getFileType(fileName: string): string {
     }
     return fileExtension.toLowerCase();
 }
+
+// This is the list of accepted map file types
+export const MAP_TYPES = {
+    'application/json': ['.json'],
+    'application/geo+json': ['.geojson'],
+    'application/vnd.google-earth.kml+xml': ['.kml'],
+    'application/octet-stream': ['.shp', '.dbf'],
+    'application/zip': ['.zip'],
+}

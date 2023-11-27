@@ -1,4 +1,4 @@
-import express, {Request, Response} from "express"
+import express from "express"
 import swaggerUi from "swagger-ui-express"
 import swaggerJSDoc from "swagger-jsdoc"
 import * as swaggerDocument from './swagger.json'
@@ -6,7 +6,6 @@ import authRouter from "./routes/auth/auth"
 import mapRouter from "./routes/map/map"
 import * as dotenv from "dotenv"
 import session from "express-session"
-var parseurl = require('parseurl')
 var cors = require('cors')
 
 dotenv.config();
@@ -14,7 +13,10 @@ const app = express()
 
 // setup cors
 app.use(cors({
-  origin: ['http://localhost:3000'],
+  origin: [
+    'http://localhost:3000',
+    'https://orca-app-tcqol.ondigitalocean.app/'
+  ],
   credentials: true
 }))
 
