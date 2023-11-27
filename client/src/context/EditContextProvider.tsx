@@ -5,8 +5,8 @@ import { BACKEND_URL } from "../utils/constants";
 enum EditModalEnum {
   NONE = "NONE",
   MAP_EXPORT = "MAP_EXPORT",
-  MAP_SETTINGS = "MAP_SETTINGS"
-
+  MAP_SETTINGS = "MAP_SETTINGS",
+  ADD_REGION = "ADD_REGION",
 }
 
 interface EditContextProviderProps {
@@ -36,8 +36,6 @@ export interface EditPageAction {
     //layer: any;
   }
 }
-
-
 
 // Constant initialization
 const initState = {
@@ -81,6 +79,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
         throw new Error(res.statusText);
       }
       const newMap = await res.json();
+      console.log("newMap", newMap)
       dispatch({
         type: "init_map",
         map: newMap

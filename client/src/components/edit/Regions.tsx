@@ -11,13 +11,15 @@ import { IconPlus } from "@tabler/icons-react";
 import { group } from "console";
 import React from "react";
 import { EditPageAction, EditPageState, useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
-
+import { AddRegionModal } from "../modals/AddRegionModal";
 
 export default function Regions(){
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+
   return (
     <>
+      <AddRegionModal/>
       <Flex
         align="center"
         gap="xl"
@@ -26,7 +28,10 @@ export default function Regions(){
       >
         <Title order={3}> Regions </Title>
       
-        <ActionIcon radius="xl">
+        <ActionIcon radius="xl"
+          onClick={
+            () => setEditPageState({ type:"change_modal", modal:"ADD_REGION" })
+          }>
           <IconPlus size={15}/>
         </ActionIcon>
       </Flex>
