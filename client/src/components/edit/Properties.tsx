@@ -20,10 +20,19 @@ import {
   useEditDispatchContext,
   ColorTypes,
 } from "../../context/EditContextProvider";
+import { useEffect, useState } from "react";
 
 export default function Properties() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+  const [groupNameState, setGroupNameState] = useState(
+    editPageState.selectedRegion?.groupName
+  );
+
+  useEffect(() => {
+    setGroupNameState(editPageState.selectedRegion?.groupName);
+  }, [editPageState.selectedRegion]);
+
   return (
     <Box
       style={{
@@ -101,18 +110,38 @@ export default function Properties() {
             <Title order={3}>
               Editing: {editPageState.selectedRegion?.region.regionName}
             </Title>
+            <Title order={6}>
+              Group Name ({editPageState.selectedRegion?.i}): {editPageState.selectedRegion?.groupName}
+            </Title>
             <Stack pl={10} gap="xs" p="sm">
               <Title order={6}> Region Properties </Title>
               <Center></Center>
               <TextInput
                 label="Group Name"
                 placeholder="Group Name"
-                value={editPageState.selectedRegion.groupName}
+                value={groupNameState}
                 onChange={(event) => {
-                  setEditPageState({
-                    type: "update_map",
-                    map: { ...editPageState.map, colorType: event.currentTarget.value },
-                  });
+                  setGroupNameState(event.currentTarget.value);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    console.log(
+                      "locking in group name from ",
+                      editPageState.selectedRegion!.groupName,
+                      "to ",
+                      groupNameState
+                    );
+                    setEditPageState({
+                      type: "update_selected_region_group_name",
+                      selectedRegion: {
+                        ...editPageState.selectedRegion!,
+                        groupName:
+                          groupNameState === ""
+                            ? editPageState.selectedRegion!.groupName
+                            : groupNameState!,
+                      },
+                    });
+                  }
                 }}
               />
 
