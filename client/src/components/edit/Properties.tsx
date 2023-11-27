@@ -42,11 +42,11 @@ export default function Properties() {
           ]}
         />
 
-        <Switch defaultChecked labelPosition="left" label="Legend" />
+        <Switch checked={editPageState.map.displayLegend} onChange={(event)=>{setEditPageState({type: "update_map", map: {...editPageState.map, displayLegend: event.currentTarget.checked}})}} labelPosition="left" label="Legend" />
 
-        <Switch defaultChecked labelPosition="left" label="Numeric Label" />
+        <Switch checked={editPageState.map.displayNumerics} onChange={(event)=>{setEditPageState({type: "update_map", map: {...editPageState.map, displayNumerics: event.currentTarget.checked}})}} labelPosition="left" label="Numeric Label" />
 
-        <Switch defaultChecked labelPosition="left" label="String Label" />
+        <Switch checked={editPageState.map.displayStrings} onChange={(event)=>{setEditPageState({type: "update_map", map: {...editPageState.map, displayStrings: event.currentTarget.checked}})}} labelPosition="left" label="String Label" />
       </Stack>
 
       <Divider my="md" />

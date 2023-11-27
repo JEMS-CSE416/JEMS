@@ -112,6 +112,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
 // TODO: change any action
 // This function handles all of the changes to the edit page state
 function editReducer(state: EditPageState, action: any): EditPageState {
+  console.log("EDIT REDUCER: ",action.map)
   switch (action.type) {
     case 'init_map':
       // Make sure you create a new state, rather than modify the old one
@@ -138,7 +139,6 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         selectedRegion: selectedRegion
       }
     case 'update_map':
-      console.log(action.map)
       return {
         ...state,
         map: action.map
