@@ -30,9 +30,9 @@ export interface EditPageState {
 }
 
 export interface EditPageAction {
-  type: String;
-  map?: Map;
-  modal?: String;
+  type: String,
+  map?: Map,
+  modal?: String,
   selectedRegion?: {
     groupName: string;
     i: number;
@@ -67,18 +67,14 @@ export function EditContextProvider(props: EditContextProviderProps) {
 
   // initialize the map by pulling it from the backend
   useEffect(() => {
-    console.log("1--------------------");
-
     fetchMap();
   }, []);
 
-  console.log("2--------------------");
 
   const fetchMap = async () => {
     // Replace with your API endpoint and map ID
-    const apiUrl = BACKEND_URL + "/api/maps/{id}/?id=";
-    const mapId = props.map_id;
-    console.log(mapId);
+    const apiUrl = BACKEND_URL+"/api/maps/{id}/?id=";
+    const mapId = props.map_id; 
 
     try {
       console.log(`fetching map for id: ${mapId}`);
@@ -121,11 +117,16 @@ function editReducer(state: EditPageState, action: any): EditPageState {
     case "change_modal":
       return {
         ...state,
-        modal: Object.values(EditModalEnum).includes(action.modal)
-          ? action.modal
-          : "NONE",
-      };
-    case "select_region":
+        modal: Object.values(EditModalEnum).includes(action.modal) ? action.modal : "NONE"
+      }
+    case 'update_map':
+      console.log("updating map state")
+      console.log(action.map)
+      return {
+        ...state,
+        map: action.map ?? ErrorMap
+      }
+    case 'select_region':
       const selectedRegion = {
         i: action.selectedRegion.i,
         groupName: action.selectedRegion.groupName,

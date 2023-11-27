@@ -1,18 +1,19 @@
 import { Group, Text, rem } from '@mantine/core';
 import { IconUpload, IconPhoto } from '@tabler/icons-react';
-import { Dropzone } from '@mantine/dropzone';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { MAP_TYPES } from '../../utils/global_utils';
 
 interface FileDropZoneProps {
+  fileUploadType: string;
   onFilesDrop: (file: File) => void;
 }
 
-const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, ...props }) => {
-  const MAP_TYPES = {
-    'application/json': ['.json'],
-    'application/geo+json': ['.geojson'],
-    'application/vnd.google-earth.kml+xml': ['.kml'],
-    'application/octet-stream': ['.shp', '.dbf'],
-    'application/zip': ['.zip'],
+const FileDropZone: React.FC<FileDropZoneProps> = ({ fileUploadType, onFilesDrop, ...props }) => {
+  let acceptedFiles;
+  if(fileUploadType === "IMAGE_UPLOAD"){
+    acceptedFiles = IMAGE_MIME_TYPE;
+  }else if(fileUploadType === "MAP_UPLOAD"){
+    acceptedFiles = MAP_TYPES;
   }
 
   return (
@@ -20,7 +21,7 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, ...props }) =>
       onDrop={(file) => onFilesDrop(file[0])}
       onReject={(file) => console.log('rejected file', file)}
       maxSize={3 * 1024 ** 2}
-      accept={MAP_TYPES}
+      accept={acceptedFiles}
       multiple={true}
       {...props}
     >
@@ -40,10 +41,10 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, ...props }) =>
 
         <div>
           <Text size="xl" inline>
-            Drag files here or click to select file
+            Drag a file here or click to select file
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
-            Attach a SHP/DBF file in a .zip. Files over 5mb are not supported. 
+            Files over 5mb are not supported.
           </Text>
         </div>
       </Group>
