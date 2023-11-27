@@ -8,7 +8,6 @@ export function convertToGeoJSON(jemsJSON: any): string {
 
   for (const group in jemsJSON.regions) {
     const regionGroup = jemsJSON.regions[group];
-    console.log(regionGroup)
     regionGroup.forEach((region: any, i: number) => {
       const feature: any = {
         type: "Feature",

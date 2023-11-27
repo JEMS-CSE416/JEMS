@@ -1,5 +1,5 @@
 import { Map, ErrorMap } from "../utils/models/Map";
-import { BACKEND_URL } from "../utils/constants";
+import { BACKEND_URL, LOCAL_BACKEND_URL } from "../utils/constants";
 
 const mapsUrl = BACKEND_URL + "/api/maps/";
 const mapUrl = BACKEND_URL + "/api/maps/:id/";
@@ -36,13 +36,13 @@ interface updateMapParams {
 }
 
 /* Update a map by passing in a Map object, which must contain the map id*/
-export async function updateMap({map} : updateMapParams) {
+export async function updateMap({map} : updateMapParams): Promise<Map[]> {
   try {
     const res = await fetch(updateMapURL + "?id=" + map._id, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        mapName: map._id,
+        mapName: map.mapName,
         public: map.public,
         description: map.description,
         colorType: map.colorType,
@@ -58,6 +58,7 @@ export async function updateMap({map} : updateMapParams) {
     if(res.ok) {
       const resData = await res.json();
       console.log("Data updated successfully:", resData);
+      return resData;
     }
     else {
       console.error("Error updating data:", res.status, res.statusText);
@@ -66,6 +67,7 @@ export async function updateMap({map} : updateMapParams) {
   catch(error) {
     console.log(error);
   }
+  return Promise.reject("Error updating maps");
 }
 
 interface MapQueryParams {
@@ -146,4 +148,24 @@ export async function duplicateMap({
   } catch (error) {
     console.error("Error Duplicating Map:", error);
   }
+}
+
+export async function createMap(req: any) {
+  try {
+    const res = await fetch(mapsUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req)
+    });
+    if (res.ok) {
+      const resData = await res.json();
+      console.log("Map created successfully:", resData);
+      return resData;
+    } else {
+      console.error("Error updating data:", res.status, res.statusText);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return Promise.reject("Error creating map");
 }

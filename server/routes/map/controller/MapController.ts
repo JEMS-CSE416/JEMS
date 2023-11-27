@@ -286,9 +286,11 @@ const createMap = async (req: Request, res: Response) => {
  */
 const updateMap = async (req: Request, res: Response) => {
   // TODO: Add security checks in future to double check whether the user accessing is indeed the owner of the map
+  console.log("inside update map");
   const mapModel = await getMapModel();
+  console.log(req.body);
   const map_id = req.query.id;
-  const map_name = req.body.map_name;
+  const mapName = req.body.mapName;
   const isPublic = req.body.public;
   const description = req.body.description;
   const colorType = req.body.colorType;
@@ -311,7 +313,7 @@ const updateMap = async (req: Request, res: Response) => {
       { _id: map_id },
       {
         $set: {
-          mapName: map_name,
+          mapName: mapName,
           public: isPublic,
           description: description,
           colorType: colorType,
