@@ -70,25 +70,30 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     if(err) return res.status(400).send("bad regen")
 
     // store objectId in session  
-    //req.session.user = {}
-    req.session.userid = user._id
-    req.session.userdisplayName = user.displayName
-    req.session.useremail = user.email
+    req.session.user = {}
+    req.session.user.id = user._id
+    req.session.user.displayName = user.displayName
+    req.session.user.email = user.email
 
+    //console.log(req.session)
+      //return res.status(200).json({
+        //id: user._id,
+        //displayname: user.displayname,
+        //email: user.email
+      //}).send();
     console.log(req.session)
+    // save session
+    req.session.save( (err: Error) => {
+      if(err) return res.status(400).send("bad save")
+      console.log("2", req.session);
+
+      // return 200 status code
       return res.status(200).json({
         id: user._id,
-        displayName: user.displayName,
+        displayname: user.displayName,
         email: user.email
       }).send();
-    //console.log(req.session)
-    //// save session
-    //req.session.save( (err: Error) => {
-      //if(err) return res.status(400).send("bad save")
-      //console.log("2", req.session)
-
-      //// return 200 status code
-    //})
+    })
 
   })
 }
@@ -139,9 +144,8 @@ export const isAuthMiddleWare = async (req: Request, res: Response, next: NextFu
  * @returns error status code
 */
 export const isAuthEndpt = async (req: Request, res: Response, next: NextFunction) => {
-  //console.log(req.session)
-  console.log("req:", req.body)
-  if (req.body.userid != undefined) res.status(200).send();
+  console.log("session:", req.session)
+  if (req.session != undefined) res.status(200).send();
   else res.status(401).send("Not Auth");
 }
 

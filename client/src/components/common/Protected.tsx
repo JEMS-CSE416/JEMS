@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { NavigateFunction, useNavigate } from "react-router-dom"
+import { NavigateFunction, Outlet, useNavigate } from "react-router-dom"
 import { isAuthenticated } from "../../api/AuthApiAccesor"
 import { useAuthContext, useSetAuthContext } from "../../context/AuthContextProvider";
 
@@ -22,21 +22,20 @@ export default function Protected(){
 
 
   return (
-    <>
-    </>
+    <Outlet/>
   )
 }
 
 function CheckAuth (navigate: NavigateFunction, userid: any){
     console.log("chk:", userid)
-  if(!userid)
-      navigate('/')
-  //isAuthenticated(userid) //calls isAuthenticated
-    //.then( isAuth => { // handle promise returned by isAuthenticated
-      //if(!isAuth) navigate('/')
-    //})
-    //.catch(err => { // handle error
-      //console.log(err)
+  //if(!userid)
       //navigate('/')
-    //})
+  isAuthenticated(userid) //calls isAuthenticated
+    .then( isAuth => { // handle promise returned by isAuthenticated
+      if(!isAuth) navigate('/')
+    })
+    .catch(err => { // handle error
+      console.log(err)
+      navigate('/')
+    })
 }

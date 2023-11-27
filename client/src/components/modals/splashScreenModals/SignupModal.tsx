@@ -37,7 +37,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
     onOpenLoginModal();
   }
 
-  const setAuthcontext = useSetAuthContext();
+  const setAuthContext = useSetAuthContext();
   const navigate = useNavigate();
   const [signupState, setsignupState] = useState({email: "", password: "", password2: "", displayName: ""} as SignUpState)
 
@@ -62,16 +62,13 @@ const SignupModal: React.FC<SignupModalProps> = ({
       displayName: signupState.displayName
     })
       .then(
-        (json) => {
-          setAuthContext({user: json});
-          navigate('/home/');
-        }
+        (json) => handleCloseSignupOpenLoginModal()
       ).catch(
         (err) => {
           console.log(err)
           if((err as string).includes('email') || (err as string).includes('password') )
-            setLoginState({
-                ...loginState,
+            setsignupState({
+                ...signupState,
                 passErr: "Sorry, your username or password is incorrect. Please try again",
                 emailErr: "Sorry, your username or password is incorrect. Please try again"
               });

@@ -15,23 +15,16 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SplashScreen />} />
-<<<<<<< HEAD
           <Route path="*" element={<SplashScreen />} />
 
-            <Route path="/home" element={<HomeScreen />} />
-            <Route path="/selected" element={<SelectedCardPage />} />
-            <Route path="/myMaps" element={<MyMaps />} />
-            <Route path="/discover" element={<Discover />} />
-            <Route path="/edit/:id?" element={<Edit />} />
-            <Route path="/maps/search/:search?" element={<SearchedMaps />} />
-=======
-          <Route path="/home" element={<HomeScreen />} />
-          <Route path="/map/:id" element={<SelectedCardPage />} />
-          <Route path="/myMaps" element={<MyMaps />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/edit/:id?" element={<Edit />} />
-          <Route path="/maps/search/:search?" element={<SearchedMaps />} />
->>>>>>> main
+          <Route element={<Protected />} >
+              <Route path="/home" element={<HomeScreen />} />
+              <Route path="/map/:id" element={<SelectedCardPage />} />
+              <Route path="/myMaps" element={<MyMaps />} />
+              <Route path="/discover" element={<Discover />} />
+              <Route path="/edit/:id?" element={<Edit />} />
+              <Route path="/maps/search/:search?" element={<SearchedMaps />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

@@ -11,7 +11,7 @@ import "./css/splashScreenModals.css";
 import SplashScreenModalTemplate from "./SplashScreenModalTemplate";
 import { useState } from "react";
 import { useSetAuthContext } from "../../../context/AuthContextProvider";
-import { forgotPass, login } from "../../../api/AuthApiAccesor";
+import { forgotPass, isAuthenticated, login } from "../../../api/AuthApiAccesor";
 import { useNavigate } from "react-router-dom";
 
 interface LoginModalProps {
@@ -67,6 +67,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
       .then(
         (json) => {
           setAuthContext({user: json});
+          //isAuthenticated(json.email)
+            //.then( res => console.log("status:", res))
+            //.catch(err => console.log(err))
           navigate('/home/');
         }
       ).catch(

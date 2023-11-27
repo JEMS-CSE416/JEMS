@@ -42,7 +42,8 @@ export function login(user: {email: string, password: string}): Promise<User> {
     fetch(`${authUrl}/login/`, { // First fetch sign up
       method: "post",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user)
+      body: JSON.stringify(user),
+      credentials: "include"
     })
     .then( (res) => { // Then handle the http response
       if(res.ok)
@@ -84,10 +85,9 @@ export function logout(): Promise<Boolean> {
 export function isAuthenticated(userId: any): Promise<Boolean> {
   return new Promise((resolve, reject) =>{
 
-    fetch(`${authUrl}/`, { // First fetch sign up
-      method: "post",
-      credentials: 'include',
-      body: JSON.stringify({userid: userId})
+    fetch(`${authUrl}/isAuth/`, { // First fetch sign up
+      method: "get",
+      credentials: 'include'
     })
     .then( (res) => { // Then handle the http response
       console.log(res)
