@@ -5,6 +5,20 @@ const mapsUrl = BACKEND_URL + "/api/maps/";
 const mapUrl = BACKEND_URL + "/api/maps/:id/";
 const updateMapURL = BACKEND_URL + "/api/maps/update/:id/";
 
+export async function deleteMap(mapId: string, creatorId: string){
+  try {
+    const res = await fetch(mapsUrl + mapId, {
+      method: "DELETE",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + creatorId,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 interface GetMapParams {
   id: string;
   creatorId: string;
