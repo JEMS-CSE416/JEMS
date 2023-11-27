@@ -17,8 +17,8 @@ export default function Canvas() {
   return (
     <>
       <MapContainer
-        center={[23.6978, 120.9605]}
-        zoom={5}
+        center={[40.6482, -73.9442]}
+        zoom={12}
         style={{
           width: "100%",
           height: "calc(100Vh - 60px)",

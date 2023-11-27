@@ -6,7 +6,12 @@ enum EditModalEnum {
   NONE = "NONE",
   MAP_EXPORT = "MAP_EXPORT",
   MAP_SETTINGS = "MAP_SETTINGS"
+}
 
+export enum ColorTypes{
+  NONE = "NONE",
+  CHOROPLETH = "CHOROPLETH",
+  COLOR = "COLOR"
 }
 
 interface EditContextProviderProps {
@@ -27,7 +32,7 @@ export interface EditPageState {
 
 export interface EditPageAction {
   type: String,
-  map?: String,
+  map?: Map,
   modal?: String,
   selectedRegion?: {
     groupName: string;
@@ -75,18 +80,16 @@ export function EditContextProvider(props: EditContextProviderProps) {
     // Replace with your API endpoint and map ID
     const apiUrl = BACKEND_URL+"/api/maps/{id}/?id=";
     const mapId = props.map_id; 
-    console.log("3--------------------")
     console.log(mapId)
 
     try {
       console.log(`fetching map for id: ${mapId}`);
       const res = await fetch(`${apiUrl}${mapId}`);
-      console.log("4--------------------")
-      console.log(res.body)
       if (!res.ok) {
         throw new Error(res.statusText);
       }
       const newMap = await res.json();
+      console.log(newMap)
       dispatch({
         type: "init_map",
         map: newMap
@@ -133,6 +136,12 @@ function editReducer(state: EditPageState, action: any): EditPageState {
       return {
         ...state,
         selectedRegion: selectedRegion
+      }
+    case 'update_map':
+      console.log(action.map)
+      return {
+        ...state,
+        map: action.map
       }
   }
 
