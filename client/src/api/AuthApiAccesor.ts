@@ -21,15 +21,9 @@ export function signup(user: {email: string, password: string, displayName: stri
     })
     .then( (res) => { // Then handle the http response
       if(res.ok)
-        return res.json();
+        res.json().then((jsn) => resolve(jsn))
       else
-        reject(res.statusText)
-    })
-    .then( jsn => { // Then handle the http response body
-      if(jsn === undefined)
-        return jsn
-      else
-        reject("undefined payload")
+        res.text().then((txt) => reject(txt))
     })
     .catch( err => { // error
       reject(err);

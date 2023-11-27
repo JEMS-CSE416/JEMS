@@ -9,22 +9,17 @@ import {
 import jemsLogo from "../../../assets/images/logo.png";
 import "./css/splashScreenModals.css";
 import SplashScreenModalTemplate from "./SplashScreenModalTemplate";
-import { useState } from "react";
 import { useSetAuthContext } from "../../../context/AuthContextProvider";
 import { forgotPass, login } from "../../../api/AuthApiAccesor";
 import { useNavigate } from "react-router-dom";
+import { isEmail, isNotEmpty, useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons-react";
 
 interface LoginModalProps {
   onCloseLoginModal: () => void;
   onOpenPasswordRecoveryModal: () => void;
   onOpenSignupModal: () => void;
-}
-
-interface LoginState{
-  email: string
-  password: string
-  emailErr?: string
-  passErr?: string
 }
 
 
@@ -34,14 +29,19 @@ const LoginModal: React.FC<LoginModalProps> = ({
   onOpenSignupModal,
 }) => {
   const setAuthContext = useSetAuthContext();
-  const [loginState, setLoginState] = useState({email: "", password: ""} as LoginState)
   const navigate = useNavigate();
+  const form = useForm({
+    initialValues: {
+      email: '',
+      password: ''
+    },
 
-  // closes login modal and opens password recovery modal
-  function handleCloseLoginOpenPasswordRecoveryModal() {
-    onCloseLoginModal();
-    onOpenPasswordRecoveryModal();
-  }
+    validate: {
+      email: isEmail('Invalid email'),
+      password: isNotEmpty('Password Cannot be empty'),
+    }
+
+  });
 
   // closes login modal and opens signup modal
   function handleCloseLoginOpenSignUpModal() {
@@ -49,39 +49,25 @@ const LoginModal: React.FC<LoginModalProps> = ({
     onOpenSignupModal();
   }
 
-  function handleLogin() {
-    // Check for email and pass nulling
-    const errState = {...loginState} as LoginState
-    if(loginState.email === "")
-      errState.emailErr = "Email is a required field"
-    if(loginState.password === "")
-      errState.passErr = "Password is a required field"
-    if(errState.passErr !== "" || errState.emailErr !== ""){
-      setLoginState(errState);
-      return
-    }
 
+
+
+  function handleLogin(values: any) {
 
     // Attempt login
-    login({email: loginState.email, password: loginState.password})
+    login({email: values.email, password: values.password})
       .then(
         (json) => {
           setAuthContext({user: json});
-          //isAuthenticated(json.email)
-            //.then( res => console.log("status:", res))
-            //.catch(err => console.log(err))
           navigate('/home/');
         }
       ).catch(
         (err) => {
           console.log(err)
-          if(err instanceof String && ((err as string).includes('email') || (err as string).includes('password')))
-            setLoginState({
-                ...loginState,
-                passErr: "Sorry, your username or password is incorrect. Please try again",
-                emailErr: "Sorry, your username or password is incorrect. Please try again"
-              });
-          else
+          if(err as string !== undefined && ((err as string).includes('email') || (err as string).includes('password'))){
+            form.setFieldError("email", "Username or password is invalid");
+            form.setFieldError("password", "Username or password is invalid");
+          } else
             console.log(err)
         }
         
@@ -92,20 +78,20 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   function handleforgotPass() {
     // Check for email and pass nulling
-    const errState = {...loginState} as LoginState
-    if(loginState.email === "")
-      errState.emailErr = "Email is a required field"
-    if(errState.emailErr !== ""){
-      setLoginState(errState);
-      return
-    }
-
+    if(form.values.email === "")
+      form.setFieldError('email', 'Invalid Email')
+    else if(!form.isValid('email'))
+      form.setFieldError('email', 'Value must be an email')
 
     // Attempt login
-    forgotPass(loginState.email)
+    forgotPass(form.values.email)
       .then(
         () => {
-          navigate('/');
+          notifications.show({
+            icon: <IconCheck />,
+            title: 'Password change initiated!',
+            message: 'Check your email :)',
+          });
         }
       ).catch(
         (err) => {
@@ -126,46 +112,47 @@ const LoginModal: React.FC<LoginModalProps> = ({
           Login
         </Text>
         <br />
-        <TextInput label="Email" required id="loginEmailInput" ta={"left"} 
-          error={loginState.emailErr ?? undefined}
-          onChange={(e) => setLoginState({...loginState, email:e.currentTarget.value,  emailErr:""})}
-        />
-        <br />
-        <PasswordInput
-          id="loginPasswordInput"
-          label="Password"
-          required
-          className="loginPasswordInput"
-          ta={"left"}
-          error={loginState.passErr ?? undefined}
-          onChange={(e) => setLoginState({...loginState, password:e.currentTarget.value, passErr:""})}
-        />
-        <div id="cursorToFinger">
-          <Text
-            onClick={handleforgotPass}
+        <form onSubmit={form.onSubmit((values) => {handleLogin(values)})}>
+          <TextInput label="Email" required id="loginEmailInput" ta={"left"} 
+            //onChange={(e) => setLoginState({...loginState, email:e.currentTarget.value,  emailErr:""})}
+            {...form.getInputProps('email')}
+          />
+          <br />
+          <PasswordInput
+            id="loginPasswordInput"
+            label="Password"
+            required
+            className="loginPasswordInput"
             ta={"left"}
-            id="splashScreenModalRedirect"
-          >
-            Forgot your password?
-          </Text>
-        </div>
-
-        <br />
-
-        <Group>
-          <Text>Don't have an account?</Text>
+            {...form.getInputProps('password')}
+          />
           <div id="cursorToFinger">
             <Text
+              onClick={handleforgotPass}
+              ta={"left"}
               id="splashScreenModalRedirect"
-              onClick={handleCloseLoginOpenSignUpModal}
             >
-              Sign up!
+              Forgot your password?
             </Text>
           </div>
-          <div id="loginButtonDiv">
-            <Button onClick={() => handleLogin()} id="loginButton">Login</Button>
-          </div>
-        </Group>
+
+          <br />
+
+          <Group>
+            <Text>Don't have an account?</Text>
+            <div id="cursorToFinger">
+              <Text
+                id="splashScreenModalRedirect"
+                onClick={handleCloseLoginOpenSignUpModal}
+              >
+                Sign up!
+              </Text>
+            </div>
+            <div id="loginButtonDiv">
+              <Button type="submit" id="loginButton">Login</Button>
+            </div>
+          </Group>
+        </form>
       </SplashScreenModalTemplate>
     </>
   );

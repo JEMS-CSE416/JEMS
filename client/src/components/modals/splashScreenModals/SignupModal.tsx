@@ -9,19 +9,10 @@ import {
 import jemsLogo from "../../../assets/images/logo.png";
 import "./css/splashScreenModals.css";
 import SplashScreenModalTemplate from "./SplashScreenModalTemplate";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { signup } from "../../../api/AuthApiAccesor";
-import { useSetAuthContext } from "../../../context/AuthContextProvider";
-
-interface SignUpState{
-  email: string
-  password: string
-  password2: string
-  displayName: string
-  emailErr?: string
-  passErr?: string
-}
+import { isEmail, isNotEmpty, useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons-react";
 
 interface SignupModalProps {
   onOpenLoginModal: () => void;
@@ -37,48 +28,51 @@ const SignupModal: React.FC<SignupModalProps> = ({
     onOpenLoginModal();
   }
 
-  const setAuthContext = useSetAuthContext();
-  const navigate = useNavigate();
-  const [signupState, setsignupState] = useState({email: "", password: "", password2: "", displayName: ""} as SignUpState)
+  const form = useForm({
+    initialValues: {
+      email: '',
+      displayName: '',
+      password: '',
+      confirmPass: ''
+    },
 
-  function handleSignUp() {
-
-    // Check for email and pass nulling
-    const errState = {...signupState} as SignUpState
-    if(signupState.email === "")
-      errState.emailErr = "Email is a required field"
-    if(signupState.password === "")
-      errState.passErr = "Password is a required field"
-    if(signupState.password2 === "")
-      errState.passErr = "Password is a required field"
-    if(errState.passErr !== "" || errState.emailErr !== ""){
-      setsignupState(errState);
-      return
+    validate: {
+      email: isEmail('Invalid email'),
+      displayName: isNotEmpty('Invalid displayName'),
+      password: isNotEmpty('Password Cannot be empty'),
+      confirmPass: (value) => ( form.values.password === value) 
+        ? null
+        : 'Passwords do not match'
     }
 
+  }) as any;
+
+  function handleSignUp(values: any) {
+
     signup({
-      email: signupState.email,
-      password: signupState.password,
-      displayName: signupState.displayName
+      email: values.email,
+      password: values.password,
+      displayName: values.displayName
     })
       .then(
-        (json) => handleCloseSignupOpenLoginModal()
+        (json) => {
+          console.log("attempting to close")
+          notifications.show({
+            icon: <IconCheck />,
+            title: 'Your account has been created!',
+            message: 'Please log in!',
+          });
+          handleCloseSignupOpenLoginModal()
+          }
       ).catch(
         (err) => {
-          console.log(err)
-          if((err as string).includes('email') || (err as string).includes('password') )
-            setsignupState({
-                ...signupState,
-                passErr: "Sorry, your username or password is incorrect. Please try again",
-                emailErr: "Sorry, your username or password is incorrect. Please try again"
-              });
-          else
+          if(err as string !== undefined && ((err as string).includes('duplicate'))){
+            form.setFieldError("email", "An account with this email exists already");
+          } else
             console.log(err)
         }
         
       )
-
-    
   }
 
   return (
@@ -89,62 +83,61 @@ const SignupModal: React.FC<SignupModalProps> = ({
           Signup!
         </Text>
         <br />
+        
+        <form onSubmit={form.onSubmit((values: any) => {handleSignUp(values)})}>
+          <TextInput
+            label="Email"
+            required
+            className="splashScreenInput"
+            ta={"left"}
+            {...form.getInputProps('email')}
 
-        <TextInput
-          label="Email"
-          required
-          className="splashScreenInput"
-          ta={"left"}
-          error={signupState.emailErr ?? undefined}
-          onChange={(e) => setsignupState({...signupState, email:e.currentTarget.value,  emailErr:""})}
-        />
-        <br />
+          />
+          <br />
 
-        <TextInput
-          label="Display Name"
-          required
-          className="splashScreenInput"
-          ta={"left"}
-          //error={signupState.emailErr ?? undefined}
-          onChange={(e) => setsignupState({...signupState, displayName:e.currentTarget.value})}
-        />
-        <br />
+          <TextInput
+            label="Display Name"
+            required
+            className="splashScreenInput"
+            ta={"left"}
+            {...form.getInputProps('displayName')}
+          />
+          <br />
 
-        <PasswordInput
-          label="Password"
-          required
-          className="splashScreenInput"
-          ta={"left"}
-          error={signupState.passErr ?? undefined}
-          onChange={(e) => setsignupState({...signupState, password:e.currentTarget.value,  passErr:""})}
-        />
-        <br />
+          <PasswordInput
+            label="Password"
+            required
+            className="splashScreenInput"
+            ta={"left"}
+            {...form.getInputProps('password')}
+          />
+          <br />
 
-        <PasswordInput
-          label="Confirm Password"
-          required
-          className="splashScreenInput"
-          ta={"left"}
-          error={signupState.passErr ?? undefined}
-          onChange={(e) => setsignupState({...signupState, password2:e.currentTarget.value,  passErr:""})}
-        />
-        <br />
+          <PasswordInput
+            label="Confirm Password"
+            required
+            className="splashScreenInput"
+            ta={"left"}
+            {...form.getInputProps('confirmPass')}
+          />
+          <br />
 
-        <Group>
-          <Text>Already have an account?</Text>
-          <div id="cursorToFinger">
-            <Text
-              id="splashScreenModalRedirect"
-              onClick={handleCloseSignupOpenLoginModal}
-            >
-              Login!
-            </Text>
-          </div>
+          <Group>
+            <Text>Already have an account?</Text>
+            <div id="cursorToFinger">
+              <Text
+                id="splashScreenModalRedirect"
+                onClick={handleCloseSignupOpenLoginModal}
+              >
+                Login!
+              </Text>
+            </div>
 
-          <div id="loginButtonDiv">
-              <Button> Signup </Button>
-          </div>
-        </Group>
+            <div id="loginButtonDiv">
+                <Button type="submit"> Signup </Button>
+            </div>
+          </Group>
+        </form>
       </SplashScreenModalTemplate>
     </>
   );

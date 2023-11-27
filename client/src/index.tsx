@@ -8,19 +8,16 @@ import { Notifications } from '@mantine/notifications';
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { AuthContextProvider } from "./context/AuthContextProvider";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-  <AuthContextProvider>
     <MantineProvider>
-      <Notifications/>
+      <Notifications zIndex={10000000}/>
       <App/>
     </MantineProvider>
-  </AuthContextProvider>
   </React.StrictMode>
 );
 
