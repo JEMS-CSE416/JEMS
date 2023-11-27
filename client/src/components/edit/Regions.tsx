@@ -4,7 +4,8 @@ import {
   Stack,
   Title,
   Text,
-  Button
+  Button,
+  ScrollArea
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { group } from "console";
@@ -30,30 +31,32 @@ export default function Regions(){
         </ActionIcon>
       </Flex>
 
-      <Stack align="flex-start"  gap={10}>
-        {
-          Object.entries(editPageState.map.regions).map(
-            ([groupName, regions]) => {
-              return (
-                <>
-                  <Title order={5} >{groupName}</Title>
-                  <Stack gap={0} w="100%">
-                    {regions.map((region, i) => 
+      <ScrollArea>
+        <Stack align="flex-start"  gap={10}>
+          {
+            Object.entries(editPageState.map.regions).map(
+              ([groupName, regions]) => {
+                return (
+                  <>
+                    <Title order={5} >{groupName}</Title>
+                    <Stack gap={0} w="100%">
+                      {regions.map((region, i) => 
 
-                        <RegionButton
-                            groupName={groupName}
-                            i={i}
-                            editPageState={editPageState}
-                            setEditPageState={setEditPageState}
-                            />
-                    )}
-                  </Stack>
-                </>
-              )
-            }
-          ) 
-        }
-      </Stack>
+                          <RegionButton
+                              groupName={groupName}
+                              i={i}
+                              editPageState={editPageState}
+                              setEditPageState={setEditPageState}
+                              />
+                      )}
+                    </Stack>
+                  </>
+                )
+              }
+            ) 
+          }
+        </Stack>
+      </ScrollArea>
 
     </>
   )
