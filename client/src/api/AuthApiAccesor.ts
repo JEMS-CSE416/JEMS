@@ -117,7 +117,7 @@ export function forgotPass(email: string): Promise<Boolean> {
       if(res.ok)
         resolve(true);
       else
-        reject(res.statusText);
+        res.text().then((txt) => reject(txt))
     })
     .catch( err => { // error
       reject(err);
@@ -128,19 +128,19 @@ export function forgotPass(email: string): Promise<Boolean> {
 /**
   * change password using id string
   */
-export function changePass(resetId: string): Promise<Boolean> {
+export function changePass(resetProps: {resetId: string, password: string}): Promise<Boolean> {
   return new Promise((resolve, reject) =>{
 
-    fetch(`${authUrl}/forgotPass`, { // First fetch sign up
+    fetch(`${authUrl}/changePass`, { // First fetch sign up
       method: "post",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({resetId: [resetId]})
+      body: JSON.stringify({resetId: resetProps.resetId, password: resetProps.password})
     })
     .then( (res) => { // Then handle the http response
       if(res.ok)
         resolve(true);
       else
-        reject(res.statusText);
+        res.text().then((txt) => reject(txt))
     })
     .catch( err => { // error
       reject(err);

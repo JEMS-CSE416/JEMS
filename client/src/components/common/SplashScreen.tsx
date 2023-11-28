@@ -14,7 +14,7 @@ import jemsLogo from "../../assets/images/logo.svg";
 import LoginModal from "../modals/splashScreenModals/LoginModal";
 import PasswordRecoveryModal from "../modals/splashScreenModals/PasswordRecoveryModal";
 import SignupModal from "../modals/splashScreenModals/SignupModal";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { IconX } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
 import { useLocation } from "react-router-dom";
@@ -22,7 +22,7 @@ import { useLocation } from "react-router-dom";
 const SplashScreen = (props?: {passReset?: boolean;}) => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openPasswordRecoveryModal, setOpenPasswordRecoveryModal] =
-    useState(false);
+    useState(props?.passReset?? false);
   const [openSignupModal, setOpenSignupModal] = useState(false);
 
   // Failed attempt to limit to only one render

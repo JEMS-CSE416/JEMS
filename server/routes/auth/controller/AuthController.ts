@@ -194,7 +194,13 @@ export const changePassword = async (req: Request, res: Response) => {
   const UserModel = await getUserModel();
 
   // get user and password from the hash provided in the link
-  const userDetails = decryptEmailPass(req.body.resetId);
+
+  let userDetails = undefined
+  try {
+    userDetails = decryptEmailPass(req.body.resetId);
+  } catch (error) {
+    return res.status(400).send("Link invalid");
+  }
   const user = await UserModel.findOne({email: userDetails.email});
 
 
@@ -202,12 +208,12 @@ export const changePassword = async (req: Request, res: Response) => {
   if(user == undefined)
     return res.status(400).send("Invalid link");    // email not found
   if(new Date(user.activeUntil) < new Date())   
-    return res.status(405).send("Link expired");    // Link expired
+    return res.status(404).send("Link expired");    // Link expired
   if(!matches(userDetails.pass, user.password))
-    return res.status(400).send("Link Invalid");    // Password not found
+    return res.status(400).send("Link invalid");    // Password not found
 
   // reset password
-  user.password = hashPassword(req.body.password);
+    user.password = hashPassword(req.body.password);
   user.activeUntil = new Date(Date.UTC(9999, 11, 31, 23, 59, 59, 999))
 
   // save user's password and active until

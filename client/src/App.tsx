@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SplashScreen from "./components/common/SplashScreen";
 import HomeScreen from "./components/browsing/HomeScreen";
 import Discover from "./components/browsing/Discover";
@@ -15,6 +15,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SplashScreen />} />
+            <Route path="/reset/:id?" element={<SplashScreen passReset={true}/>} />
 
           <Route element={<Protected />} >
               <Route path="/home" element={<HomeScreen />} />

@@ -75,11 +75,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
   function handleforgotPass() {
     // Check for email and pass nulling
-    if(form.values.email === "")
+    if(form.values.email === ""){
       form.setFieldError('email', 'Invalid Email')
-    else if(!form.isValid('email'))
+      return
+    } else if(!form.isValid('email')) {
       form.setFieldError('email', 'Value must be an email')
-
+      return
+    }
+    
     // Attempt login
     forgotPass(form.values.email)
       .then(
