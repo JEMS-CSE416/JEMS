@@ -2,6 +2,7 @@ import { MapContainer, TileLayer, GeoJSON} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Legend from "./Legend";
 import DisplayLayer from "./DisplayLayer";
+import { Box } from "@mantine/core";
 
 export default function Canvas() {
   return (
