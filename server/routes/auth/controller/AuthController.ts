@@ -108,6 +108,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const logout = async (req: Request, res: Response) => {
   // remove user from session
   req.session.user = undefined
+  console.log("logout", req.session);
 
   // save session
   req.session.save( (err) => {
@@ -145,7 +146,7 @@ export const isAuthMiddleWare = async (req: Request, res: Response, next: NextFu
 */
 export const isAuthEndpt = async (req: Request, res: Response, next: NextFunction) => {
   console.log("session:", req.session)
-  if (req.session != undefined) res.status(200).send();
+  if (req.session.user != undefined) res.status(200).send();
   else res.status(401).send("Not Auth");
 }
 

@@ -24,6 +24,7 @@ import {
   // IconArrowsLeftRight,
 } from "@tabler/icons-react";
 import { ReactNode, useState } from "react";
+import { logout } from "../../api/AuthApiAccesor";
 
 interface NavbarProps {
   modals: ReactNode;
@@ -42,10 +43,17 @@ export function BaseNavbar(props: NavbarProps) {
     name: "Monkey D. Luffy",
     avatar: "https://avatars.githubusercontent.com/u/132554",
   };
+  const navigate = useNavigate();
 
   // This is the function that will be called when the user clicks on the logout button
   const handelLogOut = () => {
-    console.log("logging out");
+    logout()
+      .then((res) => {
+        navigate("/")
+      })
+      .catch((err) => {
+          console.log(`ERROR WHEN LOGGING OUT: ${err}`);
+      });
   };
 
   return (

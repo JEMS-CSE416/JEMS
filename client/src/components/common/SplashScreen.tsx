@@ -14,14 +14,37 @@ import jemsLogo from "../../assets/images/logo.svg";
 import LoginModal from "../modals/splashScreenModals/LoginModal";
 import PasswordRecoveryModal from "../modals/splashScreenModals/PasswordRecoveryModal";
 import SignupModal from "../modals/splashScreenModals/SignupModal";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { IconX } from "@tabler/icons-react";
+import { notifications } from "@mantine/notifications";
+import { useLocation } from "react-router-dom";
 
-const SplashScreen = (state?: {passState?: boolean;}) => {
-
+const SplashScreen = (props?: {passReset?: boolean;}) => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openPasswordRecoveryModal, setOpenPasswordRecoveryModal] =
     useState(false);
   const [openSignupModal, setOpenSignupModal] = useState(false);
+
+  // Failed attempt to limit to only one render
+  //const firstRender = useRef(true);
+  //if(firstRender){
+    //firstRender.current = false;
+    //console.log("here")
+  //}
+
+  const location = useLocation();
+  if(location.state?.err404)
+    notifications.show({
+      icon: <IconX />,
+      title: 'Error 404! Page not found!',
+      message: 'Please Check your url :(',
+    });
+  if(location.state?.err401)
+    notifications.show({
+      icon: <IconX />,
+      title: 'Error 401! You aren\'t Authenicated!',
+      message: 'Please login :(',
+    });
 
   // Handles opening and closing login modal
   function handleOpenLoginModal() {

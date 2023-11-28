@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import SplashScreen from "./components/common/SplashScreen";
 import HomeScreen from "./components/browsing/HomeScreen";
 import Discover from "./components/browsing/Discover";
@@ -15,7 +15,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<SplashScreen />} />
-          <Route path="*" element={<SplashScreen />} />
 
           <Route element={<Protected />} >
               <Route path="/home" element={<HomeScreen />} />
@@ -25,6 +24,7 @@ function App() {
               <Route path="/edit/:id?" element={<Edit />} />
               <Route path="/maps/search/:search?" element={<SearchedMaps />} />
           </Route>
+          <Route path="*" element={<Navigate to="/" state={{err404:true}}/>} />
         </Routes>
       </BrowserRouter>
     </div>

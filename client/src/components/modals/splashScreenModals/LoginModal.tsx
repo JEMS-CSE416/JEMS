@@ -49,9 +49,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
     onOpenSignupModal();
   }
 
-
-
-
   function handleLogin(values: any) {
 
     // Attempt login

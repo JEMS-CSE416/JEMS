@@ -32,10 +32,10 @@ function CheckAuth (navigate: NavigateFunction, userid: any){
       //navigate('/')
   isAuthenticated(userid) //calls isAuthenticated
     .then( isAuth => { // handle promise returned by isAuthenticated
-      if(!isAuth) navigate('/')
+      if(!isAuth) navigate('/', {state:{err401: true}})
     })
     .catch(err => { // handle error
       console.log(err)
-      navigate('/')
+      navigate('/', {state:{err401: true}})
     })
 }

@@ -58,18 +58,18 @@ export function login(user: {email: string, password: string}): Promise<User> {
 /**
   * logout a user
   */
-export function logout(): Promise<Boolean> {
+export function logout(): Promise<string> {
   return new Promise((resolve, reject) =>{
 
     fetch(`${authUrl}/logout/`, { // First fetch sign up
-      method: "post",
-      headers: { "Content-Type": "application/json" },
+      method: "get",
+      headers: { "Content-Typpose": "application/json" },
     })
     .then( (res) => { // Then handle the http response
       if(res.ok)
-        resolve(true)
+        resolve("")
       else
-        reject(false)
+        res.text().then((txt) => reject(txt))
     })
     .catch( err => { // error
       reject(err);
