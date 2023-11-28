@@ -30,17 +30,25 @@ function AddRegionModalBase() {
   });
 
   // This function adds new regions onto map.regions
-  function regionUpdate(regionsToAdd: any, filename: string) {
+  function regionUpdate(regionsToAdd: any, filename: string, jemsjson?: boolean) {
     const existingRegions = editPageState.map.regions;
-
+    let newRegions;
     // add new regions to existing regions
-    const regions = {
-      ...existingRegions,
-      [filename]: regionsToAdd
-    };
+    if(jemsjson){
+      newRegions = {
+        ...existingRegions,
+        ...regionsToAdd
+      };
+    }
+    else{
+      newRegions = {
+        ...existingRegions,
+        [filename]: regionsToAdd
+      };
+    }
 
     // create a new map object
-    const newMap = { ...editPageState.map, regions: regions };
+    const newMap = { ...editPageState.map, regions: newRegions };
 
     console.log(newMap, "updated newMap");
     setEditPageState({ type: "update_map", map: newMap });
@@ -58,7 +66,7 @@ function AddRegionModalBase() {
 
         if (json_file.map_file_content) {
           // Handles getting request when file uploaded is a JEMS JSON
-          regionUpdate(json_file.map_file_content.regions, file.name);
+          regionUpdate(json_file.map_file_content.regions, file.name, true);
         } else {
           // Handles getting request when file uploaded is converted to GeoJSON
           regionUpdate(getRegions(json_file), file.name);
@@ -89,6 +97,9 @@ function AddRegionModalBase() {
       const responseData = await updateMap({ map: editPageState.map });
       console.log("Map updated successfully:", responseData);
 
+      // Close the modal
+      setEditPageState({ type: "change_modal", modal: "NONE" })
+
       // Show a notification
       notifications.show({
         icon: <IconCheck />,
@@ -98,6 +109,9 @@ function AddRegionModalBase() {
     } catch (error) {
       console.log(error);
 
+      // Close the modal
+      setEditPageState({ type: "change_modal", modal: "NONE" })
+
       // Show a notification
       notifications.show({
         icon: <IconX />,
@@ -106,8 +120,6 @@ function AddRegionModalBase() {
       });
     }
 
-    // Close the modal
-    setEditPageState({ type: "change_modal", modal: "NONE" })
   };
 
   // This function is used to display the file name after it's uploaded
