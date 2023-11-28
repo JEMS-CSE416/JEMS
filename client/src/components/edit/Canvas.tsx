@@ -2,13 +2,14 @@ import { MapContainer, TileLayer, GeoJSON} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Legend from "./Legend";
 import DisplayLayer from "./DisplayLayer";
+import { Box } from "@mantine/core";
 
 export default function Canvas() {
   return (
     <>
       <MapContainer
-        center={[23.6978, 120.9605]}
-        zoom={5}
+        center={[40.6482, -73.9442]}
+        zoom={12}
         style={{
           width: "100%",
           height: "calc(100Vh - 60px)",
@@ -22,6 +23,9 @@ export default function Canvas() {
         <DisplayLayer/>
         <Legend />
       </MapContainer>
+      <Box style={{ position: 'relative', top: "100%"}}>
+        <Legend />
+      </Box>
     </>
   )
 }
