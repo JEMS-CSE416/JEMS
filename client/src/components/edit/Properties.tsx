@@ -222,7 +222,10 @@ export default function Properties() {
                 }
               />
 
+
+
               <ColorInput
+                disabled={editPageState.map.colorType === ColorTypes.NONE}
                 label="Color"
                 placeholder="#000000"
                 value={colorState}
