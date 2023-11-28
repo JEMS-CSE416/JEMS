@@ -24,12 +24,7 @@ const HomePage = () => {
   );
   const { data: yourMaps, loading: yourMapsLoading } = useLoadingData<Map[]>(
     getMaps,
-    [
-      {
-        session_token: "652daf32e2225cdfeceea14f",
-        creatorId: "652daf32e2225cdfeceea14f",
-      },
-    ]
+    [{ownedMaps: true}]
   );
 
   // Create a getMap function that takes in a mapId and returns the map object

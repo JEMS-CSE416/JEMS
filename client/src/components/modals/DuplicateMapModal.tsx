@@ -57,7 +57,6 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
         description: form.values.description,
         isPublic:
           form.values.visibility.toString() == "Public" ? "true" : "false",
-        creatorId: map.creatorId, //TODO replace this with actual logged in creator id
       };
       await duplicateMap(data);
     } catch (error) {

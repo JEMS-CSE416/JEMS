@@ -111,7 +111,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
     // Create the request body
     const req = {
       map_file_content: {
-        creatorId: form.values.creatorId,
         mapName: form.values.mapName,
         description: form.values.description,
         creationDate: new Date().toISOString(),
@@ -137,7 +136,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
       // Create the request body
       const req = {
         map_file_content: {
-          creatorId: form.values.creatorId,
           mapName: form.values.mapName,
           description: form.values.description,
           creationDate: new Date().toISOString(),
@@ -165,6 +163,37 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
       };
       return req;
     }
+  }
+
+  function getEmptyMap() {
+      const req = {
+        map_file_content: {
+          mapName: form.values.mapName,
+          description: form.values.description,
+          creationDate: new Date().toISOString(),
+          public: form.values.visibility === "Public" ? true : false,
+          template: form.values.template,
+          colorType: getColorType(form.values.template),
+          displayStrings: false,
+          displayNumerics: false,
+          displayLegend: false,
+          displayPointers: false,
+          thumbnail: {
+            imageUrl: "",
+            imageType: "",
+          },
+          regions: {
+            
+          },
+          legend: {
+            colorLegend: {
+            },
+            choroplethLegend: {
+            }
+          }
+        },
+      };
+      return req;
   }
 
   // Handle form submission and close the modal
@@ -197,7 +226,11 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         }
         req = getGeoJsonRequest(geojson);
       }
+    } else {
+      // create an empty map
+      req = getEmptyMap();
     }
+
 
     // Create the map
     try {
@@ -213,9 +246,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 
   // Form state that we'll use as default values for now
   const form = useForm({
-    //TO-DO: Update creatorId after auth is implemented
     initialValues: {
-      creatorId: "652daf32e2225cdfeceea17f",
       mapName: "",
       description: "",
       visibility: "",

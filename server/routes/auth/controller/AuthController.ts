@@ -133,6 +133,9 @@ export const logout = async (req: Request, res: Response) => {
  * @returns error status code
 */
 export const isAuthMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("pls change")
+  console.log("qmaps: ", req.headers.authorization)
+
   if (req.session.user) next();
   else res.status(401).send("Not Authenticated")
 }
@@ -223,6 +226,46 @@ export const changePassword = async (req: Request, res: Response) => {
 }
 
 
+export const swagAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  if(req.session.user) next();
+
+  // parse login and password from headers
+  const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
+  const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':')
+  req.body.email = login;
+  req.body.password = password;
+
+  // check that login is valid
+  const UserModel = await getUserModel();
+  const user = await UserModel.findOne({email: req.body.email});
+  if(user == undefined)    // email check
+    return res.status(401).send("bad email");
+  if(!matches(req.body.password, user.password))    // password check
+    return res.status(401).send("bad password");
+  if(new Date(user.activeUntil) < new Date())
+    return res.status(401).send("Password Expired");    // password expired
+
+  // regenerate the session, which is good practice to help
+  // guard against forms of session fixation
+  req.session.regenerate((err: Error) => {
+    if(err) return res.status(400).send("bad regen")
+
+    // store objectId in session  
+    req.session.user = {}
+    req.session.user.id = user._id
+    req.session.user.displayName = user.displayName
+    req.session.user.email = user.email
+
+    // save session
+    req.session.save( (err: Error) => {
+      if(err) return res.status(400).send("bad save")
+
+      // return 200 status code
+      return next();
+    })
+
+  })
+}
 
 
 

@@ -1,18 +1,27 @@
-import { Map, ErrorMap } from "../utils/models/Map";
+import { Map } from "../utils/models/Map";
 import { BACKEND_URL, LOCAL_BACKEND_URL } from "../utils/constants";
 
-const mapsUrl = BACKEND_URL + "/api/maps/";
-const mapUrl = BACKEND_URL + "/api/maps/:id/";
-const updateMapURL = BACKEND_URL + "/api/maps/update/:id/";
+let mapsUrl = "";
+let mapUrl = "";
+let updateMapURL = "";
+if(process.env.REACT_APP_PROCESS_STAGE === 'prod'){
+  mapsUrl = BACKEND_URL + "/api/maps/";
+  mapUrl = BACKEND_URL + "/api/maps/:id/";
+  updateMapURL = BACKEND_URL + "/api/maps/update/:id/";
+} else if (process.env.REACT_APP_PROCESS_STAGE === 'dev'){
+  mapsUrl = LOCAL_BACKEND_URL + "/api/maps/";
+  mapUrl = LOCAL_BACKEND_URL + "/api/maps/:id/";
+  updateMapURL = LOCAL_BACKEND_URL + "/api/maps/update/:id/";
+}
 
-export async function deleteMap(mapId: string, creatorId: string){
+export async function deleteMap(mapId: string){
   try {
     const res = await fetch(mapsUrl + mapId, {
       method: "DELETE",
       headers: { 
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + creatorId,
       },
+      credentials: "include"
     });
   } catch (error) {
     console.log(error);
@@ -21,16 +30,15 @@ export async function deleteMap(mapId: string, creatorId: string){
 
 interface GetMapParams {
   id: string;
-  creatorId: string;
 }
 
 /* Get a single map with the map with the map id */
-export async function getMap({ id, creatorId }: GetMapParams): Promise<Map> {
-  // TODO: Change creatorId with session_token when authentication is implemented
+export async function getMap({ id }: GetMapParams): Promise<Map> {
   try {
     const res = await fetch(mapUrl + "?id=" + id, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
+      credentials: "include"
     });
     if (res.ok) {
       const resData = await res.json();
@@ -68,6 +76,7 @@ export async function updateMap({map} : updateMapParams): Promise<Map[]> {
         regions: map.regions,
         legend: map.legend,
       }),
+      credentials: "include"
     });
     if(res.ok) {
       const resData = await res.json();
@@ -87,30 +96,28 @@ export async function updateMap({map} : updateMapParams): Promise<Map[]> {
 interface MapQueryParams {
   mapName?: string;
   isPrivate?: boolean;
-  creatorId?: string;
-  session_token?: string;
+  ownedMaps?: boolean;
 }
 
 export async function getMaps({
   mapName,
   isPrivate,
-  creatorId,
-  session_token,
+  ownedMaps
 }: MapQueryParams): Promise<Map[]> {
   try {
     const searchParams = {} as any;
 
-    if (session_token) searchParams.session_token = session_token;
     if (mapName) searchParams.map_name = mapName;
     if (isPrivate) searchParams.private = isPrivate;
-    if (creatorId) searchParams.creator_id = creatorId;
+    if (ownedMaps) searchParams.owned = ownedMaps;
 
     // Replace with your API endpoint
     const response = await fetch(
-      mapsUrl + "query/?" + new URLSearchParams(searchParams),
+      mapsUrl + "?" + new URLSearchParams(searchParams),
       {
         method: "GET",
         headers: { "Content-Type": "application/json" },
+        credentials: "include"
       }
     );
 
@@ -133,24 +140,21 @@ interface duplicateMapParams {
   mapName: string;
   description: string;
   isPublic: string;
-  creatorId: string;
 }
 
 export async function duplicateMap({
   mapId,
   mapName,
   description,
-  isPublic,
-  creatorId,
+  isPublic
 }: duplicateMapParams) {
   try {
-    console.log("DUPLICATE MAPPP: ", mapId, mapName, description, isPublic, creatorId)
+    console.log("DUPLICATE MAPPP: ", mapId, mapName, description, isPublic)
     // TODO: replace with mapsurl when live server is up
     const res = await fetch(mapsUrl + "duplicate/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + creatorId,
       },
       body: JSON.stringify({
         map_id: mapId,
@@ -158,6 +162,7 @@ export async function duplicateMap({
         description: description,
         public: isPublic,
       }),
+      credentials: "include"
     });
   } catch (error) {
     console.error("Error Duplicating Map:", error);
@@ -169,7 +174,8 @@ export async function createMap(req: any) {
     const res = await fetch(mapsUrl, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req)
+      body: JSON.stringify(req),
+      credentials: "include"
     });
     if (res.ok) {
       const resData = await res.json();

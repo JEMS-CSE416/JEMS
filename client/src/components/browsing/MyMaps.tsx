@@ -29,12 +29,7 @@ function MyMaps() {
     data: yourMaps,
     error,
     loading,
-  } = useLoadingData<Map[]>(getMaps, [
-    {
-      session_token: "652daf32e2225cdfeceea14f",
-      creatorId: "652daf32e2225cdfeceea14f",
-    },
-  ]);
+  } = useLoadingData<Map[]>(getMaps, []);
 
   const handleSelectMapToDuplicate = (map: Map) => {
     location.state = map;

@@ -6,6 +6,7 @@ import authRouter from "./routes/auth/auth"
 import mapRouter from "./routes/map/map"
 import * as dotenv from "dotenv"
 import session from "express-session"
+import { swagAuthMiddleware } from "./routes/auth/controller/AuthController"
 var cors = require('cors')
 
 dotenv.config();
@@ -37,6 +38,9 @@ app.use(session({
 // Setup Map router
 app.use('/api/maps', mapRouter)
 app.use('/api/auth', authRouter)
+
+app.use(swagAuthMiddleware)
+
 
 // Setup Swagger routes
 const swaggerSpec = swaggerJSDoc({
