@@ -66,9 +66,21 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
               stringOffset: [0],
               numericLabel: 0,
               numericUnit: "",
-              color: "",
+              color: "#8eb8fa", // default color
             })
-
+            break;
+          case "MultiPolygon":
+            feature.geometry.coordinates.forEach((coordinates: any) => {
+              regions.push({
+                regionName: feature.properties.name || feature.properties.NAME,
+                coordinates: coordinates[0],
+                stringLabel: "",
+                stringOffset: [0],
+                numericLabel: 0,
+                numericUnit: "",
+                color: "#8eb8fa", // default color
+              })
+            })
             break;
           case "GeometryCollection":
             feature.geometry.geometries.forEach((geometry: any) => {
@@ -79,7 +91,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 stringOffset: [0],
                 numericLabel: 0,
                 numericUnit: "",
-                color: "",
+                color: "#8eb8fa", // default color
               })
             })
 
