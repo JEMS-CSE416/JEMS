@@ -8,6 +8,7 @@ import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
 import React from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
+import { Box } from "@mantine/core";
 
 export default function Canvas() {
   const editPageState = useEditContext();
@@ -38,8 +39,10 @@ export default function Canvas() {
             style={(region) => initStyleFunction(region, editPageState)}
                 
         />
-        <Legend />
       </MapContainer>
+      <Box style={{ position: 'relative', top: "100%"}}>
+        <Legend />
+      </Box>
     </>
   )
 }

@@ -39,7 +39,9 @@ export default function Properties() {
     editPageState.selectedRegion?.region.stringLabel
   );
 
-  const [numericLabelState, setNumericLabelState] = useState<string|number>(editPageState.selectedRegion?.region.numericLabel.toString() ?? "");
+  const [numericLabelState, setNumericLabelState] = useState<
+    string | number | undefined
+  >(editPageState.selectedRegion?.region.numericLabel?.toString() ?? undefined);
 
   const [numericUnitsState, setNumericUnitsState] = useState(
     editPageState.selectedRegion?.region.numericUnit
@@ -53,7 +55,9 @@ export default function Properties() {
     setGroupNameState(editPageState.selectedRegion?.groupName);
     setRegionNameState(editPageState.selectedRegion?.region.regionName);
     setStringLabelState(editPageState.selectedRegion?.region.stringLabel);
-    setNumericLabelState(editPageState.selectedRegion?.region.numericLabel.toString() ?? "");
+    setNumericLabelState(
+      editPageState.selectedRegion?.region.numericLabel?.toString() ?? undefined
+    );
     setNumericUnitsState(editPageState.selectedRegion?.region.numericUnit);
     setColorState(editPageState.selectedRegion?.region.color);
   }, [editPageState.selectedRegion]);
@@ -66,9 +70,21 @@ export default function Properties() {
       groupNameState
     );
     setEditPageState({
-      type: "update_selected_region_group_name",
+      type: "update_selected_region_info",
       selectedRegion: {
         ...editPageState.selectedRegion!,
+        region: {
+          ...editPageState.selectedRegion!.region,
+          regionName: regionNameState === "" ? "Untitled" : regionNameState!,
+          stringLabel: stringLabelState!,
+          numericLabel:
+            numericLabelState === "" ? undefined : Number(numericLabelState),
+          numericUnit: numericUnitsState!,
+          color:
+            colorState === ""
+              ? editPageState.selectedRegion!.region.color
+              : colorState!,
+        },
         groupName:
           groupNameState === ""
             ? editPageState.selectedRegion!.groupName
@@ -152,12 +168,9 @@ export default function Properties() {
         {editPageState.selectedRegion && (
           <>
             <Title order={3}>
-              Editing: {editPageState.selectedRegion?.region.regionName}
+              Region: {editPageState.selectedRegion?.region.regionName}
             </Title>
-            <Title order={6}>
-              Group Name ({editPageState.selectedRegion?.i}):{" "}
-              {editPageState.selectedRegion?.groupName}
-            </Title>
+            <Title order={6} c="RGB(181,186,191)">Group: {editPageState.selectedRegion?.groupName}</Title>
             <Stack pl={10} gap="xs" p="sm">
               <Title order={6}> Region Properties </Title>
               <Center></Center>
@@ -194,19 +207,11 @@ export default function Properties() {
                 label="Numeric Label"
                 placeholder="100, 250, etc."
                 value={numericLabelState}
-                onChange={setNumericLabelState}
-              />
-              {/* <TextInput
-                label="Numeric Label"
-                placeholder="Numeric Label"
-                value={numericLabelState?.toString()}
-                onChange={(event) => {
-                  const value = parseFloat(event.currentTarget.value);
-                  if (!isNaN(value)) {
-                    setNumericLabelState(value);
-                  }
+                onChange={(value) => {
+                  console.log(value);
+                  setNumericLabelState(value);
                 }}
-              /> */}
+              />
 
               <TextInput
                 label="Numeric Units"
@@ -217,13 +222,6 @@ export default function Properties() {
                 }
               />
 
-              {/* <NumberInput
-                label="Numeric Units"
-                placeholder="Numeric Units"
-                value={numericUnitsState}
-                onChange={setNumericUnitsState}
-              /> */}
-
               <ColorInput
                 label="Color"
                 placeholder="#000000"
@@ -231,7 +229,9 @@ export default function Properties() {
                 onChange={setColorState}
               />
 
-              <Button radius="xl">Done</Button>
+              <Button onClick={handleRegionPropertyEditing} radius="xl">
+                Done
+              </Button>
             </Stack>
           </>
         )}
