@@ -17,7 +17,7 @@
       "regionA": [
         {
           "regionName": "Region A",
-          "coordinate": [[10, 20], [30, 40], [50, 60]],
+          "coordinates": [[10, 20], [30, 40], [50, 60]],
           "stringLabel": "Label A",
           "stringOffset": [5, 10],
           "numericLabel": 100,
@@ -26,7 +26,7 @@
         },
         {
           "regionName": "Region A-2",
-          "coordinate": [[15, 25], [35, 45], [55, 65]],
+          "coordinates": [[15, 25], [35, 45], [55, 65]],
           "stringLabel": "Label A-2",
           "stringOffset": [8, 12],
           "numericLabel": 120,
@@ -37,7 +37,7 @@
       "regionB": [
         {
           "regionName": "Region B",
-          "coordinate": [[100, 200], [300, 400], [500, 600]],
+          "coordinates": [[100, 200], [300, 400], [500, 600]],
           "stringLabel": "Label B",
           "stringOffset": [50, 100],
           "numericLabel": 500,

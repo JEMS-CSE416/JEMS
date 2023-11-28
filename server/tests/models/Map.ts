@@ -13,7 +13,7 @@ interface Legend {
 
 interface Region {
     regionName: string;
-    coordinate: Types.Array<Types.Array<Number>>;
+    coordinates: Types.Array<Types.Array<Number>>;
     stringLabel: string;
     stringOffset: Types.Array<Number>;
     numericLabel: Number;
@@ -45,7 +45,7 @@ const imageSchema = new Schema<Image>({
 
 const regionSchema = new Schema<Region>({
     regionName: {type: String, required: true},
-    coordinate: {type: [[Number]], required: true},
+    coordinates: {type: [[Number]], required: true},
     stringLabel: {type: String, required: true},
     stringOffset:  {type: [Number], required: true},
     numericLabel: {type: Number, required: true},

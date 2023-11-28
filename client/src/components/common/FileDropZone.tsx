@@ -1,14 +1,28 @@
 import { Group, Text, rem } from '@mantine/core';
-import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { IconUpload, IconPhoto } from '@tabler/icons-react';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { MAP_TYPES } from '../../utils/global_utils';
 
-export function FileDropZone(props: Partial<DropzoneProps>) {
+interface FileDropZoneProps {
+  fileUploadType: string;
+  onFilesDrop: (file: File) => void;
+}
+
+const FileDropZone: React.FC<FileDropZoneProps> = ({ fileUploadType, onFilesDrop, ...props }) => {
+  let acceptedFiles;
+  if(fileUploadType === "IMAGE_UPLOAD"){
+    acceptedFiles = IMAGE_MIME_TYPE;
+  }else if(fileUploadType === "MAP_UPLOAD"){
+    acceptedFiles = MAP_TYPES;
+  }
+
   return (
     <Dropzone
-      onDrop={(files) => console.log('accepted files', files)}
-      onReject={(files) => console.log('rejected files', files)}
+      onDrop={(file) => onFilesDrop(file[0])}
+      onReject={(file) => console.log('rejected file', file)}
       maxSize={3 * 1024 ** 2}
-      accept={IMAGE_MIME_TYPE}
+      accept={acceptedFiles}
+      multiple={true}
       {...props}
     >
       <Group justify="center" gap="xs" mih={220} style={{ pointerEvents: 'none' }}>
@@ -18,12 +32,6 @@ export function FileDropZone(props: Partial<DropzoneProps>) {
             stroke={1.5}
           />
         </Dropzone.Accept>
-        <Dropzone.Reject>
-          <IconX
-            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
-            stroke={1.5}
-          />
-        </Dropzone.Reject>
         <Dropzone.Idle>
           <IconPhoto
             style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
@@ -33,13 +41,15 @@ export function FileDropZone(props: Partial<DropzoneProps>) {
 
         <div>
           <Text size="xl" inline>
-            Drag images here or click to select files
+            Drag a file here or click to select file
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
-            Attach as many files as you like, each file should not exceed 5mb
+            Files over 5mb are not supported.
           </Text>
         </div>
       </Group>
     </Dropzone>
   );
 }
+
+export default FileDropZone;

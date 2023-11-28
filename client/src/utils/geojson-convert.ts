@@ -2,6 +2,7 @@ import { read } from "shapefile";
 import { GeoJSON } from "geojson";
 import * as toGeoJSON from '@tmcw/togeojson';
 import JSZip from "jszip";
+import { getFileType } from "./global_utils";
 
 /*
   * Exported function that with convert specified file types into a
@@ -9,11 +10,11 @@ import JSZip from "jszip";
   */
 export async function geoJsonConvert(file: File): Promise<GeoJSON> {
   // contains characters after the '.' in a filename
-  let fileSuffix = file.name.split('.').slice(-1)[0]; 
-
+  let fileSuffix = getFileType(file.name); 
+  console.log("fileSuffix: " + fileSuffix);
   switch(fileSuffix){
     // Handling json, shp, kml and zip file
-    case "json":
+    case "geojson":
       return await handleGeoJson(file);
     case "shp":
       return await handleShp(file);
@@ -72,7 +73,6 @@ export async function handleKml(file: File): Promise<any> {
 
     // Parse the KML data to GeoJSON using togeojson.
     const geoJSON = toGeoJSON.kml(kmlData);
-    console.log(geoJSON)
 
     // Return the GeoJSON object.
     return geoJSON;

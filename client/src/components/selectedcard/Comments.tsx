@@ -1,6 +1,6 @@
 import { Center, Box, Group, Stack, Text, Avatar } from "@mantine/core";
 import { CommentCard } from "./CommentCard";
-import "../css/comments.css";
+import "./css/comments.css";
 
 const Comments = () => {
   return (

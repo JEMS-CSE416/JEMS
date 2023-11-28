@@ -1,0 +1,64 @@
+#navBar {
+  background-color: #d0ebff;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  box-shadow: 1px 1px 5px #b9b7b7;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+#jemsLogo {
+  margin-right: auto;
+  margin-left: 1%;
+  margin-right: 0px;
+  width: 100px;
+}
+
+/* Search Bar styling */
+#search {
+  margin-left: 0%;
+  border-radius: 20px;
+  border: 1px solid #c1c2c5;
+  height: 35px;
+  width: 90%;
+  max-width: 600px;
+  background: url("../../../assets/images/search.png") no-repeat left;
+  background-color: white;
+  background-size: 20px;
+  background-position: 5px;
+  padding-left: 30px;
+}
+
+#search:focus {
+  border: 1px solid #228be6;
+  outline: none;
+}
+
+::placeholder {
+  color: #c9cacc;
+  opacity: 1;
+}
+/*********************/
+
+#createMapButton {
+  margin-left: 0px;
+  margin-right: 1%;
+  height: 30px;
+}
+
+#user-profile{
+  margin-left: 0px;
+  margin-right: 2%;
+}
+
+.text-no-underline{
+  text-decoration: none;
+  color: inherit
+}
+
+.border{
+  border: 1px solid #c1c2c5;
+}
