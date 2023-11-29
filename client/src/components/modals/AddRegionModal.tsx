@@ -34,24 +34,24 @@ function AddRegionModalBase() {
     const existingRegions = editPageState.map.regions;
     let newRegions;
     // add new regions to existing regions
-    if(jemsjson){
+    if (jemsjson) {
       newRegions = {
         ...existingRegions,
         ...regionsToAdd
       };
     }
-    else{
+    else {
       newRegions = {
         ...existingRegions,
         [filename]: regionsToAdd
       };
     }
 
-    // create a new map object
-    const newMap = { ...editPageState.map, regions: newRegions };
+    editPageState.map.regions = newRegions;
 
-    console.log(newMap, "updated newMap");
-    setEditPageState({ type: "update_map", map: newMap });
+    // Update the edit page state
+    setEditPageState({ type: "update_map", map: editPageState.map });
+    console.log(editPageState.map, "updated editPageState.map????");
   }
 
   const handleAdditionalFile = async () => {
@@ -89,11 +89,12 @@ function AddRegionModalBase() {
     console.log("submitting form");
     console.log(form.values);
 
-    // Update the edit page state
-    handleAdditionalFile();
-
     try {
+      // handles adding the additional file regions
+      handleAdditionalFile();
+      
       // Update the map in the database
+      console.log("sending in map:", editPageState.map)
       const responseData = await updateMap({ map: editPageState.map });
       console.log("Map updated successfully:", responseData);
 
