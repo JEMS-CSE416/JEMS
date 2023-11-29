@@ -12,8 +12,10 @@ import {
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { useSelectedMap } from "../selectedcard/SelectedCardPage";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 const MapHeader = () => {
+  const authState = useAuthContext();
   const selectedMap = useSelectedMap();
 
   // the download modal state
@@ -53,6 +55,8 @@ const MapHeader = () => {
       <Text fw={700} size="xl" id="title">
         {selectedMap.mapName}
       </Text>
+      {
+        selectedMap.creatorId === authState.user?._id && 
       <Group id="edit">
         <Link to={`/edit/${selectedMap._id}`} style={{ marginLeft: "auto" }}>
           <Button
@@ -74,6 +78,7 @@ const MapHeader = () => {
           Delete
         </Button>
       </Group>
+        }
 
       <Group>
         <Group>

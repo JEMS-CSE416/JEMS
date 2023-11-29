@@ -7,13 +7,14 @@ interface AuthState {
 }
 
 export const AuthContext = createContext<AuthState>({});
-export const SetAuthContext = createContext<React.Dispatch<React.SetStateAction<AuthState>>>((auth) => (auth));
+export const SetAuthContext = createContext((auth: any) => (auth));
 export function useAuthContext() {
   return useContext(AuthContext);
 }
 export function useSetAuthContext() {
   return useContext(SetAuthContext);
 }
+
 
 
 /*
@@ -30,9 +31,14 @@ export function AuthContextProvider(props: {children: React.ReactNode}) {
   // auth state begins null
   const [authState, setAuthState] = useState({});
 
+  function setAuthStateWrapper(props: any){
+    console.log("in wrpaper", props);
+    setAuthState(props);
+  }
+
   return (
     <AuthContext.Provider value={authState}>
-      <SetAuthContext.Provider value={setAuthState}>
+      <SetAuthContext.Provider value={(json: any) => setAuthStateWrapper(json)}>
         {props.children}
       </SetAuthContext.Provider>
     </AuthContext.Provider>

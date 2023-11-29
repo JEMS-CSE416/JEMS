@@ -14,7 +14,7 @@ import { Map } from "../../utils/models/Map";
 export const useSelectedMap = () => {
   const location = useLocation();
   const selectedMap = location.state;
-  return selectedMap;
+  return selectedMap as Map;
 };
 
 const SelectedCardPage = ({}) => {

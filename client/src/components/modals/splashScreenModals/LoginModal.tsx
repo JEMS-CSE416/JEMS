@@ -28,7 +28,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   onOpenPasswordRecoveryModal,
   onOpenSignupModal,
 }) => {
-  const setAuthContext = useSetAuthContext();
+  const setAuthState = useSetAuthContext();
   const navigate = useNavigate();
   const form = useForm({
     initialValues: {
@@ -54,8 +54,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
     // Attempt login
     login({email: values.email, password: values.password})
       .then(
-        (json) => {
-          setAuthContext({user: json});
+        // HACK: just update user schema
+        (json: any) => {
+          const loggedUser = {user:{
+            _id: json.id,
+            email: json.email,
+            displayName: json.displayname
+          }}
+          setAuthState({...loggedUser});
           navigate('/home/');
         }
       ).catch(
