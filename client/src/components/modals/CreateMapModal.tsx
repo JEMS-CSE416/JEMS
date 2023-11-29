@@ -152,13 +152,14 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   // This function gets the request body for JEMS JSON
   function getJemsRequest(jemsjson: any) {
     const content = jemsjson.map_file_content;
+    console.log(form.values.visibility);
     // Create the request body
     const req = {
       map_file_content: {
         mapName: form.values.mapName,
         description: form.values.description,
         creationDate: new Date().toISOString(),
-        public: content.public,
+        public: form.values.visibility === "Public" ? true : false,
         template: content.template,
         colorType: getColorType(),
         displayStrings: selectedValue == "String Label Map" ? true : content.displayStrings,
