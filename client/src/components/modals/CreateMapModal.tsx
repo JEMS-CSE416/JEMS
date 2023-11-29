@@ -28,6 +28,7 @@ import { notifications } from "@mantine/notifications";
 import { IconX } from "@tabler/icons-react";
 import stringTemplate from "../../utils/templates/stringTemplate.json";
 import colorTemplate from "../../utils/templates/colorTemplate.json";
+import { error } from "console";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -302,15 +303,12 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
     } catch (err) {
       console.error("Error creating map:", err);
       onClose();
-      // check if there user dropped in a file
-      if (!file) {
-        // Show error notification
-        notifications.show({
-          icon: <IconX />,
-          title: "Error creating map",
-          message: "Drop a file or select a template!",
-        });
-      }
+      // Show error notification
+      notifications.show({
+        icon: <IconX />,
+        title: "Error creating map",
+        message: "Error creating map :(",
+      });
     }
   };
 
