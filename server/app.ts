@@ -35,11 +35,11 @@ const sess = {
 } as any
 
 if (process.env['STAGE'] !== 'dev') {
-  app.set('trust proxy', 1) // trust first proxy
+  app.set('trust proxy', true) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
   sess.proxy = true 
   sess.name = "beta"
-  sess.cookie.sameSite = false
+  sess.cookie.sameSite = "none"
 }
 
 // Use the session middleware

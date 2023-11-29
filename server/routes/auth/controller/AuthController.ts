@@ -111,17 +111,13 @@ export const logout = async (req: Request, res: Response) => {
   console.log("logout", req.session);
 
   // save session
-  req.session.save( (err) => {
+  req.session.destroy( (err) => {
     if(err) return res.status(400).send()
 
-    
-    // best practice is to regenerate session stuff
-    req.session.regenerate((err) => {
-      if(err) return res.status(400).send()
 
       // return 200 status code
       return res.status(200).send();
-    })
+
   })
 }
 
