@@ -3,8 +3,7 @@ import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import FileDropZone from "../common/FileDropZone";
-import { geoJsonConvert, handleKml, handleZip } from "../../utils/geojson-convert";
-import { getFileType } from "../../utils/global_utils";
+import { getFileType, getColorType, getRegions, handleFileConversion } from "../../utils/global_utils";
 import "./css/CreateMapModal.css";
 import { createMap } from "../../api/MapApiAccessor";
 
@@ -22,100 +21,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
   const handleFilesDrop = (droppedFile: File) => {
     setFile(droppedFile);
   };
-
-  // This function handles the conversion based on the file type
-  const handleFileConversion = async () => {
-    if (file) {
-      try {
-        // Get the file extension
-        let fileExtension = getFileType(file.name);
-        let geojson;
-        // Check the file type and handle accordingly
-        if (fileExtension === "kml") {
-          // Convert KML to GeoJSON
-          geojson = await handleKml(file);
-        } else if (fileExtension === "zip") {
-          // Handle ZIP file
-          geojson = await handleZip(file);
-        } else {
-          // Convert to GeoJSON
-          geojson = await geoJsonConvert(file);
-        }
-        return geojson;
-      } catch (error) {
-        // Log any errors
-        console.log(error);
-      }
-    }
-  };
-
-  // This function parses and grabs regions properties from GeoJSON
-  const getRegions = (geojson: any) => {
-    let regions = [] as any[];
-    if (geojson && geojson.features) {
-      let counter = 0;
-
-      geojson.features.forEach((feature: any) => {
-        // switchcase that will convert different features in different ways
-        switch (feature.geometry.type) {
-          case "Polygon":
-            regions.push({
-              regionName: feature.properties.name || feature.properties.NAME,
-              coordinates: feature.geometry.coordinates[0],
-              stringLabel: "",
-              stringOffset: [0],
-              numericLabel: 0,
-              numericUnit: "",
-              color: "#8eb8fa", // default color
-            })
-            break;
-          case "MultiPolygon":
-            feature.geometry.coordinates.forEach((coordinates: any) => {
-              regions.push({
-                regionName: feature.properties.name || feature.properties.NAME,
-                coordinates: coordinates[0],
-                stringLabel: "",
-                stringOffset: [0],
-                numericLabel: 0,
-                numericUnit: "",
-                color: "#8eb8fa", // default color
-              })
-            })
-            break;
-          case "GeometryCollection":
-            feature.geometry.geometries.forEach((geometry: any) => {
-              regions.push({
-                regionName: "untitled region " + counter++,
-                coordinates: geometry.coordinates[0],
-                stringLabel: "",
-                stringOffset: [0],
-                numericLabel: 0,
-                numericUnit: "",
-                color: "#8eb8fa", // default color
-              })
-            })
-
-            break;
-          default:
-            console.log("unsupported type:", feature);
-        }
-
-      });
-    }
-    return regions;
-  }
-
-  // This function gets the color type based on the template
-  const getColorType = (template: string) => {
-    switch (template) {
-      case "Color Label Map":
-        return "COLOR";
-      case "Choropleth Map":
-        return "CHOROPLETH";
-      default:
-        return "NONE";
-    }
-  }
 
   // This function gets the request body for JEMS JSON
   function getJemsRequest(jemsjson: any) {
@@ -161,8 +66,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
           displayLegend: false,
           displayPointers: false,
           thumbnail: {
-            imageUrl: "",
-            imageType: "",
+            imageUrl: "https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80",
+            imageType: "avif",
           },
           regions: {
             [filename]: getRegions(geojson),
@@ -179,10 +84,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
     }
   }
 
-  // Handle form submission and close the modal
-  const handleFormSubmit = async () => {
+  const createRequest = async () => {
     let req;
-
     if (file) {
       // Get the file extension
       let fileExtension = getFileType(file.name);
@@ -201,7 +104,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         }
       } else {
         // Convert the file to geojson
-        const geojson = await handleFileConversion();
+        const geojson = await handleFileConversion(file);
         // Check if the conversion was successful
         if (!geojson) {
           console.error("File conversion failed");
@@ -210,6 +113,12 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         req = getGeoJsonRequest(geojson);
       }
     }
+    return req;
+  }
+
+  // Handle form submission and close the modal
+  const handleFormSubmit = async () => {
+    const req = await createRequest();
 
     // Create the map
     try {
@@ -227,7 +136,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
   const form = useForm({
     //TO-DO: Update creatorId after auth is implemented
     initialValues: {
-      creatorId: "652daf32e2225cdfeceea17f",
+      creatorId: "652daf32e2225cdfeceea14f",
       mapName: "",
       description: "",
       visibility: "",
