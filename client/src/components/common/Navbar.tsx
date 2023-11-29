@@ -25,6 +25,7 @@ import {
 } from "@tabler/icons-react";
 import { ReactNode, useState } from "react";
 import { logout } from "../../api/AuthApiAccesor";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 interface NavbarProps {
   modals: ReactNode;
@@ -39,8 +40,9 @@ interface NavbarProps {
 export function BaseNavbar(props: NavbarProps) {
   // User that we get from the backend.
   // For now we'll pretend we have it hardcoded here
+  const auth = useAuthContext();
   const user = {
-    name: "Monkey D. Luffy",
+    name: auth.user?.displayName,
     avatar: "https://avatars.githubusercontent.com/u/132554",
   };
   const navigate = useNavigate();
@@ -97,7 +99,7 @@ export function BaseNavbar(props: NavbarProps) {
             <Menu>
               <Menu.Target>
                 <Avatar color="blue" radius="xl" className="cursor-pointer">
-                  {user.name.charAt(0)}
+                  {user.name?.charAt(0)?? '?'}
                 </Avatar>
               </Menu.Target>
               <Menu.Dropdown>
