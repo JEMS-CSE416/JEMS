@@ -1,12 +1,29 @@
-import { Divider, Modal, Button, Textarea, TextInput, Box, Select, Group, Stack, Grid, Alert } from "@mantine/core";
+import {
+  Divider,
+  Modal,
+  Button,
+  Textarea,
+  TextInput,
+  Box,
+  Select,
+  Group,
+  Stack,
+  Grid,
+  Alert,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import FileDropZone from "../common/FileDropZone";
-import { geoJsonConvert, handleKml, handleZip } from "../../utils/geojson-convert";
+import {
+  geoJsonConvert,
+  handleKml,
+  handleZip,
+} from "../../utils/geojson-convert";
 import { getFileType } from "../../utils/global_utils";
 import "./css/CreateMapModal.css";
 import { createMap } from "../../api/MapApiAccessor";
+import { TemplateTypes } from "../../utils/enums";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -14,7 +31,10 @@ interface CreateMapModalProps {
 }
 
 // The base create map modal with all the logic
-const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
+  opened,
+  onClose,
+}) => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
 
@@ -64,10 +84,10 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
               coordinates: feature.geometry.coordinates[0],
               stringLabel: "",
               stringOffset: [0],
-              numericLabel: 0,
+              numericLabel: "",
               numericUnit: "",
               color: "#8eb8fa", // default color
-            })
+            });
             break;
           case "MultiPolygon":
             feature.geometry.coordinates.forEach((coordinates: any) => {
@@ -76,11 +96,11 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 coordinates: coordinates[0],
                 stringLabel: "",
                 stringOffset: [0],
-                numericLabel: 0,
+                numericLabel: "",
                 numericUnit: "",
                 color: "#8eb8fa", // default color
-              })
-            })
+              });
+            });
             break;
           case "GeometryCollection":
             feature.geometry.geometries.forEach((geometry: any) => {
@@ -89,33 +109,38 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 coordinates: geometry.coordinates[0],
                 stringLabel: "",
                 stringOffset: [0],
-                numericLabel: 0,
+                numericLabel: "",
                 numericUnit: "",
                 color: "#8eb8fa", // default color
-              })
-            })
+              });
+            });
 
             break;
           default:
             console.log("unsupported type:", feature);
         }
-
       });
     }
     return regions;
-  }
+  };
 
   // This function gets the color type based on the template
   const getColorType = (template: string) => {
     switch (template) {
+      case "String Label Map":
+        return TemplateTypes.TEXT_LABEL_MAP;
       case "Color Label Map":
-        return "COLOR";
+        return TemplateTypes.COLOR;
+      case "Numeric Label":
+        return TemplateTypes.NUMERIC_LABEL_MAP;
       case "Choropleth Map":
-        return "CHOROPLETH";
+        return TemplateTypes.CHOROPLETH;
+      case "Pointer Label":
+        return TemplateTypes.POINT_LABEL_MAP;
       default:
-        return "NONE";
+        return TemplateTypes.NONE;
     }
-  }
+  };
 
   // This function gets the request body for JEMS JSON
   function getJemsRequest(jemsjson: any) {
@@ -136,7 +161,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         displayPointers: content.displayPointers,
         thumbnail: content.thumbnail,
         regions: content.regions,
-        legend: content.legend
+        legend: content.legend,
       },
     };
     return req;
@@ -168,11 +193,9 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
             [filename]: getRegions(geojson),
           },
           legend: {
-            colorLegend: {
-            },
-            choroplethLegend: {
-            }
-          }
+            colorLegend: {},
+            choroplethLegend: {},
+          },
         },
       };
       return req;
@@ -268,7 +291,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
           >
             {file && <p>{file.name}</p>}
           </Alert>
-
         </div>
       );
     }
@@ -276,9 +298,13 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 
   return (
     <>
-      <Modal id="create-map-modal" opened={opened}
-        onClose={onClose} title="Create Map"
-        centered size="70%"
+      <Modal
+        id="create-map-modal"
+        opened={opened}
+        onClose={onClose}
+        title="Create Map"
+        centered
+        size="70%"
       >
         <Box style={{ margin: "20px" }}>
           <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>
@@ -312,11 +338,16 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 />
               </Grid.Col>
               <Grid.Col span={7}>
-                <FileDropZone fileUploadType="MAP_UPLOAD" onFilesDrop={handleFilesDrop} />
-                <Stack justify="space-between">
-                  {previews()}
-                </Stack>
-                <Divider label="OR" labelPosition="center" style={{ margin: "10px 0" }} />
+                <FileDropZone
+                  fileUploadType="MAP_UPLOAD"
+                  onFilesDrop={handleFilesDrop}
+                />
+                <Stack justify="space-between">{previews()}</Stack>
+                <Divider
+                  label="OR"
+                  labelPosition="center"
+                  style={{ margin: "10px 0" }}
+                />
                 <Select
                   label="Template"
                   data={[
@@ -345,12 +376,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 // wrap it in a conditional loading
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   return (
-    <>
-      {
-        opened && <CreateMapModalBase opened={opened} onClose={onClose} />
-      }
-    </>
-  )
-}
+    <>{opened && <CreateMapModalBase opened={opened} onClose={onClose} />}</>
+  );
+};
 
 export default CreateMapModal;

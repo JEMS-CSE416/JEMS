@@ -13,14 +13,15 @@ import {
   SegmentedControl,
   Paper,
   Button,
+  Select,
 } from "@mantine/core";
 import {
   EditPageAction,
   EditPageState,
   useEditContext,
   useEditDispatchContext,
-  ColorTypes,
 } from "../../context/EditContextProvider";
+import { TemplateTypes } from "../../utils/enums";
 import { useEffect, useState } from "react";
 
 export default function Properties() {
@@ -39,27 +40,28 @@ export default function Properties() {
     editPageState.selectedRegion?.region.stringLabel
   );
 
-  const [numericLabelState, setNumericLabelState] = useState<
-    string | number | undefined
-  >(editPageState.selectedRegion?.region.numericLabel?.toString() ?? undefined);
-
-  const [numericUnitsState, setNumericUnitsState] = useState(
-    editPageState.selectedRegion?.region.numericUnit
+  const [numericLabelState, setNumericLabelState] = useState<string | number>(
+    editPageState.selectedRegion?.region.numericLabel?.toString() ?? ""
   );
 
   const [colorState, setColorState] = useState(
     editPageState.selectedRegion?.region.color
   );
 
+  const [ChoroplethColorRange, setChoroplethColorRange] = useState({
+    min: "",
+    max: "",
+  });
+
   useEffect(() => {
     setGroupNameState(editPageState.selectedRegion?.groupName);
     setRegionNameState(editPageState.selectedRegion?.region.regionName);
     setStringLabelState(editPageState.selectedRegion?.region.stringLabel);
     setNumericLabelState(
-      editPageState.selectedRegion?.region.numericLabel?.toString() ?? undefined
+      editPageState.selectedRegion?.region.numericLabel?.toString() ?? ""
     );
-    setNumericUnitsState(editPageState.selectedRegion?.region.numericUnit);
     setColorState(editPageState.selectedRegion?.region.color);
+    // TODO add ChoroplethColorRange set state
   }, [editPageState.selectedRegion]);
 
   const handleRegionPropertyEditing = () => {
@@ -77,9 +79,8 @@ export default function Properties() {
           ...editPageState.selectedRegion!.region,
           regionName: regionNameState === "" ? "Untitled" : regionNameState!,
           stringLabel: stringLabelState!,
-          numericLabel:
-            numericLabelState === "" ? undefined : Number(numericLabelState),
-          numericUnit: numericUnitsState!,
+          numericLabel: numericLabelState.toString(),
+          numericUnit: "WILL NOT USE PLEASE REMOVE THIS FIELD",
           color:
             colorState === ""
               ? editPageState.selectedRegion!.region.color
@@ -102,19 +103,23 @@ export default function Properties() {
       <Title order={3}> Map Properties </Title>
 
       <Stack pl={10} gap="sm" p="sm" className="mapProperties">
-        <SegmentedControl
+        <Select
+          label="Map Type:"
+          placeholder="Select a map type"
           value={editPageState.map.colorType}
+          data={Object.values(TemplateTypes)}
+          allowDeselect={false}
           onChange={(value) => {
-            setEditPageState({
-              type: "update_map",
-              map: { ...editPageState.map, colorType: value },
-            });
+            if (value !== null) {
+              setEditPageState({
+                type: "update_map",
+                map: {
+                  ...editPageState.map,
+                  colorType: value as TemplateTypes,
+                },
+              });
+            }
           }}
-          data={[
-            { label: "None", value: `${ColorTypes.NONE}` },
-            { label: "Choropleth", value: `${ColorTypes.CHOROPLETH}` },
-            { label: "Color", value: `${ColorTypes.COLOR}` },
-          ]}
         />
 
         <Switch
@@ -170,7 +175,9 @@ export default function Properties() {
             <Title order={3}>
               Region: {editPageState.selectedRegion?.region.regionName}
             </Title>
-            <Title order={6} c="RGB(181,186,191)">Group: {editPageState.selectedRegion?.groupName}</Title>
+            <Title order={6} c="RGB(181,186,191)">
+              Group: {editPageState.selectedRegion?.groupName}
+            </Title>
             <Stack pl={10} gap="xs" p="sm">
               <Title order={6}> Region Properties </Title>
               <Center></Center>
@@ -202,35 +209,27 @@ export default function Properties() {
                 }}
               />
 
-              <NumberInput
-                hideControls
-                label="Numeric Label"
-                placeholder="100, 250, etc."
-                value={numericLabelState}
-                onChange={(value) => {
-                  console.log(value);
-                  setNumericLabelState(value);
-                }}
-              />
+              {editPageState.map.colorType === TemplateTypes.NUMERIC_LABEL_MAP && (
+                <NumberInput
+                  hideControls
+                  label="Numeric Label"
+                  placeholder="100, 250, etc."
+                  value={numericLabelState}
+                  onChange={(value) => {
+                    console.log(value);
+                    setNumericLabelState(value);
+                  }}
+                />
+              )}
 
-              <TextInput
-                label="Numeric Units"
-                placeholder="100K, 2M, etc."
-                value={numericUnitsState}
-                onChange={(event) =>
-                  setNumericUnitsState(event.currentTarget.value)
-                }
-              />
-
-
-
-              <ColorInput
-                disabled={editPageState.map.colorType === ColorTypes.NONE}
-                label="Color"
-                placeholder="#000000"
-                value={colorState}
-                onChange={setColorState}
-              />
+              {editPageState.map.colorType === TemplateTypes.COLOR && (
+                <ColorInput
+                  label="Color"
+                  placeholder="#000000"
+                  value={colorState}
+                  onChange={setColorState}
+                />
+              )}
 
               <Button onClick={handleRegionPropertyEditing} radius="xl">
                 Done

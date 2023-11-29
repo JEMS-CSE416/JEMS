@@ -16,7 +16,7 @@ export interface Region {
     coordinates: Number[][]
     stringLabel: string;
     stringOffset: Number[];
-    numericLabel: Number | undefined;
+    numericLabel: string;
     numericUnit: string;
     color: string;
 }
@@ -55,96 +55,7 @@ export const ErrorMap = {
         "imageUrl": "dummyUrl.com",
         "imageType": "jpg"
     },
-    "regions": {
-        "testGroup1": [
-            {
-                "regionName": "dummyName1",
-                "coordinates": [
-                    [
-                        0,
-                        0
-                    ],
-                    [
-                        1,
-                        1
-                    ]
-                ],
-                "stringLabel": "dummyLabel",
-                "stringOffset": [
-                    0,
-                    0
-                ],
-                "numericLabel": 0,
-                "numericUnit": "dummyUnit",
-                "color": "#eeeeee"
-            },
-            {
-                "regionName": "dummyName2",
-                "coordinates": [
-                    [
-                        0,
-                        0
-                    ],
-                    [
-                        1,
-                        1
-                    ]
-                ],
-                "stringLabel": "dummyLabel",
-                "stringOffset": [
-                    0,
-                    0
-                ],
-                "numericLabel": 0,
-                "numericUnit": "dummyUnit",
-                "color": "#eeeeee"
-            }
-        ],
-        "testGroup2": [
-            {
-                "regionName": "dummyName1",
-                "coordinates": [
-                    [
-                        0,
-                        0
-                    ],
-                    [
-                        1,
-                        1
-                    ]
-                ],
-                "stringLabel": "dummyLabel",
-                "stringOffset": [
-                    0,
-                    0
-                ],
-                "numericLabel": 0,
-                "numericUnit": "dummyUnit",
-                "color": "#eeeeee"
-            },
-            {
-                "regionName": "dummyName2",
-                "coordinates": [
-                    [
-                        0,
-                        0
-                    ],
-                    [
-                        1,
-                        1
-                    ]
-                ],
-                "stringLabel": "dummyLabel",
-                "stringOffset": [
-                    0,
-                    0
-                ],
-                "numericLabel": 0,
-                "numericUnit": "dummyUnit",
-                "color": "#eeeeee"
-            }
-        ]
-    },
+    "regions": { },
     "legend": {
         "colorLegend": {
             "#000000": "black",

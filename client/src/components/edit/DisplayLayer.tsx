@@ -6,29 +6,20 @@ import {
   useEditContext,
   useEditDispatchContext,
 } from "../../context/EditContextProvider";
+import { TemplateTypes } from "../../utils/enums";
 import { Layer, Map, divIcon, marker } from "leaflet";
-import { Feature, GeoJsonProperties, Geometry } from "geojson";
+import {
+  Feature,
+  GeoJsonProperties,
+  Geometry,
+  FeatureCollection,
+} from "geojson";
 import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
 import React, { useEffect, useRef } from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
 import { geoCentroid } from "d3-geo";
-
-const RegionLabel = (props: { region: Feature }) => {
-  const region = props.region;
-
-  if (region.properties) {
-    const label = divIcon({
-      className: "map-label",
-      html: region.properties.name || "undefined",
-      iconSize: [100, 40],
-      iconAnchor: [50, 20],
-    });
-    const centroid = geoCentroid(region);
-    return <Marker position={[centroid[1], centroid[0]]} icon={label} />;
-  }
-  return <></>;
-};
+import { spawn } from "child_process";
 
 export default function DisplayLayer() {
   // Implement your component logic here
@@ -36,7 +27,7 @@ export default function DisplayLayer() {
   const setEditPageState = useEditDispatchContext();
   const convertedGeoJSON = convertToGeoJSON(editPageState.map);
   const map = useMap(); // get access to map object
-  const data = JSON.parse(convertedGeoJSON);
+  const data: FeatureCollection = JSON.parse(convertedGeoJSON);
 
   return (
     <>
@@ -46,20 +37,11 @@ export default function DisplayLayer() {
         onEachFeature={(region, layer) =>
           onEachRegion(region, layer, editPageState, setEditPageState, map)
         }
-        style={(region) => initStyleFunction(region, editPageState)}
+        style={(region: Feature<Geometry, any> | undefined) =>
+          initStyleFunction(region, editPageState)
+        }
       />
-      {
-        // add labels to each region if string label is enabled
-        editPageState.map.displayStrings &&
-        data.features.map(
-          (
-            region: Feature<Geometry, GeoJsonProperties>,
-            index: React.Key | null | undefined
-          ) => (
-            <RegionLabel key={index} region={region} />
-          )
-        )
-      }
+      <Labels data={data} editPageState={editPageState} />
     </>
   );
 }
@@ -77,23 +59,128 @@ function onEachRegion(
   attachSelectionEvents(region, layer, editPageState, setEditPageState);
 }
 
-function initStyleFunction(region: any, editPageState: EditPageState) {
+const Labels = (props: {
+  data: FeatureCollection;
+  editPageState: EditPageState;
+}) => {
+  const data = props.data;
+  const editPageState = props.editPageState;
+
+  const labels = data.features.map(
+    (
+      region: Feature<Geometry, GeoJsonProperties>,
+      index: React.Key | null | undefined
+    ) => {
+      return <RegionLabel key={index} region={region} />;
+    }
+  );
+
+  return <>{labels}</>;
+};
+
+const RegionLabel = (props: {
+  key: React.Key | null | undefined;
+  region: Feature;
+}) => {
+  const editPageState = useEditContext();
+  const setEditPageState = useEditDispatchContext();
+  const region = props.region;
+  const index = props.key;
+
+  //   if (region.properties) {
+  //     let label = divIcon({
+  //       className: "map-label",
+  //       html: `<div style="pointer-events:none;"></div>`,
+  //       iconSize: [100, 40],
+  //       iconAnchor: [50, 20],
+  //     });
+  //     const centroid = geoCentroid(region);
+  //     return <Marker position={[centroid[1], centroid[0]]} icon={label} />;
+  //   }
+  const centroid = geoCentroid(region);
   if (
-    region.properties.i === editPageState.selectedRegion?.i &&
-    region.properties.groupName === editPageState.selectedRegion?.groupName
+    region.properties &&
+    ((editPageState.map.displayStrings &&
+      region.properties.stringLabel !== "") ||
+      (editPageState.map.displayNumerics &&
+        region.properties.numericLabel !== ""))
   ) {
-    return {
-      ...SELECTED_STYLE,
-      fillColor: region.properties.color,
-      fillOpacity: 1,
-      color: "#000000",
-    };
-  } else {
-    return {
-      ...UNSELECTED_STYLE,
-      fillColor: region.properties.color,
-      fillOpacity: 1,
-      color: "#6996db",
-    };
+    let labelIcon = divIcon({
+      className: "map-label",
+      html: `<div style="border:1px solid black;">${labelHTML(
+        region,
+        editPageState
+      )}</div>`,
+      iconSize: [100, 40],
+      iconAnchor: [50, 20],
+    });
+    return (
+      <Marker
+        key={index}
+        position={[centroid[1], centroid[0]]}
+        icon={labelIcon}
+      />
+    );
   }
+  return <></>;
+};
+
+function getRegionStyle(
+  region: Feature<Geometry, any>,
+  editPageState: EditPageState
+) {
+  // Initialize the style object with common properties
+  let style: { [key: string]: any } = {
+    fillColor: region.properties.color,
+    fillOpacity: 1,
+  };
+
+  const whichMap = editPageState.map.colorType;
+  const isSelected =
+    region.properties.i === editPageState.selectedRegion?.i &&
+    region.properties.groupName === editPageState.selectedRegion?.groupName;
+
+  if (isSelected) {
+    style = { ...style, ...SELECTED_STYLE, color: "#000000" };
+  } else {
+    style = { ...style, ...UNSELECTED_STYLE, color: "#6996db" };
+  }
+
+  if (whichMap === TemplateTypes.NONE) {
+    style = {
+      ...style,
+      fillColor: "#8eb8fa",
+    };
+  }else if (whichMap === TemplateTypes.CHOROPLETH) {
+        style = {
+        ...style,
+        fillColor: "#8eb8fa",
+        };
+    }
+
+  return style;
+}
+
+function labelHTML(
+  region: Feature<Geometry, any>,
+  editPageState: EditPageState
+) {
+  const displayStrings = editPageState.map.displayStrings;
+  const displayNumerics = editPageState.map.displayNumerics;
+  const displayStringsLabel = region.properties.stringLabel;
+  const displayNumericsLabel = region.properties.numericLabel;
+
+  let label = 
+  `<div>
+  </div>`;
+  return label;
+}
+
+function initStyleFunction(
+  region: Feature<Geometry, any> | undefined,
+  editPageState: EditPageState
+) {
+  if (!region) return {};
+
+  return getRegionStyle(region, editPageState);
 }
