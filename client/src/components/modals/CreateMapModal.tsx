@@ -15,13 +15,12 @@ import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import FileDropZone from "../common/FileDropZone";
-import { getFileType, getColorType, getRegions, handleFileConversion } from "../../utils/global_utils";
+import { getFileType} from "../../utils/global_utils";
 import {
   geoJsonConvert,
   handleKml,
   handleZip,
 } from "../../utils/geojson-convert";
-import { getFileType } from "../../utils/global_utils";
 import "./css/CreateMapModal.css";
 import { createMap } from "../../api/MapApiAccessor";
 import { TemplateTypes } from "../../utils/enums";
@@ -45,7 +44,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   };
 
   // This function handles the conversion based on the file type
-  const handleFileConversion = async () => {
+  const handleFileConversion = async (file: File) => {
     if (file) {
       try {
         // Get the file extension
