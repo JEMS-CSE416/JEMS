@@ -92,7 +92,7 @@ const PasswordRecoveryModal: React.FC<PasswordRecoveryModalProps> = ({
         onClosePasswordRecoveryModal={onClosePasswordRecoveryModal}
       >
         <Image src={jemsLogo} id="logo"></Image>
-        <Text size="xl" fw={500} id="loginText">
+        <Text size="xl" fw={500} className="loginText">
           Password Recovery
         </Text>
         <br />
@@ -127,16 +127,16 @@ const PasswordRecoveryModal: React.FC<PasswordRecoveryModalProps> = ({
           <br />
 
           <Group>
-            <div id="cursorToFinger">
+            <div className="cursorToFinger">
               <Text
-                id="splashScreenModalRedirect"
+                className="splashScreenModalRedirect"
                 onClick={handleClosePasswordRecoveryOpenLoginModal}
               >
                 Back to login
               </Text>
             </div>
             <Button
-              id="loginButtonDiv"
+              className="loginButtonDiv"
               type="submit"
             >
               Confirm
