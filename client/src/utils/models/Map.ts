@@ -16,7 +16,7 @@ export interface Region {
     coordinates: Number[][]
     stringLabel: string;
     stringOffset: Number[];
-    numericLabel: Number;
+    numericLabel: Number | undefined;
     numericUnit: string;
     color: string;
 }

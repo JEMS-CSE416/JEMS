@@ -73,7 +73,6 @@ export async function handleKml(file: File): Promise<any> {
 
     // Parse the KML data to GeoJSON using togeojson.
     const geoJSON = toGeoJSON.kml(kmlData);
-    console.log(geoJSON)
 
     // Return the GeoJSON object.
     return geoJSON;

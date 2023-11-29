@@ -4,19 +4,22 @@ import {
   Stack,
   Title,
   Text,
-  Button
+  Button,
+  ScrollArea
 } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { group } from "console";
 import React from "react";
 import { EditPageAction, EditPageState, useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
-
+import { AddRegionModal } from "../modals/AddRegionModal";
 
 export default function Regions(){
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+
   return (
     <>
+      <AddRegionModal/>
       <Flex
         align="center"
         gap="xl"
@@ -25,35 +28,40 @@ export default function Regions(){
       >
         <Title order={3}> Regions </Title>
       
-        <ActionIcon radius="xl">
+        <ActionIcon radius="xl"
+          onClick={
+            () => setEditPageState({ type:"change_modal", modal:"ADD_REGION" })
+          }>
           <IconPlus size={15}/>
         </ActionIcon>
       </Flex>
 
-      <Stack align="flex-start"  gap={10}>
-        {
-          Object.entries(editPageState.map.regions).map(
-            ([groupName, regions]) => {
-              return (
-                <>
-                  <Title order={5} >{groupName}</Title>
-                  <Stack gap={0} w="100%">
-                    {regions.map((region, i) => 
+      <ScrollArea>
+        <Stack align="flex-start"  gap={10}>
+          {
+            Object.entries(editPageState.map.regions).map(
+              ([groupName, regions]) => {
+                return (
+                  <>
+                    <Title order={5} >{groupName}</Title>
+                    <Stack gap={0} w="100%">
+                      {regions.map((region, i) => 
 
-                        <RegionButton
-                            groupName={groupName}
-                            i={i}
-                            editPageState={editPageState}
-                            setEditPageState={setEditPageState}
-                            />
-                    )}
-                  </Stack>
-                </>
-              )
-            }
-          ) 
-        }
-      </Stack>
+                          <RegionButton
+                              groupName={groupName}
+                              i={i}
+                              editPageState={editPageState}
+                              setEditPageState={setEditPageState}
+                              />
+                      )}
+                    </Stack>
+                  </>
+                )
+              }
+            ) 
+          }
+        </Stack>
+      </ScrollArea>
 
     </>
   )
