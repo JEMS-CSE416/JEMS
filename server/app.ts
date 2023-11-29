@@ -39,7 +39,7 @@ if (process.env['STAGE'] !== 'dev') {
   sess.cookie.secure = true // serve secure cookies
   sess.proxy = true 
   sess.name = "beta"
-  sess.cookie.sameSite = false
+  sess.cookie.sameSite = "none"
 }
 
 // Use the session middleware
