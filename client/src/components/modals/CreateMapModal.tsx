@@ -135,15 +135,15 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
     console.log(selectedValue);
     switch (selectedValue) {
       case "String Label Map":
-        return TemplateTypes.TEXT_LABEL_MAP;
+        return TemplateTypes.NONE;
       case "Color Label Map":
         return TemplateTypes.COLOR;
       case "Numeric Label":
-        return TemplateTypes.NUMERIC_LABEL_MAP;
+        return TemplateTypes.NONE;
       case "Choropleth Map":
         return TemplateTypes.CHOROPLETH;
       case "Pointer Label":
-        return TemplateTypes.POINT_LABEL_MAP;
+        return TemplateTypes.NONE;
       default:
         return TemplateTypes.NONE;
     }
@@ -424,6 +424,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   disabled={file ? true : false}
                   style={{ width: "90%" }}
                   {...form.getInputProps("template")}
+                  value={selectedValue}
                   onChange={(selectedValue) =>
                     setSelectedValue(selectedValue)
                   }

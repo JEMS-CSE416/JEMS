@@ -111,7 +111,6 @@ export default function Properties() {
             value={editPageState.map.colorType}
             data={[
               TemplateTypes.NONE,
-              TemplateTypes.TEXT_LABEL_MAP,
               TemplateTypes.COLOR,
               TemplateTypes.CHOROPLETH,
             ]}
