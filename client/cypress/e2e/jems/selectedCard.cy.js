@@ -1,17 +1,43 @@
 /// <reference types="cypress" />
+import { splashGetStartedButton } from "./id";
+const duplicateButton = "#duplicate-button";
+const duplicateModal = "#duplicate-modal";
+const duplicateModalSubmitButton = "#duplicate-modal-submit-button";
 
-const duplicateButton = '#duplicate-button';
-const duplicateModal = '#duplicate-modal';
-const duplicateModalSubmitButton = '#duplicate-modal-submit-button';
+const downloadButton = "#download-button";
+const downloadModal = "#download-modal";
 
 const deleteButton = "#delete-button";
-const downloadButton = "#download-button";
 const deleteModalConfirmButton = "#delete-modal-confirm-button";
 const deleteModalCancelButton = "#delete-modal-cancel-button";
 
+const loginEmailInput = "#loginEmailInput";
+const loginPasswordInput = "#loginPasswordInput";
+const loginSubmitButton = "#loginButton";
+
+function login() {
+  cy.visit("/");
+
+  // click on the get started button
+  cy.get(splashGetStartedButton).click();
+
+  cy.get(loginEmailInput).type("jendyren@gmail.com");
+  cy.get(loginPasswordInput).type("12345678");
+
+  // clicks on the login button
+  cy.get(loginSubmitButton).click();
+
+  // checks if the url includes /home
+  cy.url().should("include", "/home");
+}
+
 beforeEach(() => {
-  cy.visit("/map/6567576c0837a4d8bcca4f79");
+  // Login 
+  login();
+  // click on card id of 65666368ac743f6444ab4773
+  cy.get("#65666368ac743f6444ab4773").click();
 });
+
 
 describe("Modal checking", () => {
   it("Checks if the duplicate modal is visible", () => {
@@ -19,9 +45,10 @@ describe("Modal checking", () => {
     cy.get(duplicateButton).click();
     cy.get(duplicateModalSubmitButton).click();
   });
-  it("Checks if the delete modal is visible", () => {
-    // Click on the button to open the delete modal
-    cy.get(deleteButton).click();
-    cy.get(deleteModalConfirmButton).click();
+
+  it("Checks if the download modal is visible", () => {
+    // Click on the button to open the duplicate modal
+    cy.get(downloadButton).click();
   });
+
 });
