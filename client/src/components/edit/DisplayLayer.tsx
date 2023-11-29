@@ -136,6 +136,7 @@ function getRegionStyle(
   };
 
   const whichMap = editPageState.map.colorType;
+  console.log(whichMap)
   const isSelected =
     region.properties.i === editPageState.selectedRegion?.i &&
     region.properties.groupName === editPageState.selectedRegion?.groupName;
@@ -146,17 +147,12 @@ function getRegionStyle(
     style = { ...style, ...UNSELECTED_STYLE, color: "#6996db" };
   }
 
-  if (whichMap === TemplateTypes.NONE) {
+  if (whichMap !== TemplateTypes.COLOR) {
     style = {
       ...style,
       fillColor: "#8eb8fa",
     };
-  }else if (whichMap === TemplateTypes.CHOROPLETH) {
-        style = {
-        ...style,
-        fillColor: "#8eb8fa",
-        };
-    }
+  }
 
   return style;
 }

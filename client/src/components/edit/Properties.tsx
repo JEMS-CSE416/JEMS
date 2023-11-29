@@ -200,27 +200,31 @@ export default function Properties() {
                 }}
               />
 
-              <TextInput
-                label="String Label"
-                placeholder="String Label"
-                value={stringLabelState}
-                onChange={(event) => {
-                  setStringLabelState(event.currentTarget.value);
-                }}
-              />
-
-              {editPageState.map.colorType === TemplateTypes.NUMERIC_LABEL_MAP && (
-                <NumberInput
-                  hideControls
-                  label="Numeric Label"
-                  placeholder="100, 250, etc."
-                  value={numericLabelState}
-                  onChange={(value) => {
-                    console.log(value);
-                    setNumericLabelState(value);
+              {editPageState.map.colorType === TemplateTypes.TEXT_LABEL_MAP && (
+                <TextInput
+                  label="String Label"
+                  placeholder="String Label"
+                  value={stringLabelState}
+                  onChange={(event) => {
+                    setStringLabelState(event.currentTarget.value);
                   }}
                 />
               )}
+
+              {editPageState.map.colorType ===
+                TemplateTypes.NUMERIC_LABEL_MAP ||
+                (editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
+                  <NumberInput
+                    hideControls
+                    label="Numeric Label"
+                    placeholder="100, 250, etc."
+                    value={numericLabelState}
+                    onChange={(value) => {
+                      console.log(value);
+                      setNumericLabelState(value);
+                    }}
+                  />
+                ))}
 
               {editPageState.map.colorType === TemplateTypes.COLOR && (
                 <ColorInput
