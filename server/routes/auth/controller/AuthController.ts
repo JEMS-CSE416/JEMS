@@ -133,8 +133,6 @@ export const logout = async (req: Request, res: Response) => {
  * @returns error status code
 */
 export const isAuthMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("pls change")
-  console.log("qmaps: ", req.headers.authorization)
 
   if (req.session.user) next();
   else res.status(401).send("Not Authenticated")
@@ -148,7 +146,6 @@ export const isAuthMiddleWare = async (req: Request, res: Response, next: NextFu
  * @returns error status code
 */
 export const isAuthEndpt = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("session:", req.session)
   if (req.session.user != undefined) res.status(200).send();
   else res.status(401).send("Not Auth");
 }

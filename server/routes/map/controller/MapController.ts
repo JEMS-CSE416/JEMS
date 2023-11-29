@@ -215,13 +215,19 @@ const updateMap = async (req: Request, res: Response) => {
   const legend = req.body.legend;
   const creator_id = req.session.user.id;
 
-
   /* Check map exists in database */
-  const map = await mapModel.findById(map_id);
+  let map;
+  try {
+    map = await mapModel.findById(map_id);
+    
+  } catch (error) {
+    return res.status(400).send("Bad mapid format")
+    
+  }
   if (!map) {
     return res.status(404).send("Error 404: Map not found");
   }
-  if (map.creatorId.toString() == creator_id) {
+  if (map.creatorId.toString() !== creator_id) {
     /* check if the user is authenticated */
     return res.status(401).send("Error 401: Not Authenticated");
   }
