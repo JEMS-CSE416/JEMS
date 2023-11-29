@@ -2,19 +2,9 @@ import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { ErrorMap, Map, Region } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
 import { update } from "cypress/types/lodash";
-// Types
-enum EditModalEnum {
-  NONE = "NONE",
-  MAP_EXPORT = "MAP_EXPORT",
-  MAP_SETTINGS = "MAP_SETTINGS",
-  ADD_REGION = "ADD_REGION",
-}
+import { getMap } from "../api/MapApiAccessor";
+import { EditModalEnum} from "../utils/enums";
 
-export enum ColorTypes {
-  NONE = "NONE",
-  CHOROPLETH = "CHOROPLETH",
-  COLOR = "COLOR",
-}
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
@@ -74,16 +64,12 @@ export function EditContextProvider(props: EditContextProviderProps) {
 
   const fetchMap = async () => {
     // Replace with your API endpoint and map ID
-    const apiUrl = BACKEND_URL + "/api/maps/{id}/?id=";
     const mapId = props.map_id;
 
     try {
       console.log(`fetching map for id: ${mapId}`);
-      const res = await fetch(`${apiUrl}${mapId}`);
-      if (!res.ok) {
-        throw new Error(res.statusText);
-      }
-      const newMap = await res.json();
+      const res = await getMap({id: mapId as string});
+      const newMap = res;
       console.log("newMap", newMap)
       dispatch({
         type: "init_map",

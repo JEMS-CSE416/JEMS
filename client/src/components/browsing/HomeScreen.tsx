@@ -3,17 +3,13 @@ import { Group, Text, Stack, Box, Grid, Loader } from "@mantine/core";
 import MapCard from "./MapCard";
 import NavBar from "../common/Navbar";
 import Footer from "../common/Footer";
-import { Link, Route, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { getMaps } from "../../api/MapApiAccessor";
-import { getMap } from "../../api/MapApiAccessor";
 import { Map } from "../../utils/models/Map";
-import SelectedCardPage from "../selectedcard/SelectedCardPage";
-import { map } from "cypress/types/bluebird";
 import { useDisclosure } from "@mantine/hooks";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
 import { useLoadingData } from "../hooks/useLoadingData";
+import NothingHere from "../common/NothingHere";
 
 const HomePage = () => {
   const location = useLocation();
@@ -24,12 +20,7 @@ const HomePage = () => {
   );
   const { data: yourMaps, loading: yourMapsLoading } = useLoadingData<Map[]>(
     getMaps,
-    [
-      {
-        session_token: "652daf32e2225cdfeceea14f",
-        creatorId: "652daf32e2225cdfeceea14f",
-      },
-    ]
+    [{ownedMaps: true}]
   );
 
   // Create a getMap function that takes in a mapId and returns the map object
@@ -41,28 +32,6 @@ const HomePage = () => {
     }
   };
 
-  // const getPublicMaps = async () => {
-  //   try {
-  //     const responseData = await getMaps({ isPrivate: false });
-  //     console.log("Public Maps fetched successfully:", responseData);
-  //     setMaps(responseData.splice(0, 8));
-  //   } catch (error) {
-  //     console.error("Error fetching Maps:", error);
-  //   }
-  // };
-
-  // const getYourMaps = async () => {
-  //   try {
-  //     const responseData = await getMaps({
-  //       session_token: "652daf32e2225cdfeceea14f",
-  //       creatorId: "652daf32e2225cdfeceea14f",
-  //     });
-  //     console.log("Your Maps fetched successfully:", responseData);
-  //     setYourMaps(responseData.splice(0, 8));
-  //   } catch (error) {
-  //     console.error("Error updating data:", error);
-  //   }
-  // };
 
   const handleSelectMapToDuplicate = (map: Map) => {
     console.log("Selected map to duplicate:", map);
@@ -100,35 +69,38 @@ const HomePage = () => {
                   </Text>
                 </Link>
               </Group>
-              <Grid style={{ textAlign: "initial" }}>
                 {yourMapsLoading ? (
-                  <Grid.Col
-                    style={{
-                      height: "auto",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Loader color="blue" />
-                  </Grid.Col>
-                ) : (
-                  yourMaps?.slice(0,totalMaps).map((map, i) => (
-                    <Grid.Col span={cardSpan}>
-                      <MapCard
-                        id={map._id}
-                        name={map.mapName}
-                        description={map.description}
-                        isPrivate={!map.public}
-                        map={map}
-                        duplicateAction={() => {
-                          handleSelectMapToDuplicate(map);
-                        }}
-                      />
+                  <Grid style={{ textAlign: "initial" }}>
+                    <Grid.Col
+                      style={{
+                        height: "auto",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Loader color="blue" />
                     </Grid.Col>
+                  </Grid>
+                ) : (
+                  yourMaps?.length === 0 ? <NothingHere/> :
+                  yourMaps?.slice(0,totalMaps).map((map, i) => (
+                    <Grid style={{ textAlign: "initial" }}>
+                      <Grid.Col span={cardSpan}>
+                        <MapCard
+                          id={map._id}
+                          name={map.mapName}
+                          description={map.description}
+                          isPrivate={!map.public}
+                          map={map}
+                          duplicateAction={() => {
+                            handleSelectMapToDuplicate(map);
+                          }}
+                        />
+                      </Grid.Col>
+                    </Grid>
                   ))
                 )}
-              </Grid>
             </Stack>
           </Box>
           <Box>

@@ -15,14 +15,15 @@ import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import FileDropZone from "../common/FileDropZone";
+import { getFileType} from "../../utils/global_utils";
 import {
-  getFileType,
-  getColorType,
-  getRegions,
-  handleFileConversion,
-} from "../../utils/global_utils";
+  geoJsonConvert,
+  handleKml,
+  handleZip,
+} from "../../utils/geojson-convert";
 import "./css/CreateMapModal.css";
 import { createMap } from "../../api/MapApiAccessor";
+import { TemplateTypes } from "../../utils/enums";
 import { notifications } from "@mantine/notifications";
 import { IconX } from "@tabler/icons-react";
 
@@ -89,13 +90,111 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
     }
   };
 
+  // This function handles the conversion based on the file type
+  const handleFileConversion = async (file: File) => {
+    if (file) {
+      try {
+        // Get the file extension
+        let fileExtension = getFileType(file.name);
+        let geojson;
+        // Check the file type and handle accordingly
+        if (fileExtension === "kml") {
+          // Convert KML to GeoJSON
+          geojson = await handleKml(file);
+        } else if (fileExtension === "zip") {
+          // Handle ZIP file
+          geojson = await handleZip(file);
+        } else {
+          // Convert to GeoJSON
+          geojson = await geoJsonConvert(file);
+        }
+        return geojson;
+      } catch (error) {
+        // Log any errors
+        console.log(error);
+      }
+    }
+  };
+
+  // This function parses and grabs regions properties from GeoJSON
+  const getRegions = (geojson: any) => {
+    let regions = [] as any[];
+    if (geojson && geojson.features) {
+      let counter = 0;
+
+      geojson.features.forEach((feature: any) => {
+        // switchcase that will convert different features in different ways
+        switch (feature.geometry.type) {
+          case "Polygon":
+            regions.push({
+              regionName: feature.properties.name || feature.properties.NAME,
+              coordinates: feature.geometry.coordinates[0],
+              stringLabel: "",
+              stringOffset: [0],
+              numericLabel: "",
+              numericUnit: "",
+              color: "#8eb8fa", // default color
+            });
+            break;
+          case "MultiPolygon":
+            feature.geometry.coordinates.forEach((coordinates: any) => {
+              regions.push({
+                regionName: feature.properties.name || feature.properties.NAME,
+                coordinates: coordinates[0],
+                stringLabel: "",
+                stringOffset: [0],
+                numericLabel: "",
+                numericUnit: "",
+                color: "#8eb8fa", // default color
+              });
+            });
+            break;
+          case "GeometryCollection":
+            feature.geometry.geometries.forEach((geometry: any) => {
+              regions.push({
+                regionName: "untitled region " + counter++,
+                coordinates: geometry.coordinates[0],
+                stringLabel: "",
+                stringOffset: [0],
+                numericLabel: "",
+                numericUnit: "",
+                color: "#8eb8fa", // default color
+              });
+            });
+
+            break;
+          default:
+            console.log("unsupported type:", feature);
+        }
+      });
+    }
+    return regions;
+  };
+
+  // This function gets the color type based on the template
+  const getColorType = (template: string) => {
+    switch (template) {
+      case "String Label Map":
+        return TemplateTypes.TEXT_LABEL_MAP;
+      case "Color Label Map":
+        return TemplateTypes.COLOR;
+      case "Numeric Label":
+        return TemplateTypes.NUMERIC_LABEL_MAP;
+      case "Choropleth Map":
+        return TemplateTypes.CHOROPLETH;
+      case "Pointer Label":
+        return TemplateTypes.POINT_LABEL_MAP;
+      default:
+        return TemplateTypes.NONE;
+    }
+  };
+
   // This function gets the request body for JEMS JSON
   function getJemsRequest(jemsjson: any) {
     const content = jemsjson.map_file_content;
     // Create the request body
     const req = {
       map_file_content: {
-        creatorId: form.values.creatorId,
         mapName: form.values.mapName,
         description: form.values.description,
         creationDate: new Date().toISOString(),
@@ -121,7 +220,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
       // Create the request body
       const req = {
         map_file_content: {
-          creatorId: form.values.creatorId,
           mapName: form.values.mapName,
           description: form.values.description,
           creationDate: new Date().toISOString(),
@@ -148,6 +246,35 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
       };
       return req;
     }
+  }
+
+  function getEmptyMap() {
+      const req = {
+        map_file_content: {
+          mapName: form.values.mapName,
+          description: form.values.description,
+          creationDate: new Date().toISOString(),
+          public: form.values.visibility === "Public" ? true : false,
+          template: form.values.template,
+          colorType: getColorType(form.values.template),
+          displayStrings: false,
+          displayNumerics: false,
+          displayLegend: false,
+          displayPointers: false,
+          thumbnail: {
+            imageUrl: "",
+            imageType: "",
+          },
+          regions: {
+            
+          },
+          legend: {
+            colorLegend: {},
+            choroplethLegend: {},
+          },
+        },
+      };
+      return req;
   }
 
   const createRequest = async () => {
@@ -178,6 +305,9 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         }
         req = getGeoJsonRequest(geojson);
       }
+    } else {
+      // create an empty map
+      req = getEmptyMap();
     }
     return req;
   };
@@ -185,6 +315,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   // Handle form submission and close the modal
   const handleFormSubmit = async () => {
     const req = await createRequest();
+
 
     // Create the map
     try {
@@ -209,9 +340,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 
   // Form state that we'll use as default values for now
   const form = useForm({
-    //TO-DO: Update creatorId after auth is implemented
     initialValues: {
-      creatorId: "652daf32e2225cdfeceea14f",
       mapName: "",
       description: "",
       visibility: "",

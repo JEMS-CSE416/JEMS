@@ -17,12 +17,9 @@ const DeleteMapModal: React.FC<DeleteMapModalProps> = ({ opened, onClose }) => {
 
   const handleConfirm = async () => {
     const mapId = selectedMap._id.toString();
-
-    //TO-DO replace this with actual logged in creator id
-    const creatorId = selectedMap.creatorId.toString();
    
     try {
-      await deleteMap(mapId, creatorId)
+      await deleteMap(mapId)
       navigate('/home');
       notifications.show({
         icon: <IconCheck />,

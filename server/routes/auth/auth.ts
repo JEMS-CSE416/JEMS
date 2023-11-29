@@ -145,18 +145,9 @@ authRouter.get("/logout/", logout);
 /**
  * @swagger
  * /api/auth/:
- *   post:
+ *   get:
  *     summary: Check if session attatched to user is authenticated
  *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               id:
- *                 type: string
  * 
  *     responses:
  *       200:
@@ -170,7 +161,7 @@ authRouter.get("/logout/", logout);
  *               type: string
  *
  */
-authRouter.post("/", isAuthEndpt);
+authRouter.get("/isAuth/", isAuthEndpt);
 
 /**
  * @swagger

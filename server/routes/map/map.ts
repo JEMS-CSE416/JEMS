@@ -5,6 +5,11 @@
  *   description: The Maps managing API
  *
  * components:
+ *   securitySchemes:
+ *     BasicAuth:
+ *       type: http
+ *       scheme: basic
+ *
  *   schemas:
  *     Map:
  *       type: object
@@ -122,6 +127,7 @@ import {
   updateMap,
   deleteMap,
 } from "./controller/MapController";
+import { isAuthMiddleWare } from "../auth/controller/AuthController";
 
 const mapRouter = Router();
 
@@ -131,6 +137,8 @@ const mapRouter = Router();
  *   get:
  *     summary: Query Maps with a string
  *     tags: [Maps]
+ *     security:
+ *       - BasicAuth: []
  *     parameters:
  *       - in: query
  *         name: map_name
@@ -140,14 +148,6 @@ const mapRouter = Router();
  *         name: private
  *         schema:
  *            type: boolean
- *       - in: query
- *         name: creator_id
- *         schema:
- *            type: string
- *       - in: query
- *         name: session_token
- *         schema:
- *            type: string
  *
  *     responses:
  *       200:
@@ -173,7 +173,7 @@ const mapRouter = Router();
  *               type: string
  *
  */
-mapRouter.get("/query", queryMaps);
+mapRouter.get("/", isAuthMiddleWare,  queryMaps);
 
 /**
  * @swagger
@@ -181,24 +181,15 @@ mapRouter.get("/query", queryMaps);
  *   get:
  *     summary: Gets a map
  *     tags: [Maps]
+ *     security:
+ *       - BasicAuth: []
  *     parameters:
  *       - in: query
  *         name: id
  *         type: integer
  *         required: true
  *         description: Numeric ID of the map to get.
- *       - in: query
- *         name: creator_id
- *         schema:
- *            type: string
- *       - in: query
- *         name: session_token
- *         schema:
- *            type: string
- *       - in: query
- *         name: private
- *         schema:
- *            type: boolean
+ *
  *     responses:
  *       200:
  *         description: the map was retrieved
@@ -228,7 +219,7 @@ mapRouter.get("/query", queryMaps);
  *               type: string
  *
  */
-mapRouter.get("/:id", getMap);
+mapRouter.get("/:id", isAuthMiddleWare, getMap);
 
 /**
  * @swagger
@@ -236,6 +227,8 @@ mapRouter.get("/:id", getMap);
  *   put:
  *     summary: Updates a map
  *     tags: [Maps]
+ *     security:
+ *       - BasicAuth: []
  *     parameters:
  *      - in: query
  *        name: id
@@ -295,21 +288,16 @@ mapRouter.get("/:id", getMap);
  *               type: string
  *
  */
-mapRouter.put("/update/:id", updateMap);
+mapRouter.put("/update/:id", isAuthMiddleWare, updateMap);
 
 /**
  * @swagger
- * components:
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
  * /api/maps/duplicate:
  *   post:
  *     summary: Duplicates a map
  *     tags: [Maps]
  *     security:
- *       - bearerAuth: []
+ *       - BasicAuth: []
  *     requestBody:
  *       content:
  *         application/json:
@@ -339,8 +327,6 @@ mapRouter.put("/update/:id", updateMap);
  *               legend:
  *                 $ref: '#/components/schemas/Legend'
  *
- *               creator_id:
- *                 type: string
  *             required:
  *               - map_id
  *               - map_name
@@ -372,7 +358,7 @@ mapRouter.put("/update/:id", updateMap);
  *             schema:
  *               type: string
  */
-mapRouter.post("/duplicate", duplicateMap);
+mapRouter.post("/duplicate",isAuthMiddleWare, duplicateMap);
 
 /**
  * @swagger
@@ -380,6 +366,8 @@ mapRouter.post("/duplicate", duplicateMap);
  *   put:
  *     summary: Creates a map
  *     tags: [Maps]
+ *     security:
+ *       - BasicAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -411,8 +399,8 @@ mapRouter.post("/duplicate", duplicateMap);
  *               type: string
  *
  */
-mapRouter.put("/", createMap);
+mapRouter.put("/", isAuthMiddleWare, createMap);
 
-mapRouter.delete("/:id", deleteMap);
+mapRouter.delete("/:id",isAuthMiddleWare, deleteMap);
 
 export default mapRouter;
