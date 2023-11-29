@@ -14,8 +14,8 @@ import {
   EditPageState,
   useEditContext,
   useEditDispatchContext,
-  ColorTypes,
 } from "../../context/EditContextProvider";
+import { TemplateTypes } from "../../utils/enums";
 import { Map, Region, Legend as legend } from "../../utils/models/Map";
 import { useState } from "react";
 
@@ -140,10 +140,10 @@ export default function Legend() {
           </Title>
 
           <Stack pl={10} gap="xs" p="sm">
-            {editPageState.map.colorType === ColorTypes.CHOROPLETH && (
+            {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
               <ChoroplethLegend />
             )}
-            {editPageState.map.colorType === ColorTypes.COLOR && (
+            {editPageState.map.colorType === TemplateTypes.COLOR && (
               <ColorLegend />
             )}
           </Stack>

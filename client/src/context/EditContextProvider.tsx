@@ -3,19 +3,8 @@ import { ErrorMap, Map, Region } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
 import { update } from "cypress/types/lodash";
 import { getMap } from "../api/MapApiAccessor";
-// Types
-enum EditModalEnum {
-  NONE = "NONE",
-  MAP_EXPORT = "MAP_EXPORT",
-  MAP_SETTINGS = "MAP_SETTINGS",
-  ADD_REGION = "ADD_REGION",
-}
+import { EditModalEnum} from "../utils/enums";
 
-export enum ColorTypes {
-  NONE = "NONE",
-  CHOROPLETH = "CHOROPLETH",
-  COLOR = "COLOR",
-}
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
