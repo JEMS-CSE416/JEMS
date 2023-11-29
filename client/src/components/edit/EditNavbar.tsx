@@ -12,6 +12,8 @@ import {
 import { ExportMapModal } from "../modals/ExportMapModal";
 import { SettingsMapModal } from "../modals/SettingsMapModal";
 import { updateMap } from "../../api/MapApiAccessor";
+import { notifications } from "@mantine/notifications";
+import { IconCheck, IconX } from "@tabler/icons-react";
 
 /*
  * Edit navbar
@@ -43,8 +45,25 @@ function MapTitle(props: { name: string }) {
 
 function EditNavButtons() {
   const editState = useEditContext();
-  function CallUpdateMap() {
-      updateMap({map: editState.map})
+  async function CallUpdateMap() {
+    try {
+      const map = await updateMap({ map: editState.map });
+
+      // Show a notification
+      notifications.show({
+        icon: <IconCheck />,
+        title: "Your map has been saved!",
+        message: "A map never to be lost again!",
+      });
+    } catch (error) {
+      console.log(error);
+      // Show a notification
+      notifications.show({
+        icon: <IconX />,
+        title: "Error updating map",
+        message: "Please try again",
+      });
+    }
   }
   const setEditPageState = useEditDispatchContext();
   const iconSize = 20;
