@@ -1,4 +1,4 @@
-import "./css/homeScreen.css";
+import "../browsing/css/homeScreen.css";
 import { Text, Image, Stack, Button } from "@mantine/core";
 import nothingHere from "../../assets/images/NothingHere.svg";
 import CreateMapModal from "../modals/CreateMapModal";
@@ -9,7 +9,7 @@ const NothingHere = () => {
 
   return (
     <>
-      <Stack align="center" id="nothingHereStack" >
+      <Stack align="center" dir="row" id="nothingHereStack" >
         <Image src={nothingHere} w={300} h={300} />
         <Text size="lg" fw={500} id="nothingHereText">
           Nothing here yet
