@@ -1,11 +1,30 @@
-import { Divider, Modal, Button, Textarea, TextInput, Box, Select, Group, Stack, Grid, Alert } from "@mantine/core";
+import {
+  Divider,
+  Modal,
+  Button,
+  Textarea,
+  TextInput,
+  Box,
+  Select,
+  Group,
+  Stack,
+  Grid,
+  Alert,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FileDropZone from "../common/FileDropZone";
-import { getFileType, getColorType, getRegions, handleFileConversion } from "../../utils/global_utils";
+import {
+  getFileType,
+  getColorType,
+  getRegions,
+  handleFileConversion,
+} from "../../utils/global_utils";
 import "./css/CreateMapModal.css";
 import { createMap } from "../../api/MapApiAccessor";
+import { notifications } from "@mantine/notifications";
+import { IconX } from "@tabler/icons-react";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -13,13 +32,61 @@ interface CreateMapModalProps {
 }
 
 // The base create map modal with all the logic
-const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
+  opened,
+  onClose,
+}) => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
 
+  // Custom hook that fetches template files based on the template selected and directory
+  const SaveTemplateFile = (filePath: string) => {
+    useEffect(() => {
+      // Use fetch to load the JSON file
+      fetch(filePath)
+        .then((response) => response.json())
+        .then((jsonData) => setFile(jsonData))
+        .catch((error) => console.error("Error loading JSON file:", error));
+    }, []); // Empty dependency array to run the effect only once on mount
+  };
   // This function handles the file drop & sets the file state
   const handleFilesDrop = (droppedFile: File) => {
     setFile(droppedFile);
+  };
+
+  // This function handles when a template is selected
+  const handleTemplateFile = (selectedValue: string | null) => {
+    let filePath: string = "";
+    if (selectedValue) {
+      switch (selectedValue) {
+        case "String Label Map":
+          filePath = "../utils/templates/stringTemplate.json";
+          break;
+        case "Color Label Map":
+          // Path to the JSON file in your project
+          filePath = "../utils/templates/colorTemplate.json";
+          break;
+        case "Numeric Label":
+          setFile(null);
+          break;
+        case "Choropleth Map":
+          setFile(null);
+          break;
+        case "Pointer Label":
+          setFile(null);
+          break;
+        default:
+          setFile(null);
+          break;
+      }
+      if (filePath != "") {
+        SaveTemplateFile(filePath);
+      }
+      else {
+        //TODO: remove this else statement once we have all the templates
+        console.log(selectedValue + " Map Template is not yet supported");
+      }
+    }
   };
 
   // This function gets the request body for JEMS JSON
@@ -41,7 +108,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         displayPointers: content.displayPointers,
         thumbnail: content.thumbnail,
         regions: content.regions,
-        legend: content.legend
+        legend: content.legend,
       },
     };
     return req;
@@ -66,18 +133,17 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
           displayLegend: false,
           displayPointers: false,
           thumbnail: {
-            imageUrl: "https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80",
+            imageUrl:
+              "https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80",
             imageType: "avif",
           },
           regions: {
             [filename]: getRegions(geojson),
           },
           legend: {
-            colorLegend: {
-            },
-            choroplethLegend: {
-            }
-          }
+            colorLegend: {},
+            choroplethLegend: {},
+          },
         },
       };
       return req;
@@ -114,7 +180,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
       }
     }
     return req;
-  }
+  };
 
   // Handle form submission and close the modal
   const handleFormSubmit = async () => {
@@ -129,6 +195,15 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
     } catch (err) {
       console.error("Error creating map:", err);
       onClose();
+      // check if there user dropped in a file
+      if (!file) {
+        // Show error notification
+        notifications.show({
+          icon: <IconX />,
+          title: "Error creating map",
+          message: "Drop a file or select a template!",
+        });
+      }
     }
   };
 
@@ -177,7 +252,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
           >
             {file && <p>{file.name}</p>}
           </Alert>
-
         </div>
       );
     }
@@ -185,9 +259,13 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 
   return (
     <>
-      <Modal id="create-map-modal" opened={opened}
-        onClose={onClose} title="Create Map"
-        centered size="70%"
+      <Modal
+        id="create-map-modal"
+        opened={opened}
+        onClose={onClose}
+        title="Create Map"
+        centered
+        size="70%"
       >
         <Box style={{ margin: "20px" }}>
           <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>
@@ -221,11 +299,16 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 />
               </Grid.Col>
               <Grid.Col span={7}>
-                <FileDropZone fileUploadType="MAP_UPLOAD" onFilesDrop={handleFilesDrop} />
-                <Stack justify="space-between">
-                  {previews()}
-                </Stack>
-                <Divider label="OR" labelPosition="center" style={{ margin: "10px 0" }} />
+                <FileDropZone
+                  fileUploadType="MAP_UPLOAD"
+                  onFilesDrop={handleFilesDrop}
+                />
+                <Stack justify="space-between">{previews()}</Stack>
+                <Divider
+                  label="OR"
+                  labelPosition="center"
+                  style={{ margin: "10px 0" }}
+                />
                 <Select
                   label="Template"
                   data={[
@@ -238,6 +321,9 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                   disabled={file ? true : false}
                   style={{ width: "90%" }}
                   {...form.getInputProps("template")}
+                  onChange={(selectedValue) =>
+                    handleTemplateFile(selectedValue)
+                  }
                 />
               </Grid.Col>
             </Grid>
@@ -254,12 +340,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 // wrap it in a conditional loading
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   return (
-    <>
-      {
-        opened && <CreateMapModalBase opened={opened} onClose={onClose} />
-      }
-    </>
-  )
-}
+    <>{opened && <CreateMapModalBase opened={opened} onClose={onClose} />}</>
+  );
+};
 
 export default CreateMapModal;
