@@ -71,7 +71,7 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
     notifications.show({
       icon: <IconCheck />,
       title: "Your map has been duplicated!",
-      message: "You can now edit your new map at: https://jems.app/",
+      message: "Horray a new map! Click Edit!",
     });
   };
 
