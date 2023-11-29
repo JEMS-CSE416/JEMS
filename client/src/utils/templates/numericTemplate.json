@@ -1,6 +1,6 @@
 {
     "map_file_content": {
-        "mapName": "String Template",
+        "mapName": "Numeric Template",
         "description": "121",
         "creationDate": "2023-11-28T06:25:34.829Z",
         "public": true,
@@ -104,7 +104,7 @@
                             40.664614
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -228,7 +228,7 @@
                             40.60195
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -300,7 +300,7 @@
                             40.671705
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -460,7 +460,7 @@
                             40.618472
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -724,7 +724,7 @@
                             40.704979
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2180,7 +2180,7 @@
                             40.665527
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2268,7 +2268,7 @@
                             40.632632
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2352,7 +2352,7 @@
                             40.650595
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2456,7 +2456,7 @@
                             40.581989
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2488,7 +2488,7 @@
                             40.598996
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2516,7 +2516,7 @@
                             40.598714
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2628,7 +2628,7 @@
                             40.596302
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2672,7 +2672,7 @@
                             40.616967
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2716,7 +2716,7 @@
                             40.631966
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2884,7 +2884,7 @@
                             40.626782
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -2912,7 +2912,7 @@
                             40.626782
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3044,7 +3044,7 @@
                             40.629095
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3080,7 +3080,7 @@
                             40.631111
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3116,7 +3116,7 @@
                             40.603743
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3148,7 +3148,7 @@
                             40.607193
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3196,7 +3196,7 @@
                             40.60654
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3228,7 +3228,7 @@
                             40.608068
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3304,7 +3304,7 @@
                             40.616131
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3380,7 +3380,7 @@
                             40.617738
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3472,7 +3472,7 @@
                             40.6639
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3520,7 +3520,7 @@
                             40.680798
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3588,7 +3588,7 @@
                             40.63059
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -3640,7 +3640,7 @@
                             40.608833
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -4704,7 +4704,7 @@
                             40.679705
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -5332,7 +5332,7 @@
                             40.571662
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -5872,7 +5872,7 @@
                             40.584575
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -5956,7 +5956,7 @@
                             40.684043
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -6004,7 +6004,7 @@
                             40.644122
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -7440,7 +7440,7 @@
                             40.607311
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -7836,7 +7836,7 @@
                             40.599609
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -7892,7 +7892,7 @@
                             40.632295
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -7956,7 +7956,7 @@
                             40.69784
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -8796,7 +8796,7 @@
                             40.732916
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -8848,7 +8848,7 @@
                             40.685448
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -9108,7 +9108,7 @@
                             40.697158
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -9188,7 +9188,7 @@
                             40.687466
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -9256,7 +9256,7 @@
                             40.689691
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -9460,7 +9460,7 @@
                             40.691182
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -11236,7 +11236,7 @@
                             40.615206
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -11340,7 +11340,7 @@
                             40.675561
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -13564,7 +13564,7 @@
                             40.601734
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -14176,7 +14176,7 @@
                             40.70395
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -15008,7 +15008,7 @@
                             40.725097
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -15100,7 +15100,7 @@
                             40.675507
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -15164,7 +15164,7 @@
                             40.65925
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -15344,7 +15344,7 @@
                             40.705967
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -16664,7 +16664,7 @@
                             40.605567
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -18548,7 +18548,7 @@
                             40.594236
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -18620,7 +18620,7 @@
                             40.633224
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -18712,7 +18712,7 @@
                             40.655249
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -20060,7 +20060,7 @@
                             40.583412
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -20172,7 +20172,7 @@
                             40.633967
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -20284,7 +20284,7 @@
                             40.660753
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -20624,7 +20624,7 @@
                             40.692407
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -20852,7 +20852,7 @@
                             40.67163
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -20952,7 +20952,7 @@
                             40.68175
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -21692,7 +21692,7 @@
                             40.609394
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -22212,7 +22212,7 @@
                             40.582609
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -22380,7 +22380,7 @@
                             40.581635
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -23624,7 +23624,7 @@
                             40.649034
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -24676,7 +24676,7 @@
                             40.675021
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -24772,7 +24772,7 @@
                             40.70112
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -24832,7 +24832,7 @@
                             40.700281
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -27612,7 +27612,7 @@
                             40.631007
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],
@@ -27736,7 +27736,7 @@
                             40.694114
                         ]
                     ],
-                    "stringLabel": "Change Me!",
+                    "stringLabel" : "",
                     "stringOffset": [
                         0
                     ],

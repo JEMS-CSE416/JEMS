@@ -28,6 +28,7 @@ import { notifications } from "@mantine/notifications";
 import { IconX } from "@tabler/icons-react";
 import stringTemplate from "../../utils/templates/stringTemplate.json";
 import colorTemplate from "../../utils/templates/colorTemplate.json";
+import numericTemplate from "../../utils/templates/numericTemplate.json";
 import { error } from "console";
 
 interface CreateMapModalProps {
@@ -276,8 +277,10 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         case "Color Label Map":
           req = getJemsRequest(colorTemplate);
           break;
-        // TODO: TO BE IMPLEMENTED
         case "Numeric Label":
+          req = getJemsRequest(numericTemplate);
+          break;
+        // TODO: TO BE IMPLEMENTED
         case "Choropleth Map":
         case "Pointer Label":
         default:
