@@ -5,10 +5,11 @@ import Canvas from "./Canvas";
 import MapAbout from "./MapAbout";
 import Comments from "./Comments";
 import Footer from "../common/Footer";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Map } from "../../utils/models/Map";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 /* Custom React Hook, selectedMap content can now be accessed without passing as a prop */
 export const useSelectedMap = () => {
@@ -20,6 +21,9 @@ export const useSelectedMap = () => {
 const SelectedCardPage = ({}) => {
   const { id } = useParams();
   const [map, setMap] = useState<Map>();
+  const auth = useAuthContext();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     // fetch map data from backend
@@ -29,6 +33,9 @@ const SelectedCardPage = ({}) => {
   const selectedMap: Map = useSelectedMap();
   console.log("Selected Map Details");
   console.log(selectedMap);
+
+  if(auth.user?._id != selectedMap.creatorId)
+    navigate('/', {state:{err401: true}})
 
   return (
     <>
