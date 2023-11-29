@@ -20,7 +20,7 @@ const HomePage = () => {
   );
   const { data: yourMaps, loading: yourMapsLoading } = useLoadingData<Map[]>(
     getMaps,
-    [{ownedMaps: true}]
+    [{ ownedMaps: true }]
   );
 
   // Create a getMap function that takes in a mapId and returns the map object
@@ -31,7 +31,6 @@ const HomePage = () => {
       console.error("Error updating data:", error);
     }
   };
-
 
   const handleSelectMapToDuplicate = (map: Map) => {
     console.log("Selected map to duplicate:", map);
@@ -69,38 +68,39 @@ const HomePage = () => {
                   </Text>
                 </Link>
               </Group>
-                {yourMapsLoading ? (
-                  <Grid style={{ textAlign: "initial" }}>
-                    <Grid.Col
-                      style={{
-                        height: "auto",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Loader color="blue" />
+              {yourMapsLoading ? (
+                <Grid style={{ textAlign: "initial" }}>
+                  <Grid.Col
+                    style={{
+                      height: "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Loader color="blue" />
+                  </Grid.Col>
+                </Grid>
+              ) : yourMaps?.length === 0 ? (
+                <NothingHere />
+              ) : (
+                <Grid style={{ textAlign: "initial" }}>
+                  {yourMaps?.slice(0, totalMaps).map((map, i) => (
+                    <Grid.Col span={cardSpan}>
+                      <MapCard
+                        id={map._id}
+                        name={map.mapName}
+                        description={map.description}
+                        isPrivate={!map.public}
+                        map={map}
+                        duplicateAction={() => {
+                          handleSelectMapToDuplicate(map);
+                        }}
+                      />
                     </Grid.Col>
-                  </Grid>
-                ) : (
-                  yourMaps?.length === 0 ? <NothingHere/> :
-                  yourMaps?.slice(0,totalMaps).map((map, i) => (
-                    <Grid style={{ textAlign: "initial" }}>
-                      <Grid.Col span={cardSpan}>
-                        <MapCard
-                          id={map._id}
-                          name={map.mapName}
-                          description={map.description}
-                          isPrivate={!map.public}
-                          map={map}
-                          duplicateAction={() => {
-                            handleSelectMapToDuplicate(map);
-                          }}
-                        />
-                      </Grid.Col>
-                    </Grid>
-                  ))
-                )}
+                  ))}
+                </Grid>
+              )}
             </Stack>
           </Box>
           <Box>
@@ -135,7 +135,7 @@ const HomePage = () => {
                     <Loader color="blue" />
                   </Grid.Col>
                 ) : (
-                  maps?.slice(0,totalMaps).map((map) => (
+                  maps?.slice(0, totalMaps).map((map) => (
                     <Grid.Col span={cardSpan}>
                       <MapCard
                         id={map._id}

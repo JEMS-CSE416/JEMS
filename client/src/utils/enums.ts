@@ -2,6 +2,7 @@ export enum EditModalEnum {
   NONE = "NONE",
   MAP_EXPORT = "MAP_EXPORT",
   MAP_SETTINGS = "MAP_SETTINGS",
+  ADD_REGION = "ADD_REGION",
 }
 
 export enum TemplateTypes {
