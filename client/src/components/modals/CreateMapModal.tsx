@@ -164,7 +164,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         template: content.template,
         colorType: getColorType(),
         displayStrings: selectedValue == "String Label Map" ? true : content.displayStrings,
-        displayNumerics: content.displayNumerics,
+        displayNumerics: selectedValue == "Numeric Label" ? true : content.displayNumerics,
         displayLegend: content.displayLegend,
         displayPointers: content.displayPointers,
         thumbnail: content.thumbnail,
