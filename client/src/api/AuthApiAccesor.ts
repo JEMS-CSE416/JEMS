@@ -2,10 +2,10 @@ import { User } from "../utils/models/User";
 import { BACKEND_URL, LOCAL_BACKEND_URL } from "../utils/constants";
 
 let authUrl = ""
-if(process.env.REACT_APP_PROCESS_STAGE === 'prod')
-  authUrl = BACKEND_URL + "/api/auth";
-else if (process.env.REACT_APP_PROCESS_STAGE === 'dev')
+if (process.env.REACT_APP_PROCESS_STAGE === 'dev')
   authUrl = LOCAL_BACKEND_URL + "/api/auth";
+else
+  authUrl = BACKEND_URL + "/api/auth";
 
 
 /**

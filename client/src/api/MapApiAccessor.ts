@@ -4,14 +4,14 @@ import { BACKEND_URL, LOCAL_BACKEND_URL } from "../utils/constants";
 let mapsUrl = "";
 let mapUrl = "";
 let updateMapURL = "";
-if(process.env.REACT_APP_PROCESS_STAGE === 'prod'){
-  mapsUrl = BACKEND_URL + "/api/maps/";
-  mapUrl = BACKEND_URL + "/api/maps/:id/";
-  updateMapURL = BACKEND_URL + "/api/maps/update/:id/";
-} else if (process.env.REACT_APP_PROCESS_STAGE === 'dev'){
+if (process.env.REACT_APP_PROCESS_STAGE === 'dev'){
   mapsUrl = LOCAL_BACKEND_URL + "/api/maps/";
   mapUrl = LOCAL_BACKEND_URL + "/api/maps/:id/";
   updateMapURL = LOCAL_BACKEND_URL + "/api/maps/update/:id/";
+} else {
+  mapsUrl = BACKEND_URL + "/api/maps/";
+  mapUrl = BACKEND_URL + "/api/maps/:id/";
+  updateMapURL = BACKEND_URL + "/api/maps/update/:id/";
 }
 
 export async function deleteMap(mapId: string){
