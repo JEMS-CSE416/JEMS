@@ -9,28 +9,105 @@ import {
 import jemsLogo from "../../../assets/images/logo.png";
 import "./css/splashScreenModals.css";
 import SplashScreenModalTemplate from "./SplashScreenModalTemplate";
-import { Link } from "react-router-dom";
+import { useSetAuthContext } from "../../../context/AuthContextProvider";
+import { forgotPass, login } from "../../../api/AuthApiAccesor";
+import { useNavigate } from "react-router-dom";
+import { isEmail, isNotEmpty, useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons-react";
 
 interface LoginModalProps {
   onCloseLoginModal: () => void;
   onOpenPasswordRecoveryModal: () => void;
   onOpenSignupModal: () => void;
 }
+
+
 const LoginModal: React.FC<LoginModalProps> = ({
   onCloseLoginModal,
   onOpenPasswordRecoveryModal,
   onOpenSignupModal,
 }) => {
-  // closes login modal and opens password recovery modal
-  function handleCloseLoginOpenPasswordRecoveryModal() {
-    onCloseLoginModal();
-    onOpenPasswordRecoveryModal();
-  }
+  const setAuthState = useSetAuthContext();
+  const navigate = useNavigate();
+  const form = useForm({
+    initialValues: {
+      email: '',
+      password: ''
+    },
+
+    validate: {
+      email: isEmail('Invalid email'),
+      password: isNotEmpty('Password Cannot be empty'),
+    }
+
+  });
 
   // closes login modal and opens signup modal
   function handleCloseLoginOpenSignUpModal() {
     onCloseLoginModal();
     onOpenSignupModal();
+  }
+
+  function handleLogin(values: any) {
+
+    // Attempt login
+    login({email: values.email, password: values.password})
+      .then(
+        // HACK: just update user schema
+        (json: any) => {
+          const loggedUser = {user:{
+            _id: json.id,
+            email: json.email,
+            displayName: json.displayname
+          }}
+          setAuthState({...loggedUser});
+          navigate('/home/');
+        }
+      ).catch(
+        (err) => {
+          console.log(err)
+          if(err as string !== undefined && ((err as string).includes('email') || (err as string).includes('password'))){
+            form.setFieldError("email", "Username or password is invalid");
+            form.setFieldError("password", "Username or password is invalid");
+          } else
+            console.log(err)
+        }
+        
+      )
+
+    
+  }
+
+  function handleforgotPass() {
+    // Check for email and pass nulling
+    if(form.values.email === ""){
+      form.setFieldError('email', 'Invalid Email')
+      return
+    } else if(!form.isValid('email')) {
+      form.setFieldError('email', 'Value must be an email')
+      return
+    }
+    
+    // Attempt login
+    forgotPass(form.values.email)
+      .then(
+        () => {
+          notifications.show({
+            icon: <IconCheck />,
+            title: 'Password change initiated!',
+            message: 'Check your email :)',
+          });
+        }
+      ).catch(
+        (err) => {
+          console.log(err)
+        }
+        
+      )
+    onCloseLoginModal();
+
+    
   }
 
   return (
@@ -41,49 +118,52 @@ const LoginModal: React.FC<LoginModalProps> = ({
           Login
         </Text>
         <br />
-        <TextInput label="Email" required id="loginEmailInput" ta={"left"} />
-        <br />
-        <PasswordInput
-          label="Password"
-          required
-          className="loginPasswordInput"
-          ta={"left"}
-        />
-        <div id="cursorToFinger">
-          <Text
-            onClick={handleCloseLoginOpenPasswordRecoveryModal}
+        <form onSubmit={form.onSubmit((values) => {handleLogin(values)})}>
+          <TextInput label="Email" required id="loginEmailInput" ta={"left"} 
+            //onChange={(e) => setLoginState({...loginState, email:e.currentTarget.value,  emailErr:""})}
+            {...form.getInputProps('email')}
+          />
+          <br />
+          <PasswordInput
+            id="loginPasswordInput"
+            label="Password"
+            required
+            className="loginPasswordInput"
             ta={"left"}
-            id="splashScreenModalRedirect"
-          >
-            Forgot your password?
-          </Text>
-        </div>
-
-        <br />
-
-        <Group>
-          <Text>Don't have an account?</Text>
+            {...form.getInputProps('password')}
+          />
           <div id="cursorToFinger">
             <Text
+              onClick={handleforgotPass}
+              ta={"left"}
               id="splashScreenModalRedirect"
-              onClick={handleCloseLoginOpenSignUpModal}
             >
-              Sign up!
+              Forgot your password?
             </Text>
           </div>
-          <div id="loginButtonDiv">
-            <Link to={"/home"}>
-              <Button onClick={checkFields} id="loginButton">Login</Button>
-            </Link>
-          </div>
-        </Group>
+
+          <br />
+
+          <Group>
+            <Text>Don't have an account?</Text>
+            <div id="cursorToFinger">
+              <Text
+                id="splashScreenModalRedirect"
+                onClick={handleCloseLoginOpenSignUpModal}
+              >
+                Sign up!
+              </Text>
+            </div>
+            <div id="loginButtonDiv">
+              <Button type="submit" id="loginButton">Login</Button>
+            </div>
+          </Group>
+        </form>
       </SplashScreenModalTemplate>
     </>
   );
 };
-function checkFields() {
-  const email = document.getElementById("loginEmailInput");
-  const pass = document.getElementById("loginPasswordInput");
-  console.log("TODO: delete log when email and pass are used" + email + pass);
-}
 export default LoginModal;
+
+
+

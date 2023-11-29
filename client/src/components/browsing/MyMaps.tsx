@@ -18,6 +18,7 @@ import { getMaps } from "../../api/MapApiAccessor";
 import { useDisclosure } from "@mantine/hooks";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
 import { useLoadingData } from "../hooks/useLoadingData";
+import NothingHere from "../common/NothingHere";
 
 const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 function MyMaps() {
@@ -29,12 +30,7 @@ function MyMaps() {
     data: yourMaps,
     error,
     loading,
-  } = useLoadingData<Map[]>(getMaps, [
-    {
-      session_token: "652daf32e2225cdfeceea14f",
-      creatorId: "652daf32e2225cdfeceea14f",
-    },
-  ]);
+  } = useLoadingData<Map[]>(getMaps, [{ownedMaps: true}]);
 
   const handleSelectMapToDuplicate = (map: Map) => {
     location.state = map;
@@ -69,35 +65,38 @@ function MyMaps() {
                   Your Maps
                 </Text>
               </Group>
-              <Grid style={{ textAlign: "initial" }}>
                 {loading ? (
-                  <Grid.Col
-                    style={{
-                      height: "auto",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Loader color="blue" />
-                  </Grid.Col>
-                ) : (
-                  yourMaps?.slice(start,end).map((map) => (
-                    <Grid.Col span={cardSpan}>
-                      <MapCard
-                        id={map._id}
-                        name={map.mapName}
-                        description={map.description}
-                        isPrivate={!map.public}
-                        map={map}
-                        duplicateAction={() => {
-                          handleSelectMapToDuplicate(map);
-                        }}
-                      />
+                  <Grid style={{ textAlign: "initial" }}>
+                    <Grid.Col
+                      style={{
+                        height: "auto",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Loader color="blue" />
                     </Grid.Col>
-                  ))
+                  </Grid>
+                ) : (
+                  yourMaps?.length == undefined ? <NothingHere/> :
+                  <Grid style={{ textAlign: "initial" }}>{
+                    yourMaps?.slice(start,end).map((map) => (
+                      <Grid.Col span={cardSpan}>
+                        <MapCard
+                          id={map._id}
+                          name={map.mapName}
+                          description={map.description}
+                          isPrivate={!map.public}
+                          map={map}
+                          duplicateAction={() => {
+                            handleSelectMapToDuplicate(map);
+                          }}
+                        />
+                      </Grid.Col>
+                    ))}
+                  </Grid>
                 )}
-              </Grid>
             </Stack>
           </Box>
           <Pagination
