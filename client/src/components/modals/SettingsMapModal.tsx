@@ -66,7 +66,10 @@ function SettingsMapModalBase() {
       // Update the edit page state 
       editPageState.map.mapName = form.values.mapName;
       editPageState.map.description = form.values.description;
-      editPageState.map.public = form.values.visibility === "Public" ? true : false;
+      //update map visibility if changed
+      if(form.values.visibility){
+        editPageState.map.public = form.values.visibility === "Public" ? true : false;
+      }
       editPageState.map.thumbnail.imageUrl = imageUrl;
       editPageState.map.thumbnail.imageType = getFileType(imageUrl);
 
