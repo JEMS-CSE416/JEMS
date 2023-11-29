@@ -35,7 +35,7 @@ const sess = {
 } as any
 
 if (process.env['STAGE'] !== 'dev') {
-  app.set('trust proxy', 1) // trust first proxy
+  app.set('trust proxy', true) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
   sess.proxy = true 
   sess.name = "beta"
