@@ -16,7 +16,7 @@ interface Region {
     coordinates: Types.Array<Types.Array<Number>>;
     stringLabel: string;
     stringOffset: Types.Array<Number>;
-    numericLabel: Number;
+    numericLabel: String;
     numericUnit: string;
     color: string;
 }

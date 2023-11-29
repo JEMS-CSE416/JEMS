@@ -57,7 +57,6 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
         description: form.values.description,
         isPublic:
           form.values.visibility.toString() == "Public" ? "true" : "false",
-        creatorId: map.creatorId, //TODO replace this with actual logged in creator id
       };
       await duplicateMap(data);
     } catch (error) {
@@ -72,7 +71,7 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
     notifications.show({
       icon: <IconCheck />,
       title: "Your map has been duplicated!",
-      message: "You can now edit your new map at: https://jems.app/",
+      message: "Horray a new map! Click Edit!",
     });
   };
 

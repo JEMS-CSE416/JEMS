@@ -70,25 +70,30 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     if(err) return res.status(400).send("bad regen")
 
     // store objectId in session  
-    //req.session.user = {}
-    req.session.userid = user._id
-    req.session.userdisplayName = user.displayName
-    req.session.useremail = user.email
+    req.session.user = {}
+    req.session.user.id = user._id
+    req.session.user.displayName = user.displayName
+    req.session.user.email = user.email
 
+    //console.log(req.session)
+      //return res.status(200).json({
+        //id: user._id,
+        //displayname: user.displayname,
+        //email: user.email
+      //}).send();
     console.log(req.session)
+    // save session
+    req.session.save( (err: Error) => {
+      if(err) return res.status(400).send("bad save")
+      console.log("2", req.session);
+
+      // return 200 status code
       return res.status(200).json({
         id: user._id,
-        displayName: user.displayName,
+        displayname: user.displayName,
         email: user.email
       }).send();
-    //console.log(req.session)
-    //// save session
-    //req.session.save( (err: Error) => {
-      //if(err) return res.status(400).send("bad save")
-      //console.log("2", req.session)
-
-      //// return 200 status code
-    //})
+    })
 
   })
 }
@@ -103,19 +108,16 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 export const logout = async (req: Request, res: Response) => {
   // remove user from session
   req.session.user = undefined
+  console.log("logout", req.session);
 
   // save session
-  req.session.save( (err) => {
+  req.session.destroy( (err) => {
     if(err) return res.status(400).send()
 
-    
-    // best practice is to regenerate session stuff
-    req.session.regenerate((err) => {
-      if(err) return res.status(400).send()
 
       // return 200 status code
       return res.status(200).send();
-    })
+
   })
 }
 
@@ -127,6 +129,7 @@ export const logout = async (req: Request, res: Response) => {
  * @returns error status code
 */
 export const isAuthMiddleWare = async (req: Request, res: Response, next: NextFunction) => {
+
   if (req.session.user) next();
   else res.status(401).send("Not Authenticated")
 }
@@ -139,9 +142,7 @@ export const isAuthMiddleWare = async (req: Request, res: Response, next: NextFu
  * @returns error status code
 */
 export const isAuthEndpt = async (req: Request, res: Response, next: NextFunction) => {
-  //console.log(req.session)
-  console.log("req:", req.body)
-  if (req.body.userid != undefined) res.status(200).send();
+  if (req.session.user != undefined) res.status(200).send();
   else res.status(401).send("Not Auth");
 }
 
@@ -189,7 +190,13 @@ export const changePassword = async (req: Request, res: Response) => {
   const UserModel = await getUserModel();
 
   // get user and password from the hash provided in the link
-  const userDetails = decryptEmailPass(req.body.resetId);
+
+  let userDetails = undefined
+  try {
+    userDetails = decryptEmailPass(req.body.resetId);
+  } catch (error) {
+    return res.status(400).send("Link invalid");
+  }
   const user = await UserModel.findOne({email: userDetails.email});
 
 
@@ -197,12 +204,12 @@ export const changePassword = async (req: Request, res: Response) => {
   if(user == undefined)
     return res.status(400).send("Invalid link");    // email not found
   if(new Date(user.activeUntil) < new Date())   
-    return res.status(405).send("Link expired");    // Link expired
+    return res.status(404).send("Link expired");    // Link expired
   if(!matches(userDetails.pass, user.password))
-    return res.status(400).send("Link Invalid");    // Password not found
+    return res.status(400).send("Link invalid");    // Password not found
 
   // reset password
-  user.password = hashPassword(req.body.password);
+    user.password = hashPassword(req.body.password);
   user.activeUntil = new Date(Date.UTC(9999, 11, 31, 23, 59, 59, 999))
 
   // save user's password and active until
@@ -212,6 +219,46 @@ export const changePassword = async (req: Request, res: Response) => {
 }
 
 
+export const swagAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  if(req.session.user) next();
+
+  // parse login and password from headers
+  const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
+  const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':')
+  req.body.email = login;
+  req.body.password = password;
+
+  // check that login is valid
+  const UserModel = await getUserModel();
+  const user = await UserModel.findOne({email: req.body.email});
+  if(user == undefined)    // email check
+    return res.status(401).send("bad email");
+  if(!matches(req.body.password, user.password))    // password check
+    return res.status(401).send("bad password");
+  if(new Date(user.activeUntil) < new Date())
+    return res.status(401).send("Password Expired");    // password expired
+
+  // regenerate the session, which is good practice to help
+  // guard against forms of session fixation
+  req.session.regenerate((err: Error) => {
+    if(err) return res.status(400).send("bad regen")
+
+    // store objectId in session  
+    req.session.user = {}
+    req.session.user.id = user._id
+    req.session.user.displayName = user.displayName
+    req.session.user.email = user.email
+
+    // save session
+    req.session.save( (err: Error) => {
+      if(err) return res.status(400).send("bad save")
+
+      // return 200 status code
+      return next();
+    })
+
+  })
+}
 
 
 

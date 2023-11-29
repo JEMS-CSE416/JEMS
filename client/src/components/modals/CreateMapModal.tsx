@@ -1,12 +1,29 @@
-import { Divider, Modal, Button, Textarea, TextInput, Box, Select, Group, Stack, Grid, Alert } from "@mantine/core";
+import {
+  Divider,
+  Modal,
+  Button,
+  Textarea,
+  TextInput,
+  Box,
+  Select,
+  Group,
+  Stack,
+  Grid,
+  Alert,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import FileDropZone from "../common/FileDropZone";
-import { geoJsonConvert, handleKml, handleZip } from "../../utils/geojson-convert";
-import { getFileType } from "../../utils/global_utils";
+import { getFileType} from "../../utils/global_utils";
+import {
+  geoJsonConvert,
+  handleKml,
+  handleZip,
+} from "../../utils/geojson-convert";
 import "./css/CreateMapModal.css";
 import { createMap } from "../../api/MapApiAccessor";
+import { TemplateTypes } from "../../utils/enums";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -14,7 +31,10 @@ interface CreateMapModalProps {
 }
 
 // The base create map modal with all the logic
-const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
+const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
+  opened,
+  onClose,
+}) => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
 
@@ -24,7 +44,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
   };
 
   // This function handles the conversion based on the file type
-  const handleFileConversion = async () => {
+  const handleFileConversion = async (file: File) => {
     if (file) {
       try {
         // Get the file extension
@@ -64,10 +84,10 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
               coordinates: feature.geometry.coordinates[0],
               stringLabel: "",
               stringOffset: [0],
-              numericLabel: 0,
+              numericLabel: "",
               numericUnit: "",
               color: "#8eb8fa", // default color
-            })
+            });
             break;
           case "MultiPolygon":
             feature.geometry.coordinates.forEach((coordinates: any) => {
@@ -76,11 +96,11 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 coordinates: coordinates[0],
                 stringLabel: "",
                 stringOffset: [0],
-                numericLabel: 0,
+                numericLabel: "",
                 numericUnit: "",
                 color: "#8eb8fa", // default color
-              })
-            })
+              });
+            });
             break;
           case "GeometryCollection":
             feature.geometry.geometries.forEach((geometry: any) => {
@@ -89,33 +109,38 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 coordinates: geometry.coordinates[0],
                 stringLabel: "",
                 stringOffset: [0],
-                numericLabel: 0,
+                numericLabel: "",
                 numericUnit: "",
                 color: "#8eb8fa", // default color
-              })
-            })
+              });
+            });
 
             break;
           default:
             console.log("unsupported type:", feature);
         }
-
       });
     }
     return regions;
-  }
+  };
 
   // This function gets the color type based on the template
   const getColorType = (template: string) => {
     switch (template) {
+      case "String Label Map":
+        return TemplateTypes.TEXT_LABEL_MAP;
       case "Color Label Map":
-        return "COLOR";
+        return TemplateTypes.COLOR;
+      case "Numeric Label":
+        return TemplateTypes.NUMERIC_LABEL_MAP;
       case "Choropleth Map":
-        return "CHOROPLETH";
+        return TemplateTypes.CHOROPLETH;
+      case "Pointer Label":
+        return TemplateTypes.POINT_LABEL_MAP;
       default:
-        return "NONE";
+        return TemplateTypes.NONE;
     }
-  }
+  };
 
   // This function gets the request body for JEMS JSON
   function getJemsRequest(jemsjson: any) {
@@ -123,7 +148,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
     // Create the request body
     const req = {
       map_file_content: {
-        creatorId: form.values.creatorId,
         mapName: form.values.mapName,
         description: form.values.description,
         creationDate: new Date().toISOString(),
@@ -136,7 +160,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         displayPointers: content.displayPointers,
         thumbnail: content.thumbnail,
         regions: content.regions,
-        legend: content.legend
+        legend: content.legend,
       },
     };
     return req;
@@ -149,7 +173,36 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
       // Create the request body
       const req = {
         map_file_content: {
-          creatorId: form.values.creatorId,
+          mapName: form.values.mapName,
+          description: form.values.description,
+          creationDate: new Date().toISOString(),
+          public: form.values.visibility === "Public" ? true : false,
+          template: form.values.template,
+          colorType: getColorType(form.values.template),
+          displayStrings: false,
+          displayNumerics: false,
+          displayLegend: false,
+          displayPointers: false,
+          thumbnail: {
+            imageUrl: "https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80",
+            imageType: "avif",
+          },
+          regions: {
+            [filename]: getRegions(geojson),
+          },
+          legend: {
+            colorLegend: {},
+            choroplethLegend: {},
+          },
+        },
+      };
+      return req;
+    }
+  }
+
+  function getEmptyMap() {
+      const req = {
+        map_file_content: {
           mapName: form.values.mapName,
           description: form.values.description,
           creationDate: new Date().toISOString(),
@@ -165,7 +218,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
             imageType: "",
           },
           regions: {
-            [filename]: getRegions(geojson),
+            
           },
           legend: {
             colorLegend: {
@@ -176,13 +229,10 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         },
       };
       return req;
-    }
   }
 
-  // Handle form submission and close the modal
-  const handleFormSubmit = async () => {
+  const createRequest = async () => {
     let req;
-
     if (file) {
       // Get the file extension
       let fileExtension = getFileType(file.name);
@@ -201,7 +251,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         }
       } else {
         // Convert the file to geojson
-        const geojson = await handleFileConversion();
+        const geojson = await handleFileConversion(file);
         // Check if the conversion was successful
         if (!geojson) {
           console.error("File conversion failed");
@@ -209,7 +259,17 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
         }
         req = getGeoJsonRequest(geojson);
       }
+    } else {
+      // create an empty map
+      req = getEmptyMap();
     }
+    return req;
+  }
+
+  // Handle form submission and close the modal
+  const handleFormSubmit = async () => {
+    const req = await createRequest();
+
 
     // Create the map
     try {
@@ -225,9 +285,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 
   // Form state that we'll use as default values for now
   const form = useForm({
-    //TO-DO: Update creatorId after auth is implemented
     initialValues: {
-      creatorId: "652daf32e2225cdfeceea17f",
       mapName: "",
       description: "",
       visibility: "",
@@ -268,7 +326,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
           >
             {file && <p>{file.name}</p>}
           </Alert>
-
         </div>
       );
     }
@@ -276,9 +333,13 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 
   return (
     <>
-      <Modal id="create-map-modal" opened={opened}
-        onClose={onClose} title="Create Map"
-        centered size="70%"
+      <Modal
+        id="create-map-modal"
+        opened={opened}
+        onClose={onClose}
+        title="Create Map"
+        centered
+        size="70%"
       >
         <Box style={{ margin: "20px" }}>
           <form onSubmit={form.onSubmit((values) => handleFormSubmit())}>
@@ -312,11 +373,16 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
                 />
               </Grid.Col>
               <Grid.Col span={7}>
-                <FileDropZone fileUploadType="MAP_UPLOAD" onFilesDrop={handleFilesDrop} />
-                <Stack justify="space-between">
-                  {previews()}
-                </Stack>
-                <Divider label="OR" labelPosition="center" style={{ margin: "10px 0" }} />
+                <FileDropZone
+                  fileUploadType="MAP_UPLOAD"
+                  onFilesDrop={handleFilesDrop}
+                />
+                <Stack justify="space-between">{previews()}</Stack>
+                <Divider
+                  label="OR"
+                  labelPosition="center"
+                  style={{ margin: "10px 0" }}
+                />
                 <Select
                   label="Template"
                   data={[
@@ -345,12 +411,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({ opened, onClose }) 
 // wrap it in a conditional loading
 const CreateMapModal: React.FC<CreateMapModalProps> = ({ opened, onClose }) => {
   return (
-    <>
-      {
-        opened && <CreateMapModalBase opened={opened} onClose={onClose} />
-      }
-    </>
-  )
-}
+    <>{opened && <CreateMapModalBase opened={opened} onClose={onClose} />}</>
+  );
+};
 
 export default CreateMapModal;

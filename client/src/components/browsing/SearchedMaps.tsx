@@ -46,7 +46,7 @@ const SearchedMapsScreen = () => {
     loading,
   } = useLoadingData<Map[]>(
     getMaps,
-    [{ isPrivate: false, mapName: `${search}` }],
+    [{  isPrivate: false, mapName: `${search}` }],
     [search, location.state]
   );
   const [page, setPage] = useState(1);
