@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { splashGetStartedButton, mapCard, loginButton, editButton } from "./id";
+import { splashGetStartedButton } from "./id";
 
 const loginEmailInput = "#loginEmailInput";
 const loginPasswordInput = "#loginPasswordInput";
@@ -15,6 +15,8 @@ const signupDisplayNameInput = "#signupDisplayNameInput";
 const signUpPasswordInput = "#signupPasswordInput";
 const signUpConfirmPasswordInput = "#signupConfirmPasswordInput";
 const signUpSubmitButton = "#signUpSubmitButton";
+
+const randomNumber = Math.floor(Math.random() * 1000000); // generates a random number between 0 and 999999
 
 beforeEach(() => {
   cy.visit("/");
@@ -44,8 +46,8 @@ describe("Sign up as a new user", () => {
     // clicks on the login screen
     cy.get(signUpLink).click();
 
-    cy.get(signUpEmailInput).type("cypressuser1@gmail.com")
-    cy.get(signupDisplayNameInput).type("cypressUser1")
+    cy.get(signUpEmailInput).type(`cypressuser${randomNumber}@gmail.com`);
+    cy.get(signupDisplayNameInput).type(`cypressUser${randomNumber}`)
     cy.get(signUpPasswordInput).type("12345678")
     cy.get(signUpConfirmPasswordInput).type("12345678")
 
@@ -53,7 +55,7 @@ describe("Sign up as a new user", () => {
     cy.get(signUpSubmitButton).click();
 
     // Log in with the newly created user
-    cy.get(loginEmailInput).type("cypressuser1@gmail.com")
+    cy.get(loginEmailInput).type(`cypressuser${randomNumber}@gmail.com`)
     cy.get(loginPasswordInput).type("12345678")
 
     // clicks on the login button
@@ -63,3 +65,4 @@ describe("Sign up as a new user", () => {
     cy.url().should("include", "/home");
   });
 });
+
