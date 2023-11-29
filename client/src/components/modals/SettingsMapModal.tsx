@@ -154,7 +154,7 @@ function SettingsMapModalBase() {
                 />
                 <Select
                   label="Visibility"
-                  placeholder={editPageState.map.public ? "Public" : "Private"}
+                  defaultValue={editPageState.map.public ? "Public" : "Private"}
                   data={["Public", "Private"]}
                   style={{ width: "100%" }}
                   withAsterisk
