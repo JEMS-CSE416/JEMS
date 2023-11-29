@@ -15,7 +15,7 @@ import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import FileDropZone from "../common/FileDropZone";
-import { getFileType} from "../../utils/global_utils";
+import { getFileType } from "../../utils/global_utils";
 import {
   geoJsonConvert,
   handleKml,
@@ -26,6 +26,8 @@ import { createMap } from "../../api/MapApiAccessor";
 import { TemplateTypes } from "../../utils/enums";
 import { notifications } from "@mantine/notifications";
 import { IconX } from "@tabler/icons-react";
+import stringTemplate from "../../utils/templates/stringTemplate.json";
+import colorTemplate from "../../utils/templates/colorTemplate.json";
 
 interface CreateMapModalProps {
   opened: boolean;
@@ -39,55 +41,11 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 }) => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
+  const [selectedValue, setSelectedValue] = useState<string|null>();
 
-  // Custom hook that fetches template files based on the template selected and directory
-  const SaveTemplateFile = (filePath: string) => {
-    useEffect(() => {
-      // Use fetch to load the JSON file
-      fetch(filePath)
-        .then((response) => response.json())
-        .then((jsonData) => setFile(jsonData))
-        .catch((error) => console.error("Error loading JSON file:", error));
-    }, []); // Empty dependency array to run the effect only once on mount
-  };
   // This function handles the file drop & sets the file state
   const handleFilesDrop = (droppedFile: File) => {
     setFile(droppedFile);
-  };
-
-  // This function handles when a template is selected
-  const handleTemplateFile = (selectedValue: string | null) => {
-    let filePath: string = "";
-    if (selectedValue) {
-      switch (selectedValue) {
-        case "String Label Map":
-          filePath = "../utils/templates/stringTemplate.json";
-          break;
-        case "Color Label Map":
-          // Path to the JSON file in your project
-          filePath = "../utils/templates/colorTemplate.json";
-          break;
-        case "Numeric Label":
-          setFile(null);
-          break;
-        case "Choropleth Map":
-          setFile(null);
-          break;
-        case "Pointer Label":
-          setFile(null);
-          break;
-        default:
-          setFile(null);
-          break;
-      }
-      if (filePath != "") {
-        SaveTemplateFile(filePath);
-      }
-      else {
-        //TODO: remove this else statement once we have all the templates
-        console.log(selectedValue + " Map Template is not yet supported");
-      }
-    }
   };
 
   // This function handles the conversion based on the file type
@@ -172,8 +130,9 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   };
 
   // This function gets the color type based on the template
-  const getColorType = (template: string) => {
-    switch (template) {
+  const getColorType = () => {
+    console.log(selectedValue);
+    switch (selectedValue) {
       case "String Label Map":
         return TemplateTypes.TEXT_LABEL_MAP;
       case "Color Label Map":
@@ -200,8 +159,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         creationDate: new Date().toISOString(),
         public: content.public,
         template: content.template,
-        colorType: content.colorType,
-        displayStrings: content.displayStrings,
+        colorType: getColorType(),
+        displayStrings: selectedValue == "String Label Map" ? true : content.displayStrings,
         displayNumerics: content.displayNumerics,
         displayLegend: content.displayLegend,
         displayPointers: content.displayPointers,
@@ -225,7 +184,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
           creationDate: new Date().toISOString(),
           public: form.values.visibility === "Public" ? true : false,
           template: form.values.template,
-          colorType: getColorType(form.values.template),
+          colorType: getColorType(),
           displayStrings: false,
           displayNumerics: false,
           displayLegend: false,
@@ -249,37 +208,38 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   }
 
   function getEmptyMap() {
-      const req = {
-        map_file_content: {
-          mapName: form.values.mapName,
-          description: form.values.description,
-          creationDate: new Date().toISOString(),
-          public: form.values.visibility === "Public" ? true : false,
-          template: form.values.template,
-          colorType: getColorType(form.values.template),
-          displayStrings: false,
-          displayNumerics: false,
-          displayLegend: false,
-          displayPointers: false,
-          thumbnail: {
-            imageUrl: "",
-            imageType: "",
-          },
-          regions: {
-            
-          },
-          legend: {
-            colorLegend: {},
-            choroplethLegend: {},
-          },
+    const req = {
+      map_file_content: {
+        mapName: form.values.mapName,
+        description: form.values.description,
+        creationDate: new Date().toISOString(),
+        public: form.values.visibility === "Public" ? true : false,
+        template: form.values.template,
+        colorType: getColorType(),
+        displayStrings: false,
+        displayNumerics: false,
+        displayLegend: false,
+        displayPointers: false,
+        thumbnail: {
+          imageUrl: "",
+          imageType: "",
         },
-      };
-      return req;
+        regions: {},
+        legend: {
+          colorLegend: {},
+          choroplethLegend: {},
+        },
+      },
+    };
+    return req;
   }
 
   const createRequest = async () => {
     let req;
     if (file) {
+      // A file was dropped in meaning template was not selected
+      setSelectedValue(null);
+
       // Get the file extension
       let fileExtension = getFileType(file.name);
 
@@ -305,7 +265,24 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         }
         req = getGeoJsonRequest(geojson);
       }
-    } else {
+    } 
+    else if (selectedValue) { // If file does not exist, check if a template was selected
+      switch (selectedValue) {
+        case "String Label Map":
+          req = getJemsRequest(stringTemplate);
+          break;
+        case "Color Label Map":
+          req = getJemsRequest(colorTemplate);
+          break;
+        // TODO: TO BE IMPLEMENTED
+        case "Numeric Label":
+        case "Choropleth Map":
+        case "Pointer Label":
+        default:
+          console.log(selectedValue + " currently not supported");
+          break;
+      } 
+    }else {
       // create an empty map
       req = getEmptyMap();
     }
@@ -315,7 +292,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   // Handle form submission and close the modal
   const handleFormSubmit = async () => {
     const req = await createRequest();
-
 
     // Create the map
     try {
@@ -451,7 +427,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   style={{ width: "90%" }}
                   {...form.getInputProps("template")}
                   onChange={(selectedValue) =>
-                    handleTemplateFile(selectedValue)
+                    setSelectedValue(selectedValue)
                   }
                 />
               </Grid.Col>

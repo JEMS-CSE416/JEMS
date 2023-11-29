@@ -1,16 +1,10 @@
 {
   "map_file_content": {
-    "_id": {
-      "$oid": "6566d94fb6473027f56c31d5"
-    },
-    "creatorId": {
-      "$oid": "652daf32e2225cdfeceea14f"
-    },
-    "mapName": "Brook Nook",
-    "description": "yeahh yeahhhhhh",
-    "creationDate": {
-      "$date": "2023-11-29T06:25:19.727Z"
-    },
+    "_id": "6566d94fb6473027f56c31d5",
+    "creatorId": "652daf32e2225cdfeceea14f",
+    "mapName": "ColorTemplate",
+    "description": "This is the Color Map Template",
+    "creationDate": "2023-11-29T06:25:19.727Z",
     "public": true,
     "colorType": "NONE",
     "displayStrings": false,
@@ -20,9 +14,7 @@
     "thumbnail": {
       "imageUrl": "",
       "imageType": "",
-      "_id": {
-        "$oid": "656587dfcaec749a198be642"
-      }
+      "_id": "656587dfcaec749a198be642"
     },
     "regions": {
       "brooklyn-ny_97.geojson": [
@@ -7453,9 +7445,7 @@
     "legend": {
       "colorLegend": {},
       "choroplethLegend": {},
-      "_id": {
-        "$oid": "656587dfcaec749a198be643"
-      }
+      "_id": "656587dfcaec749a198be643"
     },
     "__v": 0
   }
