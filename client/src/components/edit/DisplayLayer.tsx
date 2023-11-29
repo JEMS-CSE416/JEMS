@@ -107,10 +107,7 @@ const RegionLabel = (props: {
   ) {
     let labelIcon = divIcon({
       className: "map-label",
-      html: `<div style="border:1px solid black;">${labelHTML(
-        region,
-        editPageState
-      )}</div>`,
+      html: `<div>${labelHTML(region, editPageState)}</div>`,
       iconSize: [100, 40],
       iconAnchor: [50, 20],
     });
@@ -119,6 +116,7 @@ const RegionLabel = (props: {
         key={index}
         position={[centroid[1], centroid[0]]}
         icon={labelIcon}
+        interactive={false}
       />
     );
   }
@@ -132,11 +130,11 @@ function getRegionStyle(
   // Initialize the style object with common properties
   let style: { [key: string]: any } = {
     fillColor: region.properties.color,
-    fillOpacity: 1,
+    fillOpacity: 0.9,
   };
 
   const whichMap = editPageState.map.colorType;
-  console.log(whichMap)
+  console.log(whichMap);
   const isSelected =
     region.properties.i === editPageState.selectedRegion?.i &&
     region.properties.groupName === editPageState.selectedRegion?.groupName;
@@ -151,6 +149,7 @@ function getRegionStyle(
     style = {
       ...style,
       fillColor: "#8eb8fa",
+      fillOpacity: 0.5,
     };
   }
 
@@ -163,13 +162,17 @@ function labelHTML(
 ) {
   const displayStrings = editPageState.map.displayStrings;
   const displayNumerics = editPageState.map.displayNumerics;
-  const displayStringsLabel = region.properties.stringLabel;
-  const displayNumericsLabel = region.properties.numericLabel;
+  const StringsLabel = region.properties.stringLabel;
+  const NumericsLabel = region.properties.numericLabel;
+  const UnitsLabel = region.properties.numericUnit;
+  let contents = `
+  <div style="pointer-events: none;">
+    <p style="margin: 0;">${displayStrings ? StringsLabel : ""}</p>
+    <p style="margin: 0;">${displayNumerics ? NumericsLabel + ` ${UnitsLabel}`: ""}</p>
+  </div>
+`;
 
-  let label = 
-  `<div>
-  </div>`;
-  return label;
+  return contents;
 }
 
 function initStyleFunction(

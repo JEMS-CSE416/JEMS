@@ -12,3 +12,4 @@ export enum TemplateTypes {
   NUMERIC_LABEL_MAP = "Numeric Label Map",
   TEXT_LABEL_MAP = "Text Label Map",
 }
+
