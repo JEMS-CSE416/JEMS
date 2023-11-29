@@ -73,7 +73,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
         throw new Error(res.statusText);
       }
       const newMap = await res.json();
-      console.log(newMap);
+      console.log("newMap", newMap)
       dispatch({
         type: "init_map",
         map: newMap,
@@ -95,7 +95,6 @@ export function EditContextProvider(props: EditContextProviderProps) {
 // TODO: change any action
 // This function handles all of the changes to the edit page state
 function editReducer(state: EditPageState, action: any): EditPageState {
-  console.log("EDIT REDUCER: ", action);
   switch (action.type) {
     case "init_map":
       // Make sure you create a new state, rather than modify the old one
@@ -112,8 +111,6 @@ function editReducer(state: EditPageState, action: any): EditPageState {
           : "NONE",
       };
     case "update_map":
-      console.log("updating map state");
-      console.log(action.map);
       return {
         ...state,
         map: action.map ?? ErrorMap,
@@ -123,7 +120,6 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         i: action.selectedRegion.i,
         groupName: action.selectedRegion.groupName,
         region: action.selectedRegion.region,
-        //layer: action.selectedRegion.layer,
       };
 
       return {

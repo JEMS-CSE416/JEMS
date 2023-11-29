@@ -15,6 +15,7 @@ import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import FileDropZone from "../common/FileDropZone";
+import { getFileType, getColorType, getRegions, handleFileConversion } from "../../utils/global_utils";
 import {
   geoJsonConvert,
   handleKml,
@@ -186,8 +187,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
           displayLegend: false,
           displayPointers: false,
           thumbnail: {
-            imageUrl: "",
-            imageType: "",
+            imageUrl: "https://images.unsplash.com/photo-1527004013197-933c4bb611b3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=720&q=80",
+            imageType: "avif",
           },
           regions: {
             [filename]: getRegions(geojson),
@@ -202,10 +203,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
     }
   }
 
-  // Handle form submission and close the modal
-  const handleFormSubmit = async () => {
+  const createRequest = async () => {
     let req;
-
     if (file) {
       // Get the file extension
       let fileExtension = getFileType(file.name);
@@ -224,7 +223,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         }
       } else {
         // Convert the file to geojson
-        const geojson = await handleFileConversion();
+        const geojson = await handleFileConversion(file);
         // Check if the conversion was successful
         if (!geojson) {
           console.error("File conversion failed");
@@ -233,6 +232,12 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         req = getGeoJsonRequest(geojson);
       }
     }
+    return req;
+  }
+
+  // Handle form submission and close the modal
+  const handleFormSubmit = async () => {
+    const req = await createRequest();
 
     // Create the map
     try {
@@ -250,7 +255,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   const form = useForm({
     //TO-DO: Update creatorId after auth is implemented
     initialValues: {
-      creatorId: "652daf32e2225cdfeceea17f",
+      creatorId: "652daf32e2225cdfeceea14f",
       mapName: "",
       description: "",
       visibility: "",
