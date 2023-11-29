@@ -16,7 +16,7 @@ const app = express()
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://orca-app-tcqol.ondigitalocean.app/'
+    'https://orca-app-tcqol.ondigitalocean.app'
   ],
   credentials: true
 }))
@@ -25,15 +25,26 @@ app.use(cors({
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb'}));
 
-// Use the session middleware
-app.use(session({
+const sess = {
   secret: process.env["SESSION_SECRET"],
   resave: false,
   saveUninitialized: true,
   cookie: {
-    sameSite: "lax",
-  }
-}))
+    sameSite: "lax" as any,
+  } as any
+} as any
+
+if (process.env['STAGE'] !== 'dev') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+  sess.proxy = true 
+  sess.name = "beta"
+  sess.cookie.sameSite = false
+}
+
+// Use the session middleware
+app.use(session(sess))
+
 
 // Setup Map router
 app.use('/api/maps', mapRouter)
