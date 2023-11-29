@@ -79,7 +79,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
     <>
       <SplashScreenModalTemplate onCloseSignupModal={onCloseSignupModal}>
         <Image src={jemsLogo} id="logo"></Image>
-        <Text size="xl" fw={500} id="loginText">
+        <Text size="xl" fw={500} className="loginText">
           Signup!
         </Text>
         <br />
@@ -89,6 +89,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             label="Email"
             required
             className="splashScreenInput"
+            id="signUpEmailInput"
             ta={"left"}
             {...form.getInputProps('email')}
 
@@ -99,6 +100,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             label="Display Name"
             required
             className="splashScreenInput"
+            id="signupDisplayNameInput"
             ta={"left"}
             {...form.getInputProps('displayName')}
           />
@@ -108,6 +110,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             label="Password"
             required
             className="splashScreenInput"
+            id="signupPasswordInput"
             ta={"left"}
             {...form.getInputProps('password')}
           />
@@ -117,6 +120,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             label="Confirm Password"
             required
             className="splashScreenInput"
+            id="signupConfirmPasswordInput"
             ta={"left"}
             {...form.getInputProps('confirmPass')}
           />
@@ -124,17 +128,18 @@ const SignupModal: React.FC<SignupModalProps> = ({
 
           <Group>
             <Text>Already have an account?</Text>
-            <div id="cursorToFinger">
+            <div className="cursorToFinger">
               <Text
-                id="splashScreenModalRedirect"
+                className="splashScreenModalRedirect"
                 onClick={handleCloseSignupOpenLoginModal}
+                id="loginLink"
               >
                 Login!
               </Text>
             </div>
 
-            <div id="loginButtonDiv">
-                <Button type="submit"> Signup </Button>
+            <div className="loginButtonDiv">
+                <Button type="submit" id="signUpSubmitButton"> Signup </Button>
             </div>
           </Group>
         </form>

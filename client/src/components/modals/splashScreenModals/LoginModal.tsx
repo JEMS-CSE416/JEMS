@@ -114,7 +114,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
     <>
       <SplashScreenModalTemplate onCloseLoginModal={onCloseLoginModal}>
         <Image src={jemsLogo} id="logo"></Image>
-        <Text size="xl" fw={500} id="loginText">
+        <Text size="xl" fw={500} className="loginText">
           Login
         </Text>
         <br />
@@ -132,11 +132,12 @@ const LoginModal: React.FC<LoginModalProps> = ({
             ta={"left"}
             {...form.getInputProps('password')}
           />
-          <div id="cursorToFinger">
+          <div className="cursorToFinger">
             <Text
               onClick={handleforgotPass}
               ta={"left"}
-              id="splashScreenModalRedirect"
+              className="splashScreenModalRedirect"
+              id="forgotPasswordLink"
             >
               Forgot your password?
             </Text>
@@ -146,15 +147,16 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
           <Group>
             <Text>Don't have an account?</Text>
-            <div id="cursorToFinger">
+            <div className="cursorToFinger">
               <Text
-                id="splashScreenModalRedirect"
+                className="splashScreenModalRedirect"
                 onClick={handleCloseLoginOpenSignUpModal}
+                id="signUpLink"
               >
                 Sign up!
               </Text>
             </div>
-            <div id="loginButtonDiv">
+            <div className="loginButtonDiv">
               <Button type="submit" id="loginButton">Login</Button>
             </div>
           </Group>
