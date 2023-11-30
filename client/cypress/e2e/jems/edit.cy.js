@@ -31,13 +31,13 @@ function login() {
 
 beforeEach(() => {
   login();
-  cy.get("#6567576c0837a4d8bcca4f79").click();
+  cy.get("#6566e11a0837a4d8bcca4ead").click();
 });
 
 describe("Routed to Edit Screen", () => {
   it("Successfully displays edit", () => {
     cy.get(editButton).click();
-    cy.url().should("include", "6567576c0837a4d8bcca4f79");
+    cy.url().should("include", "6566e11a0837a4d8bcca4ead");
   });
 });
 
@@ -45,7 +45,7 @@ describe("Routed to Edit Screen", () => {
 describe("Modal Checking", () => {
   it("Checks if the settings modal is visible", () => {
     cy.get(editButton).click();
-    cy.url().should("include", "6567576c0837a4d8bcca4f79");
+    cy.url().should("include", "6566e11a0837a4d8bcca4ead");
     // Click on the settings button to open the duplicate modal
     cy.get(settingsButton).click();
 
@@ -53,7 +53,7 @@ describe("Modal Checking", () => {
 
   it("Checks if the export modal is visible", () => {
     cy.get(editButton).click();
-    cy.url().should("include", "6567576c0837a4d8bcca4f79");
+    cy.url().should("include", "6566e11a0837a4d8bcca4ead");
     // Click on the button to open the duplicate modal
     cy.get(exportButton).click();
   });
