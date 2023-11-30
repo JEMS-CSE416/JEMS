@@ -220,7 +220,8 @@ export const changePassword = async (req: Request, res: Response) => {
 
 
 export const swagAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  if(req.session.user) next();
+  if(req.session.user) return next();
+  if(!req.headers.authorization) return next();
 
   // parse login and password from headers
   const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
