@@ -45,12 +45,12 @@ if (process.env['STAGE'] !== 'dev') {
 // Use the session middleware
 app.use(session(sess))
 
+// basic Auth swag
+app.use(swagAuthMiddleware)
 
 // Setup Map router
 app.use('/api/maps', mapRouter)
 app.use('/api/auth', authRouter)
-
-app.use(swagAuthMiddleware)
 
 
 // Setup Swagger routes
