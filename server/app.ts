@@ -4,6 +4,7 @@ import swaggerJSDoc from "swagger-jsdoc"
 import * as swaggerDocument from './swagger.json'
 import authRouter from "./routes/auth/auth"
 import mapRouter from "./routes/map/map"
+import userRouter from "./routes/user/user"
 import * as dotenv from "dotenv"
 import session from "express-session"
 import { swagAuthMiddleware } from "./routes/auth/controller/AuthController"
@@ -51,7 +52,7 @@ app.use(swagAuthMiddleware)
 // Setup Map router
 app.use('/api/maps', mapRouter)
 app.use('/api/auth', authRouter)
-
+app.use('/api/user', userRouter)
 
 // Setup Swagger routes
 const swaggerSpec = swaggerJSDoc({
