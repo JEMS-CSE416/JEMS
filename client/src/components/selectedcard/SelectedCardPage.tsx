@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Map } from "../../utils/models/Map";
 import { useAuthContext } from "../../context/AuthContextProvider";
+import { getUser } from "../../api/UserApiAccesor";
 
 /* Custom React Hook, selectedMap content can now be accessed without passing as a prop */
 export const useSelectedMap = () => {
