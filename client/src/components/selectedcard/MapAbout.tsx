@@ -1,18 +1,19 @@
 import "./css/mapAbout.css";
 import { Text } from "@mantine/core";
-import { useSelectedMap } from "../selectedcard/SelectedCardPage";
+import { Map} from "../../utils/models/Map";
 
 
-const MapAbout = () => {
-  const selectedMap = useSelectedMap();
-
+interface MapAboutProps {
+  map: Map
+}
+const MapAbout = ({map}: MapAboutProps) => {
   return (
     <>
       <Text fw={700} size="lg" id="aboutMap">
         About Map
       </Text>
       <Text size="md" id="description">
-        {selectedMap.description}
+        {map.description}
       </Text>
     </>
   );

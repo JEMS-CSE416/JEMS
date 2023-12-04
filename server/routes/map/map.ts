@@ -289,7 +289,7 @@ mapRouter.get("/", isAuthMiddleWare,  queryMaps);
  *               type: string
  *
  */
-mapRouter.put("/update/:id", isAuthMiddleWare, updateMap);
+mapRouter.put("/update/", isAuthMiddleWare, updateMap);
 
 /**
  * @swagger

@@ -4,7 +4,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { deleteMap } from "../../api/MapApiAccessor";
-import { useSelectedMap } from "../selectedcard/SelectedCardPage";
+import { useSelectedMap } from "../hooks/useSelectedMap";
 
 interface DeleteMapModalProps {
   opened: boolean;

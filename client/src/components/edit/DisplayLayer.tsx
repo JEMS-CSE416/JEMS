@@ -19,7 +19,6 @@ import { convertToGeoJSON } from "./utils/jemsconvert";
 import React, { useEffect, useRef } from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
 import { geoCentroid } from "d3-geo";
-import { spawn } from "child_process";
 
 export default function DisplayLayer() {
   // Implement your component logic here
