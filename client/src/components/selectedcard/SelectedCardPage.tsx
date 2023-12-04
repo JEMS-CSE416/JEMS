@@ -31,10 +31,10 @@ const SelectedCardPage = ({}) => {
           <>
             <NavBar />
             <div id="content">
-              <MapHeader map={map}></MapHeader>
-              <Canvas map={map}></Canvas>
-              <MapAbout></MapAbout>
-              <Comments></Comments>
+              <MapHeader map={map}/>
+              <Canvas map={map}/>
+              <MapAbout map={map}/>
+              <Comments/>
             </div>
             <Footer />
           </>
