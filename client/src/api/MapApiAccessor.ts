@@ -5,10 +5,12 @@ let mapsUrl = "";
 let mapUrl = "";
 let updateMapURL = "";
 if (process.env.REACT_APP_PROCESS_STAGE === 'dev'){
+  console.log("DEV MODE")
   mapsUrl = LOCAL_BACKEND_URL + "/api/maps/";
   mapUrl = LOCAL_BACKEND_URL + "/api/maps/";
   updateMapURL = LOCAL_BACKEND_URL + "/api/maps/update/";
 } else {
+  console.log("PROD MODE")
   mapsUrl = BACKEND_URL + "/api/maps/";
   updateMapURL = BACKEND_URL + "/api/maps/update/";
 }
@@ -33,9 +35,8 @@ interface GetMapParams {
 
 /* Get a single map with the map with the map id */
 export async function getMap({ id }: GetMapParams): Promise<Map> {
-  console.log(mapsUrl + id)
   try {
-    const res = await fetch(mapsUrl + id, {
+    const res = await fetch(mapsUrl + id + "/", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       credentials: "include"
