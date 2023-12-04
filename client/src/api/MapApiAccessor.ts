@@ -6,12 +6,11 @@ let mapUrl = "";
 let updateMapURL = "";
 if (process.env.REACT_APP_PROCESS_STAGE === 'dev'){
   mapsUrl = LOCAL_BACKEND_URL + "/api/maps/";
-  mapUrl = LOCAL_BACKEND_URL + "/api/maps/:id/";
-  updateMapURL = LOCAL_BACKEND_URL + "/api/maps/update/:id/";
+  mapUrl = LOCAL_BACKEND_URL + "/api/maps/";
+  updateMapURL = LOCAL_BACKEND_URL + "/api/maps/update/";
 } else {
   mapsUrl = BACKEND_URL + "/api/maps/";
-  mapUrl = BACKEND_URL + "/api/maps/:id/";
-  updateMapURL = BACKEND_URL + "/api/maps/update/:id/";
+  updateMapURL = BACKEND_URL + "/api/maps/update/";
 }
 
 export async function deleteMap(mapId: string){
@@ -34,8 +33,9 @@ interface GetMapParams {
 
 /* Get a single map with the map with the map id */
 export async function getMap({ id }: GetMapParams): Promise<Map> {
+  console.log(mapsUrl + id)
   try {
-    const res = await fetch(mapUrl + "?id=" + id, {
+    const res = await fetch(mapsUrl + id, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       credentials: "include"
