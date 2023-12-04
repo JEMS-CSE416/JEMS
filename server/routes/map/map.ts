@@ -131,49 +131,6 @@ import { isAuthMiddleWare } from "../auth/controller/AuthController";
 
 const mapRouter = Router();
 
-/**
- * @swagger
- * /api/maps/:
- *   get:
- *     summary: Query Maps with a string
- *     tags: [Maps]
- *     security:
- *       - BasicAuth: []
- *     parameters:
- *       - in: query
- *         name: map_name
- *         schema:
- *           type: string
- *       - in: query
- *         name: private
- *         schema:
- *            type: boolean
- *
- *     responses:
- *       200:
- *         description: List of maps
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Map'
- *       400:
- *         description: Bad Request
- *         content:
- *           application/json:
- *             schema:
- *               type: string
- *
- *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: string
- *
- */
-mapRouter.get("/", isAuthMiddleWare,  queryMaps);
 
 /**
  * @swagger
@@ -220,6 +177,50 @@ mapRouter.get("/", isAuthMiddleWare,  queryMaps);
  *
  */
 mapRouter.get("/:id", isAuthMiddleWare, getMap);
+
+/**
+ * @swagger
+ * /api/maps/:
+ *   get:
+ *     summary: Query Maps with a string
+ *     tags: [Maps]
+ *     security:
+ *       - BasicAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: map_name
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: private
+ *         schema:
+ *            type: boolean
+ *
+ *     responses:
+ *       200:
+ *         description: List of maps
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Map'
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: string
+ *
+ */
+mapRouter.get("/", isAuthMiddleWare,  queryMaps);
 
 /**
  * @swagger
