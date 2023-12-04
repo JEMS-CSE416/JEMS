@@ -134,18 +134,18 @@ const mapRouter = Router();
 
 /**
  * @swagger
- * /api/maps/{id}/:
+ * /api/maps/{id}:
  *   get:
  *     summary: Gets a map
  *     tags: [Maps]
  *     security:
  *       - BasicAuth: []
  *     parameters:
- *       - in: query
+ *       - in: path
  *         name: id
- *         type: integer
+ *         type: string
  *         required: true
- *         description: Numeric ID of the map to get.
+ *         description: string ID of the map to get.
  *
  *     responses:
  *       200:

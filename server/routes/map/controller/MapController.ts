@@ -79,14 +79,15 @@ const queryMaps = async (req: Request, res: Response) => {
 const getMap = async (req: Request, res: Response) => {
   /* Get collection of maps */
   const mapModel = await getMapModel();
-  const map_id = req.query.id?.toString();
+  const map_id = req.params.id?.toString();
+  console.log(map_id)
   const creator_id: string = req.session.user.id;
 
 
   /* Check map exists */
   const map = await mapModel.findById(map_id);
   if (!map) {
-    return res.status(404).send("Error 404: Map not found");
+    return res.status(404).send("Error 404: Map not found" + map_id);
   }
 
   /* Check maps private status */
