@@ -11,7 +11,7 @@ import React from "react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { useSelectedMap } from "../selectedcard/SelectedCardPage";
+import { useSelectedMap } from "../hooks/useSelectedMap";
 import { Map } from "../../utils/models/Map";
 import { duplicateMap } from "../../api/MapApiAccessor";
 

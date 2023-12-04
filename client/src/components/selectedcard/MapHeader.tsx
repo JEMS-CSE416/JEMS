@@ -4,6 +4,9 @@ import DownloadMapModal from "../modals/DownloadMapModal";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
 import DeleteMapModal from "../modals/DeleteMapModal";
 import { Text, Group, Avatar, Button } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import {Map} from "../../utils/models/Map";
 import {
   IconEdit,
   IconDownload,
@@ -11,12 +14,12 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-import { useSelectedMap } from "../selectedcard/SelectedCardPage";
-import { useAuthContext } from "../../context/AuthContextProvider";
 
-const MapHeader = () => {
-  const authState = useAuthContext();
-  const selectedMap = useSelectedMap();
+interface MapHeaderProps {
+  map: Map
+}
+const MapHeader = ({map}: MapHeaderProps) => {
+  const { isLoggedIn, user } = useAuth();
 
   // the download modal state
   const [downloadModalOpened, setDownloadModal] = useDisclosure(false);
@@ -28,14 +31,12 @@ const MapHeader = () => {
   return (
     <>
       {/* Show download modal when needed */}
-
       <DownloadMapModal
         opened={downloadModalOpened}
         onClose={setDownloadModal.close}
       />
 
       {/* Show duplicate modal when needed */}
-
       <DuplicateMapModal
         opened={duplicateModalOpened}
         onClose={setDuplicateModal.close}
@@ -50,15 +51,15 @@ const MapHeader = () => {
       )}
 
       <Text fw={500} size="sm" id="creationDate">
-        {selectedMap.creationDate}
+        {map.creationDate}
       </Text>
       <Text fw={700} size="xl" id="title">
-        {selectedMap.mapName}
+        {map.mapName}
       </Text>
       {
-        selectedMap.creatorId === authState.user?._id && 
+        user && map.creatorId === user._id && 
       <Group id="edit">
-        <Link to={`/edit/${selectedMap._id}`} style={{ marginLeft: "auto" }}>
+        <Link to={`/edit/${map._id}`} style={{ marginLeft: "auto" }}>
           <Button
             leftSection={<IconEdit size={14} />}
             variant="subtle"
