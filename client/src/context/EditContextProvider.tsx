@@ -3,8 +3,7 @@ import { ErrorMap, Map, Region } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
 import { update } from "cypress/types/lodash";
 import { getMap } from "../api/MapApiAccessor";
-import { EditModalEnum} from "../utils/enums";
-
+import { EditModalEnum } from "../utils/enums";
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
@@ -68,9 +67,9 @@ export function EditContextProvider(props: EditContextProviderProps) {
 
     try {
       console.log(`fetching map for id: ${mapId}`);
-      const res = await getMap({id: mapId as string});
+      const res = await getMap({ id: mapId as string });
       const newMap = res;
-      console.log("newMap", newMap)
+      console.log("newMap", newMap);
       dispatch({
         type: "init_map",
         map: newMap,
@@ -192,11 +191,25 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         }
       }
 
+      const minMaxValues = findChoroplethLegendMinMax(state);
+      // Get the old choropleth legend and update it with a new legend that includes the new min and max values
+      const oldChoroplethLegend = state.map.legend.choroplethLegend;
+      const updatedChoroplethLegend = {
+        ...oldChoroplethLegend,
+        min: minMaxValues.minValue,
+        max: minMaxValues.maxValue,
+        hue: action.map.legend.choroplethLegend.hue,
+      };
+
       console.log("updated state: ", {
         ...state,
         map: {
           ...state.map,
           regions: newRegions,
+          legend: {
+            ...state.map.legend,
+            choroplethLegend: updatedChoroplethLegend,
+          }
         },
         selectedRegion: updatedSelectedRegionInfo,
       });
@@ -206,6 +219,10 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         map: {
           ...state.map,
           regions: newRegions,
+          legend: {
+            ...state.map.legend,
+            choroplethLegend: updatedChoroplethLegend,
+          }
         },
         selectedRegion: updatedSelectedRegionInfo,
       };
@@ -236,8 +253,39 @@ function editReducer(state: EditPageState, action: any): EditPageState {
           },
         },
       };
-    }
+  }
   return state;
+}
+
+// Find the min and max values for the choropleth legend
+function findChoroplethLegendMinMax(state: EditPageState) {
+  let minValue = Number.MAX_SAFE_INTEGER;
+  let maxValue = Number.MIN_SAFE_INTEGER;
+  // let numericLabelMap = new Map<number | string, number>();
+  const regions = state.map.regions;
+  const filename = Object.keys(regions);
+
+  // Iterate through each region filename and find the min and max values
+  for (let i = 0; i < filename.length; i++) {
+    const region = regions[filename[i]];
+    for (let j = 0; j < region.length; j++) {
+      const numericLabel = region[j].numericLabel;
+      const numericLabelNumber = Number(numericLabel);
+      if (numericLabel === "") continue;
+      if (numericLabelNumber < minValue) {
+        minValue = numericLabelNumber;
+      }
+      if (numericLabelNumber > maxValue) {
+        maxValue = numericLabelNumber;
+      }
+      // numericLabelMap.set(numericLabel, numericLabelNumber);
+    }
+  }
+  // console.log(numericLabelMap);
+  console.log(minValue);
+  console.log(maxValue);
+
+  return({minValue, maxValue});
 }
 
 export function useEditContext() {

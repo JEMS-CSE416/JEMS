@@ -44,7 +44,7 @@ export default function Properties() {
   );
 
   const [numericLabelState, setNumericLabelState] = useState<string | number>(
-    editPageState.selectedRegion?.region.numericLabel?.toString() ?? ""
+    editPageState.selectedRegion?.region.numericLabel?.toString() ?? "#8"
   );
 
   const [unitsState, setUnitsState] = useState("");
@@ -52,72 +52,19 @@ export default function Properties() {
   const [colorState, setColorState] = useState(
     editPageState.selectedRegion?.region.color
   );
+
+  const [hueState, setHueState] = useState(
+    editPageState.map.legend.choroplethLegend?.hue ?? "#8eb8fa"
+  );
+
   const [ChoroplethColorRange, setChoroplethColorRange] = useState<{
-    min: { value: number; color: string };
-    max: { value: number; color: string };
+    min: { value: string; color: string };
+    max: { value: string; color: string };
   }>({
-    min: { value: Number.MAX_SAFE_INTEGER, color: "#000000" },
-    max: { value: Number.MIN_SAFE_INTEGER, color: "#FFFFFF" },
+    min: { value: "", color: "#000000" },
+    max: { value: "", color: "#FFFFFF" },
   });
 
-  // Find the min and max values for the choropleth legend
-  function findChoroplethLegendMinMax(state: EditPageState) {
-    let numericLabelMap = new Map<number | string, number>();
-    let minValue = Number.MAX_SAFE_INTEGER;
-    let maxValue = Number.MIN_SAFE_INTEGER;
-    const regions = state.map.regions;
-    const filename = Object.keys(regions);
-
-    // Iterate through each region filename and find the min and max values
-    for (let i = 0; i < filename.length; i++) {
-      const region = regions[filename[i]];
-      for (let j = 0; j < region.length; j++) {
-        const numericLabel = region[j].numericLabel;
-        const numericLabelNumber = Number(numericLabel);
-        if (numericLabel === "") continue;
-        if (numericLabelNumber < minValue) {
-          minValue = numericLabelNumber;
-        }
-        if (numericLabelNumber > maxValue) {
-          maxValue = numericLabelNumber;
-        }
-        numericLabelMap.set(numericLabel, numericLabelNumber);
-      }
-    }
-
-    // Set the min and max values for the choropleth legend
-    setChoroplethColorRange({
-      min: {
-        value: minValue,
-        color: ChoroplethColorRange.min.color,
-      },
-      max: {
-        value: maxValue,
-        color: ChoroplethColorRange.max.color,
-      },
-    });
-
-    console.log(numericLabelMap);
-    console.log(minValue);
-    console.log(maxValue);
-    console.log(ChoroplethColorRange.max);
-    console.log(ChoroplethColorRange.min);
-
-    setEditPageState({
-      type: "update_choropleth_legend",
-      map: {
-        ...editPageState.map,
-        legend: {
-          ...editPageState.map.legend,
-          choroplethLegend: {
-            ...editPageState.map.legend.choroplethLegend,
-            min: ChoroplethColorRange.min.value,
-            max: ChoroplethColorRange.max.value,
-          },
-        },
-      },
-    });
-  }
   useEffect(() => {
     setGroupNameState(editPageState.selectedRegion?.groupName);
     setRegionNameState(editPageState.selectedRegion?.region.regionName);
@@ -127,12 +74,37 @@ export default function Properties() {
     );
     setUnitsState(editPageState.selectedRegion?.region.numericUnit ?? "");
     setColorState(editPageState.selectedRegion?.region.color);
-    findChoroplethLegendMinMax(editPageState);
+    setHueState(editPageState.map.legend.choroplethLegend.hue ?? "#8eb8fa");
+    if (
+      editPageState.map.legend.choroplethLegend.min &&
+      editPageState.map.legend.choroplethLegend.max
+    ) {
+      setChoroplethColorRange({
+        min: {
+          value: editPageState.map.legend.choroplethLegend.min.toString(),
+          color: ChoroplethColorRange.min.color,
+        },
+        max: {
+          value: editPageState.map.legend.choroplethLegend.max.toString(),
+          color: ChoroplethColorRange.max.color,
+        },
+      });
+    }
   }, [editPageState.selectedRegion]);
 
   const handleRegionPropertyEditing = () => {
     setEditPageState({
       type: "update_selected_region_info",
+      map: {
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend,
+          choroplethLegend: {
+            ...editPageState.map.legend.choroplethLegend,
+            hue: hueState,
+          },
+        },
+      },
       selectedRegion: {
         ...editPageState.selectedRegion!,
         region: {
@@ -152,6 +124,8 @@ export default function Properties() {
             : groupNameState!,
       },
     });
+
+    console.log(editPageState);
   };
 
   return (
@@ -232,6 +206,16 @@ export default function Properties() {
             label="Show Text Label"
           />
 
+          {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
+            <>
+              <ColorInput
+                label="Hue"
+                placeholder="#000000"
+                value={hueState}
+                onChange={setHueState}
+              />
+            </>
+          )}
           {/* {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
             <>
               <Group>
