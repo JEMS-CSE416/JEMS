@@ -1,4 +1,4 @@
-import { GeoJSON, useMap, Marker, GeoJSONProps } from "react-leaflet";
+import { GeoJSON, useMap, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {
   EditPageAction,
@@ -7,7 +7,7 @@ import {
   useEditDispatchContext,
 } from "../../context/EditContextProvider";
 import { TemplateTypes } from "../../utils/enums";
-import { Layer, Map, divIcon, marker } from "leaflet";
+import { Layer, Map, divIcon } from "leaflet";
 import {
   Feature,
   GeoJsonProperties,
@@ -16,9 +16,10 @@ import {
 } from "geojson";
 import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
-import React, { useEffect, useRef } from "react";
+import React, { useRef, useState } from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
 import { geoCentroid } from "d3-geo";
+import { onClickLabel, onDragEndLabel, onDragLabel, PointerConnection } from "./leaflet/pointers";
 
 export default function DisplayLayer() {
   // Implement your component logic here
@@ -63,7 +64,6 @@ const Labels = (props: {
   editPageState: EditPageState;
 }) => {
   const data = props.data;
-  const editPageState = props.editPageState;
 
   const labels = data.features.map(
     (
@@ -77,6 +77,7 @@ const Labels = (props: {
   return <>{labels}</>;
 };
 
+// This function handles the labels (string, numeric, and pointer)
 const RegionLabel = (props: {
   key: React.Key | null | undefined;
   region: Feature;
@@ -86,16 +87,10 @@ const RegionLabel = (props: {
   const region = props.region;
   const index = props.key;
 
-  //   if (region.properties) {
-  //     let label = divIcon({
-  //       className: "map-label",
-  //       html: `<div style="pointer-events:none;"></div>`,
-  //       iconSize: [100, 40],
-  //       iconAnchor: [50, 20],
-  //     });
-  //     const centroid = geoCentroid(region);
-  //     return <Marker position={[centroid[1], centroid[0]]} icon={label} />;
-  //   }
+  // useRef allows a ReactLeaflet child component to be accessible 
+  const markerRef = useRef(null);
+  const [dragSetter, setDragSetter] = useState(() => {});
+
   const centroid = geoCentroid(region);
   if (
     region.properties &&
@@ -110,17 +105,55 @@ const RegionLabel = (props: {
       iconSize: [100, 40],
       iconAnchor: [50, 20],
     });
+
     return (
-      <Marker
-        key={index}
-        position={[centroid[1], centroid[0]]}
-        icon={labelIcon}
-        interactive={false}
-      />
+      <>
+        {
+          editPageState.map.displayPointers && 
+          <PointerConnection
+            centroid={[centroid[1], centroid[0]]}
+            setDragStateSetter={(fxn: any) => setDragSetter(fxn)}
+            region={region}
+          />
+        }
+        
+          <Marker
+            key={index}
+            position={editPageState.map.displayPointers && region.properties.stringOffset?.length !== 1
+              ? [region.properties.stringOffset[0], region.properties.stringOffset[1]]
+              : [centroid[1], centroid[0]]}
+            icon={labelIcon}
+            interactive={true}
+            bubblingMouseEvents={true}
+            draggable={isDraggable(region, editPageState)}
+            eventHandlers={{
+                click: () => {
+                  onClickLabel(region, editPageState, setEditPageState)
+                },
+                dragend: () => {
+                  onDragEndLabel(markerRef, editPageState, setEditPageState)
+                },
+                drag: (e) => {
+                  onDragLabel(e, markerRef, dragSetter)
+                }
+              }}
+            ref={markerRef}
+          >
+          </Marker>
+      </>
     );
   }
   return <></>;
 };
+
+// Helper function that determines weather or not a marker is draggable
+function isDraggable(region: Feature, editPageState: EditPageState){
+  const i = region.properties?.i as number
+  const groupName = region.properties?.groupName as string
+  return editPageState.map.displayPointers && 
+    editPageState.selectedRegion?.groupName === groupName && 
+    editPageState.selectedRegion?.i === i;
+}
 
 function getRegionStyle(
   region: Feature<Geometry, any>,
@@ -133,7 +166,6 @@ function getRegionStyle(
   };
 
   const whichMap = editPageState.map.colorType;
-  console.log(whichMap);
   const isSelected =
     region.properties.i === editPageState.selectedRegion?.i &&
     region.properties.groupName === editPageState.selectedRegion?.groupName;
@@ -155,6 +187,7 @@ function getRegionStyle(
   return style;
 }
 
+// this function generates the pointer label and numeric labels for the map
 function labelHTML(
   region: Feature<Geometry, any>,
   editPageState: EditPageState
