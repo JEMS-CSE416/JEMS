@@ -87,6 +87,8 @@ commentRouter.put("/create", createComment);
  *   get:
  *     summary: Gets a list of comments
  *     tags: [Comment]
+ *     security:
+ *       - BasicAuth: []
  *     parameters:
  *       - in: header
  *         name: id

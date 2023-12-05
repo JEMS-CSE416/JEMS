@@ -37,7 +37,7 @@ export interface Map {
     regions: { [key: string]: Region[] };
     legend: Legend;
     visibility?: string;
-  }
+}
 
 export const ErrorMap = {
     "_id": "ERROR/TEST Map",
@@ -55,7 +55,7 @@ export const ErrorMap = {
         "imageUrl": "dummyUrl.com",
         "imageType": "jpg"
     },
-    "regions": { },
+    "regions": {},
     "legend": {
         "colorLegend": {
             "#000000": "black",

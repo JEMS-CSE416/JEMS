@@ -7,7 +7,7 @@ import { ObjectId } from "mongodb";
  * Connects to the mongodb server and returns a queriable object
  * @returns
  */
-async function getMapModel() {
+export async function getMapModel() {
   await connect(process.env.MONGO_DB_CONNECTION_STRING);
   return model("Map", mapSchema);
 }

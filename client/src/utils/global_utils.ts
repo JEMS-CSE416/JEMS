@@ -1,4 +1,5 @@
-import { handleKml, handleZip, geoJsonConvert} from "./geojson-convert";
+import { handleKml, handleZip, geoJsonConvert } from "./geojson-convert";
+import { formatDistanceToNow } from "date-fns";
 
 export interface FileInfo {
     fileType: string;
@@ -122,3 +123,11 @@ export const handleFileConversion = async (file: File) => {
         }
     }
 };
+
+// splices the createdAt string to show how long ago was it made.
+// for example: 2023-10-16T21:46:26.858+00:00 -> Created 5 minutes ago
+export function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const formattedDate = formatDistanceToNow(date, { addSuffix: true });
+    return `Created ${formattedDate}`;
+}

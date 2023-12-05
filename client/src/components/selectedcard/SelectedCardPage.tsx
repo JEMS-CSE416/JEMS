@@ -34,7 +34,7 @@ const SelectedCardPage = ({}) => {
               <MapHeader map={map}/>
               <Canvas map={map}/>
               <MapAbout map={map}/>
-              <Comments/>
+              <Comments map={map}/>
             </div>
             <Footer />
           </>
