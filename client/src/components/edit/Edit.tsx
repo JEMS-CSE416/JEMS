@@ -9,7 +9,7 @@ import Regions from "./Regions";
 
 export default function Edit(){
   const { id } = useParams();
-
+  
   return (
     <EditContextProvider map_id={id}>
       <ProtectEdit/>

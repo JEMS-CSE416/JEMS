@@ -1,10 +1,17 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { ErrorMap, Map, Region } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
-import { update } from "cypress/types/lodash";
+import { create, update } from "cypress/types/lodash";
 import { getMap } from "../api/MapApiAccessor";
-import { EditModalEnum} from "../utils/enums";
-
+import { EditModalEnum } from "../utils/enums";
+import { Map as LeafletMap } from "leaflet";
+import * as L from "leaflet";
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
@@ -30,6 +37,7 @@ export interface EditPageAction {
     i: number;
     region: Region;
   };
+  leafletMap?: LeafletMap;
 }
 
 // Constant initialization
@@ -37,12 +45,22 @@ const initState = {
   map: ErrorMap,
   selectedRegion: undefined,
   modal: "NONE",
+  leafletMap: undefined,
 };
 
 export const EditContext = createContext<EditPageState>(initState);
 export const EditDispatchContext = createContext<
   React.Dispatch<EditPageAction>
 >(() => {});
+
+export const LeafletMapContext = createContext<LeafletMap | undefined>(
+  undefined
+);
+
+export const SetLeafletMapContext =
+  createContext<React.Dispatch<React.SetStateAction<LeafletMap | undefined>> | undefined>(
+    undefined
+  );
 
 /*
  * EditContextProvider component.
@@ -56,7 +74,9 @@ export const EditDispatchContext = createContext<
  */
 export function EditContextProvider(props: EditContextProviderProps) {
   const [editPageState, dispatch] = useReducer(editReducer, initState);
-
+  const [leafletMap, setLeafletMap] = useState<LeafletMap | undefined>(
+    undefined
+  );
   // initialize the map by pulling it from the backend
   useEffect(() => {
     fetchMap();
@@ -68,9 +88,9 @@ export function EditContextProvider(props: EditContextProviderProps) {
 
     try {
       console.log(`fetching map for id: ${mapId}`);
-      const res = await getMap({id: mapId as string});
+      const res = await getMap({ id: mapId as string });
       const newMap = res;
-      console.log("newMap", newMap)
+      console.log("newMap", newMap);
       dispatch({
         type: "init_map",
         map: newMap,
@@ -83,7 +103,11 @@ export function EditContextProvider(props: EditContextProviderProps) {
   return (
     <EditContext.Provider value={editPageState}>
       <EditDispatchContext.Provider value={dispatch}>
-        {props.children}
+        <LeafletMapContext.Provider value={leafletMap}>
+          <SetLeafletMapContext.Provider value={setLeafletMap}>
+            {props.children}
+          </SetLeafletMapContext.Provider>
+        </LeafletMapContext.Provider>
       </EditDispatchContext.Provider>
     </EditContext.Provider>
   );
@@ -236,8 +260,13 @@ function editReducer(state: EditPageState, action: any): EditPageState {
           },
         },
       };
-    }
+  }
+
   return state;
+}
+
+export function useLeafletMapContext() {
+  return useContext(LeafletMapContext);
 }
 
 export function useEditContext() {

@@ -5,6 +5,8 @@ import {
   EditPageState,
   useEditContext,
   useEditDispatchContext,
+  SetLeafletMapContext,
+  useLeafletMapContext
 } from "../../context/EditContextProvider";
 import { TemplateTypes } from "../../utils/enums";
 import { Layer, Map, divIcon, marker } from "leaflet";
@@ -16,17 +18,27 @@ import {
 } from "geojson";
 import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
 import { geoCentroid } from "d3-geo";
 
 export default function DisplayLayer() {
-  // Implement your component logic here
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
   const convertedGeoJSON = convertToGeoJSON(editPageState.map);
   const map = useMap(); // get access to map object
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
+
+  const mapInstance = useMap();
+  const setLeafletMap = useContext(SetLeafletMapContext);
+
+  useEffect(() => {
+    if (mapInstance && setLeafletMap) {
+      setLeafletMap(mapInstance);
+      console.warn("LEAFLET MAP: ", mapInstance);
+    }
+  }, [mapInstance, setLeafletMap]);
+
 
   return (
     <>
@@ -167,7 +179,9 @@ function labelHTML(
   let contents = `
   <div style="pointer-events: none;">
     <p style="margin: 0;">${displayStrings ? StringsLabel : ""}</p>
-    <p style="margin: 0;">${displayNumerics ? NumericsLabel + ` ${UnitsLabel}`: ""}</p>
+    <p style="margin: 0;">${
+      displayNumerics ? NumericsLabel + ` ${UnitsLabel}` : ""
+    }</p>
   </div>
 `;
 
