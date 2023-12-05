@@ -7,23 +7,18 @@ import {
   useEditDispatchContext,
   useLeafletMapContext,
   SetLeafletMapContext,
+  useLeafLetMapPrinter
 } from "../../context/EditContextProvider";
 
 export function ExportMapModal() {
   const map = useLeafletMapContext();
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
-
+  const printer = useLeafLetMapPrinter();
 
   const handlePrint = () => {
-    if (map) {
-      const printer = L.easyPrint({
-        sizeModes: ['Current', 'A4Portrait', 'A4Landscape'],
-        filename: 'MyMap',
-        exportOnly: true,
-        hideControlContainer: true
-      }).addTo(map);
-      printer.printMap('CurrentSize', 'MyMap');
+    if (map && printer) {
+      printer.printMap("A4Landscape", 'MyMap');
     }
   };
 

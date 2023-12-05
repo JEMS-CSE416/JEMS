@@ -57,10 +57,14 @@ export const LeafletMapContext = createContext<LeafletMap | undefined>(
   undefined
 );
 
-export const SetLeafletMapContext =
-  createContext<React.Dispatch<React.SetStateAction<LeafletMap | undefined>> | undefined>(
-    undefined
-  );
+export const leafletMapPrinterContext = createContext<any>(undefined);
+export const setLeafletMapPrinterContext = createContext<
+  React.Dispatch<React.SetStateAction<any>> | undefined
+>(undefined);
+
+export const SetLeafletMapContext = createContext<
+  React.Dispatch<React.SetStateAction<LeafletMap | undefined>> | undefined
+>(undefined);
 
 /*
  * EditContextProvider component.
@@ -77,6 +81,8 @@ export function EditContextProvider(props: EditContextProviderProps) {
   const [leafletMap, setLeafletMap] = useState<LeafletMap | undefined>(
     undefined
   );
+  const [leafletMapPrinter, setLeafletMapPrinter] = useState<any>(undefined);
+
   // initialize the map by pulling it from the backend
   useEffect(() => {
     fetchMap();
@@ -105,7 +111,11 @@ export function EditContextProvider(props: EditContextProviderProps) {
       <EditDispatchContext.Provider value={dispatch}>
         <LeafletMapContext.Provider value={leafletMap}>
           <SetLeafletMapContext.Provider value={setLeafletMap}>
-            {props.children}
+            <leafletMapPrinterContext.Provider value={leafletMapPrinter}>
+              <setLeafletMapPrinterContext.Provider value={setLeafletMapPrinter}>
+                {props.children}
+              </setLeafletMapPrinterContext.Provider>
+            </leafletMapPrinterContext.Provider>
           </SetLeafletMapContext.Provider>
         </LeafletMapContext.Provider>
       </EditDispatchContext.Provider>
@@ -267,6 +277,10 @@ function editReducer(state: EditPageState, action: any): EditPageState {
 
 export function useLeafletMapContext() {
   return useContext(LeafletMapContext);
+}
+
+export function useLeafLetMapPrinter() {
+  return useContext(leafletMapPrinterContext);
 }
 
 export function useEditContext() {

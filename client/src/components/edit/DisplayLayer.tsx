@@ -6,10 +6,12 @@ import {
   useEditContext,
   useEditDispatchContext,
   SetLeafletMapContext,
-  useLeafletMapContext
+  setLeafletMapPrinterContext,
+  useLeafLetMapPrinter,
 } from "../../context/EditContextProvider";
 import { TemplateTypes } from "../../utils/enums";
 import { Layer, Map, divIcon, marker } from "leaflet";
+import * as L from "leaflet";
 import {
   Feature,
   GeoJsonProperties,
@@ -31,14 +33,34 @@ export default function DisplayLayer() {
 
   const mapInstance = useMap();
   const setLeafletMap = useContext(SetLeafletMapContext);
+  const setLeafletMapPrinter = useContext(setLeafletMapPrinterContext);
+  const leafletMapPrinter = useLeafLetMapPrinter();
 
   useEffect(() => {
-    if (mapInstance && setLeafletMap) {
+    console.debug(
+      "MAP INSTANCE: ",
+      mapInstance,
+      "SET LEAFLET MAP",
+      setLeafletMap,
+      "SET LEAFLET MAP PRINTER",
+      setLeafletMapPrinter
+    );
+    
+    if (mapInstance && setLeafletMap && setLeafletMapPrinter) {
       setLeafletMap(mapInstance);
+
+      const printer = L.easyPrint({
+        sizeModes: ["Current", "A4Portrait", "A4Landscape"],
+        filename: "MyMap",
+        exportOnly: true,
+        hideControlContainer: true,
+      }).addTo(mapInstance);
+      
+      setLeafletMapPrinter(printer);
+
       console.warn("LEAFLET MAP: ", mapInstance);
     }
   }, [mapInstance, setLeafletMap]);
-
 
   return (
     <>
