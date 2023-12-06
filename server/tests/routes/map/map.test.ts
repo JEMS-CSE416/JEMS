@@ -49,15 +49,20 @@ describe("testing the api/map route", () => {
       });
 
       test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
-        // const response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({
-        //     private: true,
-        //     creator_id: "6119dbef8b0915f12c818a3a",
-        //     session_token: "6119dbef8b0915f12c818a37",
-        //   })
-        //   .expect(200);
-        // expect(response.body).toEqual([]);
+        // First, log in to create a session
+        const loginResponse = await request(app)
+          .post("/api/auth/login/")
+          .send({ email: "test@test.test", password: "123" })
+          .expect(200);
+          
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({
+            private: true,
+            map_name: "asdasd"
+          })
+          .expect(200);
+        expect(response.body).toEqual([]);
       });
 
       test("getting all maps created by a user", async () => {
