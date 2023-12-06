@@ -10,7 +10,7 @@ beforeAll(async () => {
   const Fixtures = require("node-mongodb-fixtures");
   const fixtures = new Fixtures({
     dir: "tests/fakeDB",
-    filter: /\.json$/,
+    filter: /\.(json|js)$/,
     mute: true,
   });
 
