@@ -67,6 +67,7 @@ export function ColorLegend() {
   const initialLegend = editPageState.map.legend.colorLegend;
   // const [legend, setLegend] = useState(initialLegend);
 
+  // TODO: update state every change is computationally intensive
   const handleLabelChange = (color: string, newLabel: string) => {
     // setLegend((prevLegend) => ({ ...prevLegend, [color]: newLabel }));
 
@@ -88,7 +89,7 @@ export function ColorLegend() {
   return (
     <>
       <ScrollArea style={{ height: 200, width: 150 }}>
-        {Object.entries(initialLegend).map(([color, label], index) => (
+        {editPageState.getUniqueColors().map((color, index) => (
           <Box
             key={index}
             style={{
@@ -99,7 +100,7 @@ export function ColorLegend() {
           >
             <ColorSwatch color={color} mr={20} />
             <TextInput
-              value={label}
+              value={editPageState.map.legend.colorLegend[color] ?? ""}
               onChange={(event) =>
                 handleLabelChange(color, event.currentTarget.value)
               }

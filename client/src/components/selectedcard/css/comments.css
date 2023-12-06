@@ -1,15 +1,10 @@
-#commentsText {
-  margin-top: 3%;
-  text-align: left;
-}
-
 #inputCommentRow {
   margin-top: 3%;
 }
 
 #inputComment {
   height: 38px;
-  width: 90%;
+  width: 100%;
   border-width: 0 0 1px;
   border-color: #dddfe4;
 }

@@ -80,6 +80,7 @@ function Discover() {
                   maps?.slice(start,end).map((map) => (
                     <Grid.Col span={cardSpan}>
                       <MapCard
+                        id={map._id}
                         isPrivate={!map.public}
                         name={map["mapName"]}
                         description={map.description}

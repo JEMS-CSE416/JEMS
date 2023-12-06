@@ -20,7 +20,7 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ fileUploadType, onFilesDrop
     <Dropzone
       onDrop={(file) => onFilesDrop(file[0])}
       onReject={(file) => console.log('rejected file', file)}
-      maxSize={3 * 1024 ** 2}
+      maxSize={ (2 * 1024) ** 6}
       accept={acceptedFiles}
       multiple={true}
       {...props}
@@ -44,7 +44,7 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ fileUploadType, onFilesDrop
             Drag a file here or click to select file
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
-            Files over 5mb are not supported.
+            Files over 64mb are not supported.
           </Text>
         </div>
       </Group>

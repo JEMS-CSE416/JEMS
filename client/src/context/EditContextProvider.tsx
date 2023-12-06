@@ -1,10 +1,13 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+
+import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import { ErrorMap, Map as JemsMap, Region } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
-import { update } from "cypress/types/lodash";
+import { create, update } from "cypress/types/lodash";
 import { getMap } from "../api/MapApiAccessor";
 import { EditModalEnum } from "../utils/enums";
 import chroma from "chroma-js";
+import { Map as LeafletMap } from "leaflet";
+import * as L from "leaflet";
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
@@ -19,6 +22,7 @@ export interface EditPageState {
     region: Region;
   };
   modal: String;
+  getUniqueColors: () => string[];
 }
 
 export interface EditPageAction {
@@ -30,6 +34,7 @@ export interface EditPageAction {
     i: number;
     region: Region;
   };
+  leafletMap?: LeafletMap;
 }
 
 // Constant initialization
@@ -37,12 +42,27 @@ const initState = {
   map: ErrorMap,
   selectedRegion: undefined,
   modal: "NONE",
+  leafletMap: undefined,
+  getUniqueColors: () => [] as string[]
 };
 
 export const EditContext = createContext<EditPageState>(initState);
 export const EditDispatchContext = createContext<
   React.Dispatch<EditPageAction>
 >(() => {});
+
+export const LeafletMapContext = createContext<LeafletMap | undefined>(
+  undefined
+);
+
+export const leafletMapPrinterContext = createContext<any>(undefined);
+export const setLeafletMapPrinterContext = createContext<
+  React.Dispatch<React.SetStateAction<any>> | undefined
+>(undefined);
+
+export const SetLeafletMapContext = createContext<
+  React.Dispatch<React.SetStateAction<LeafletMap | undefined>> | undefined
+>(undefined);
 
 /*
  * EditContextProvider component.
@@ -56,6 +76,10 @@ export const EditDispatchContext = createContext<
  */
 export function EditContextProvider(props: EditContextProviderProps) {
   const [editPageState, dispatch] = useReducer(editReducer, initState);
+  const [leafletMap, setLeafletMap] = useState<LeafletMap | undefined>(
+    undefined
+  );
+  const [leafletMapPrinter, setLeafletMapPrinter] = useState<any>(undefined);
 
   // initialize the map by pulling it from the backend
   useEffect(() => {
@@ -97,10 +121,36 @@ export function EditContextProvider(props: EditContextProviderProps) {
     }
   };
 
+  // Helper functions for editPageState
+  editPageState.getUniqueColors = ()=>{
+    const res = Object.entries(editPageState.map.regions).reduce(
+      (acc, current_group: [string, Region[]]) => {
+        acc = acc.concat( current_group[1].reduce(
+            (acc, region: Region) => {
+              if(region.color !== "")
+                acc.push(region.color)
+              return acc
+            }, [] as string[]
+          )
+        )
+        return acc
+      }, [] as string[]
+    )
+    return Array.from(new Set(res))
+  }
+
   return (
     <EditContext.Provider value={editPageState}>
       <EditDispatchContext.Provider value={dispatch}>
-        {props.children}
+        <LeafletMapContext.Provider value={leafletMap}>
+          <SetLeafletMapContext.Provider value={setLeafletMap}>
+            <leafletMapPrinterContext.Provider value={leafletMapPrinter}>
+              <setLeafletMapPrinterContext.Provider value={setLeafletMapPrinter}>
+                {props.children}
+              </setLeafletMapPrinterContext.Provider>
+            </leafletMapPrinterContext.Provider>
+          </SetLeafletMapContext.Provider>
+        </LeafletMapContext.Provider>
       </EditDispatchContext.Provider>
     </EditContext.Provider>
   );
@@ -226,6 +276,8 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         action.selectedRegion.region.regionName;
       newRegions[oldGroupName][state.selectedRegion!.i].stringLabel =
         action.selectedRegion.region.stringLabel;
+      newRegions[oldGroupName][state.selectedRegion!.i].stringOffset =
+        action.selectedRegion.region.stringOffset;
       newRegions[oldGroupName][state.selectedRegion!.i].numericLabel =
         action.selectedRegion.region.numericLabel;
       newRegions[oldGroupName][state.selectedRegion!.i].numericUnit =
@@ -279,6 +331,7 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         }
       }
 
+
       const minMaxValues = findChoroplethLegendMinMax(state);
       // Get the old choropleth legend and update it with a new legend that includes the new min and max values
       const oldChoroplethLegend = state.map.legend.choroplethLegend;
@@ -295,35 +348,30 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         minMaxValues.minValue,
         minMaxValues.maxValue
       );
-      console.log(choroplethItems);
+      
       updatedChoroplethLegend = {
         ...updatedChoroplethLegend,
         items: choroplethItems,
       };
 
+      const newMap = {
+        ...state.map,
+        regions: newRegions,
+        legend: {
+          ...state.map.legend,
+          choroplethLegend: updatedChoroplethLegend,
+        },
+      }
+
       console.log("updated state: ", {
         ...state,
-        map: {
-          ...state.map,
-          regions: newRegions,
-          legend: {
-            ...state.map.legend,
-            choroplethLegend: updatedChoroplethLegend,
-          },
-        },
+        map: newMap,
         selectedRegion: updatedSelectedRegionInfo,
       });
 
       return {
         ...state,
-        map: {
-          ...state.map,
-          regions: newRegions,
-          legend: {
-            ...state.map.legend,
-            choroplethLegend: updatedChoroplethLegend,
-          },
-        },
+        map: newMap,
         selectedRegion: updatedSelectedRegionInfo,
       };
     case "update_map":
@@ -403,11 +451,15 @@ function findChoroplethLegendMinMax(state: EditPageState, newMap?: JemsMap) {
       // numericLabelMap.set(numericLabel, numericLabelNumber);
     }
   }
-  // console.log(numericLabelMap);
-  console.log(minValue);
-  console.log(maxValue);
-
   return { minValue, maxValue };
+}
+
+export function useLeafletMapContext() {
+  return useContext(LeafletMapContext);
+}
+
+export function useLeafLetMapPrinter() {
+  return useContext(leafletMapPrinterContext);
 }
 
 export function useEditContext() {

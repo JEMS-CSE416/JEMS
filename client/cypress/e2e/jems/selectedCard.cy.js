@@ -35,7 +35,7 @@ beforeEach(() => {
   // Login 
   login();
   // click on card id of 65666368ac743f6444ab4773
-  cy.get("#65666368ac743f6444ab4773").click();
+  cy.get("#6570831f904450313965d9a5").click();
 });
 
 
