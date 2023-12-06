@@ -28,14 +28,10 @@ describe("testing MAPS routes", () => {
     describe("when user is authenticated", () => {
       test("given an ID of a public map, it should return status code 200", async () => {
         // First, log in to create a session
-        const loginResponse = await request(app)
-          .post("/api/auth/login/")
-          .send({ email: "test@test.test", password: "123" })
-          .expect(200);
+        const loginResponse = await login();
 
-        
         // Then, get a map
-        const id = "656ff8a4f651eef41c74c9d3"
+        const id = "656ff8a4f651eef41c74c9d3";
         const response = await request(app)
           .get(`/api/maps/${id}`)
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
@@ -44,14 +40,10 @@ describe("testing MAPS routes", () => {
 
       test("given an invalid ID of a map, it should return status code 404", async () => {
         // First, log in to create a session
-        const loginResponse = await request(app)
-          .post("/api/auth/login/")
-          .send({ email: "test@test.test", password: "123" })
-          .expect(200);
+        const loginResponse = await login();
 
-        
         // Then, get a map
-        const id = "656ff8a4f651eef31c74c9d4" // this is an invalid map id that does not exist
+        const id = "656ff8a4f651eef31c74c9d4"; // this is an invalid map id that does not exist
         const response = await request(app)
           .get(`/api/maps/${id}`)
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
@@ -61,10 +53,8 @@ describe("testing MAPS routes", () => {
 
     describe("when user is not authenticated", () => {
       it("should return status code 401", async () => {
-        const id = "656ff8a4f651eef41c74c9d3"
-        const response = await request(app)
-          .get(`/api/maps/${id}`)
-          .expect(401);
+        const id = "656ff8a4f651eef41c74c9d3";
+        const response = await request(app).get(`/api/maps/${id}`).expect(401);
       });
     });
   });
@@ -74,10 +64,7 @@ describe("testing MAPS routes", () => {
     describe("when user is authenticated", () => {
       test("getting private maps, it should return status code 200", async () => {
         // First, log in to create a session
-        const loginResponse = await request(app)
-          .post("/api/auth/login/")
-          .send({ email: "test@test.test", password: "123" })
-          .expect(200);
+        const loginResponse = await login();
 
         // Then, get private maps
         const response = await request(app)
@@ -94,10 +81,7 @@ describe("testing MAPS routes", () => {
 
       test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
         // First, log in to create a session
-        const loginResponse = await request(app)
-          .post("/api/auth/login/")
-          .send({ email: "test@test.test", password: "123" })
-          .expect(200);
+        const loginResponse = await login();
 
         // Attempt to get a private map that does not belong to you
         const response = await request(app)
@@ -125,23 +109,7 @@ describe("testing MAPS routes", () => {
 
   // Test Update Map
   describe("PUT /api/maps/update/", () => {
-    describe("when user is authenticated", () => {
-      test("given map file details, it should return status code 201", async () => {
-        // const map_2 = map_content_files[1];
-        // const response = await request(app)
-        //   .put("/api/maps/")
-        //   .send(map_2)
-        //   .expect(201);
-      });
-
-      test("given no map file details, it should return status code 400", async () => {
-        // const authenticated = true;
-        // const response = await request(app)
-        //   .put("/api/maps/")
-        //   .send({})
-        //   .expect(400);
-      });
-    });
+    describe("when user is authenticated", () => {});
 
     describe("when user is not authenticated", () => {
       it("should return status code 401", async () => {
@@ -154,44 +122,20 @@ describe("testing MAPS routes", () => {
   describe("POST /api/maps/duplicate", () => {
     describe("when user is authenticated", () => {
       test("with a valid map ID, it should successfully duplicate the map and return 201", async () => {
-        // let response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({
-        //     creator_id: "6119dbef8b0915f12c818a3b",
-        //     session_token: "6119dbef8b0915f12c818a37",
-        //   })
-        //   .expect(200);
-        // expect(response.body[0]).toHaveProperty("creatorId");
-        // expect(response.body[0]).toHaveProperty("mapName");
-        // expect(response.body[0]).toHaveProperty("description");
-        // expect(response.body[0]).toHaveProperty("public");
-        // const mapID = response.body[0]._id;
-        // const map_name = "Copy Of" + response.body[0].mapName;
-        // const description = "Copy Of" + response.body[0].description;
-        // const isPublic = "false";
-        // const token = "6119dbef8b0915f12c818a37";
-        // response = await request(app)
-        //   .post("/api/maps/duplicate/")
-        //   .set("Authorization", "Bearer " + token)
-        //   .send({
-        //     map_id: mapID,
-        //     map_name: map_name,
-        //     description: description,
-        //     public: isPublic,
-        //   })
-        //   .expect(201);
-        // expect(response.body).toHaveProperty("creatorId");
-        // expect(response.body).toHaveProperty("mapName");
-        // expect(response.body).toHaveProperty("description");
-        // expect(response.body).toHaveProperty("public");
-        // // check response.body.creatorId == token
-        // expect(response.body.creatorId).toEqual(token);
-        // // check response.body.mapName == map_name
-        // expect(response.body.mapName).toEqual(map_name);
-        // // check response.body.description == description
-        // expect(response.body.description).toEqual(description);
-        // // check response.body.public == isPublic
-        // expect(response.body.public).toEqual(false);
+        const loginResponse = await login();
+
+        // duplicate a map
+        const id = "656ff8a4f651eef41c74c9d3";
+        const response = await request(app)
+          .post(`/api/maps/duplicate`)
+          .send({
+            map_id: id,
+            map_name: "Duplicate of Region Names 2",
+            description: "Duplicate Description of Region Names 2",
+            public: false,
+          })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(201);
       });
 
       test("with an invalid map ID, it should return a specific error and return 400", async () => {
@@ -208,8 +152,7 @@ describe("testing MAPS routes", () => {
 
   // Test Creating Map
   describe("PUT /api/maps/", () => {
-    describe("when user is authenticated", () => {
-    });
+    describe("when user is authenticated", () => {});
 
     describe("when user is not authenticated", () => {
       it("should return status code 401", async () => {
@@ -259,3 +202,11 @@ describe("testing MAPS routes", () => {
     });
   });
 });
+
+async function login() {
+  const loginResponse = await request(app)
+    .post("/api/auth/login/")
+    .send({ email: "test@test.test", password: "123" })
+    .expect(200);
+  return loginResponse;
+}
