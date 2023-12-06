@@ -16,13 +16,13 @@ export async function getUser(id: string): Promise<User> {
     });
     if (res.ok) {
       const resData = await res.json();
-      console.log("Data updated successfully:", resData);
+      console.log("User Fetched successfully:", resData);
       return resData;
     } else {
-      console.error("Error updating data:", res.status, res.statusText);
+      console.error("Error getting user data:", res.status, res.statusText);
     }
   } catch (error) {
     console.log(error);
   }
-  return Promise.reject("Error fetching maps: ");
+  return Promise.reject("Error getting user");
 }

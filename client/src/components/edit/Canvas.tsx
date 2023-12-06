@@ -1,8 +1,12 @@
-import { MapContainer, TileLayer, GeoJSON} from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
+import { SetLeafletMapContext } from "../../context/EditContextProvider"
 import "leaflet/dist/leaflet.css";
 import Legend from "./Legend";
 import DisplayLayer from "./DisplayLayer";
 import { Box } from "@mantine/core";
+import { useEffect, useContext } from "react";
+
+
 
 export default function Canvas() {
   return (
@@ -13,7 +17,7 @@ export default function Canvas() {
         style={{
           width: "100%",
           height: "calc(100Vh - 60px)",
-          zIndex: 125
+          zIndex: 125,
         }}
       >
         <TileLayer
@@ -21,12 +25,12 @@ export default function Canvas() {
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        <DisplayLayer/>
+        <DisplayLayer />
         <Legend />
       </MapContainer>
-      <Box style={{ position: 'relative', top: "100%"}}>
+      <Box style={{ position: "relative", top: "100%" }}>
         <Legend />
       </Box>
     </>
-  )
+  );
 }

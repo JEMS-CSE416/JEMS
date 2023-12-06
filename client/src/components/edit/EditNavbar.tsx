@@ -2,6 +2,7 @@ import { Button, Flex, Text } from "@mantine/core";
 import {
   useEditContext,
   useEditDispatchContext,
+  useLeafletMapContext
 } from "../../context/EditContextProvider";
 import { BaseNavbar } from "../common/Navbar";
 import {
@@ -14,6 +15,9 @@ import { SettingsMapModal } from "../modals/SettingsMapModal";
 import { updateMap } from "../../api/MapApiAccessor";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import L from 'leaflet';
+import 'leaflet-easyprint';
+
 
 /*
  * Edit navbar

@@ -5,9 +5,13 @@ import {
   EditPageState,
   useEditContext,
   useEditDispatchContext,
+  SetLeafletMapContext,
+  setLeafletMapPrinterContext,
+  useLeafLetMapPrinter,
 } from "../../context/EditContextProvider";
 import { TemplateTypes } from "../../utils/enums";
 import { Layer, Map, divIcon } from "leaflet";
+import * as L from "leaflet";
 import {
   Feature,
   GeoJsonProperties,
@@ -16,18 +20,48 @@ import {
 } from "geojson";
 import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect} from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
 import { geoCentroid } from "d3-geo";
 import { onClickLabel, onDragEndLabel, onDragLabel, PointerConnection } from "./leaflet/pointers";
 
 export default function DisplayLayer() {
-  // Implement your component logic here
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
   const convertedGeoJSON = convertToGeoJSON(editPageState.map);
   const map = useMap(); // get access to map object
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
+
+  const mapInstance = useMap();
+  const setLeafletMap = useContext(SetLeafletMapContext);
+  const setLeafletMapPrinter = useContext(setLeafletMapPrinterContext);
+  const leafletMapPrinter = useLeafLetMapPrinter();
+
+  useEffect(() => {
+    console.debug(
+      "MAP INSTANCE: ",
+      mapInstance,
+      "SET LEAFLET MAP",
+      setLeafletMap,
+      "SET LEAFLET MAP PRINTER",
+      setLeafletMapPrinter
+    );
+    
+    if (mapInstance && setLeafletMap && setLeafletMapPrinter) {
+      setLeafletMap(mapInstance);
+
+      const printer = L.easyPrint({
+        sizeModes: ["Current", "A4Portrait", "A4Landscape"],
+        filename: "MyMap",
+        exportOnly: true,
+        hideControlContainer: true,
+      }).addTo(mapInstance);
+      
+      setLeafletMapPrinter(printer);
+
+      console.warn("LEAFLET MAP: ", mapInstance);
+    }
+  }, [mapInstance, setLeafletMap]);
 
   return (
     <>
@@ -200,7 +234,9 @@ function labelHTML(
   let contents = `
   <div style="pointer-events: none;">
     <p style="margin: 0;">${displayStrings ? StringsLabel : ""}</p>
-    <p style="margin: 0;">${displayNumerics ? NumericsLabel + ` ${UnitsLabel}`: ""}</p>
+    <p style="margin: 0;">${
+      displayNumerics ? NumericsLabel + ` ${UnitsLabel}` : ""
+    }</p>
   </div>
 `;
 

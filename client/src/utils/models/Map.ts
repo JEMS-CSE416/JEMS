@@ -39,6 +39,7 @@ export interface Map {
     visibility?: string;
 }
 
+
 export const ErrorMap = {
     "_id": "ERROR/TEST Map",
     "creatorId": "652daf32e2225cdfeceea17f",
@@ -67,3 +68,5 @@ export const ErrorMap = {
         }
     }
 }
+
+

@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "postcss.config.js", "cypress/e2e/jems/NavbarNavBar.cy.js"]
+  "include": ["src", "postcss.config.js", "cypress/e2e/jems/NavbarNavBar.cy.js", "leaflet-easyprint.d.ts"]
 }
