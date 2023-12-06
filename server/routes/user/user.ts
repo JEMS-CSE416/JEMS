@@ -5,6 +5,11 @@
  *   description: The API that manages users -- getting user and in the future potentially deleting/updating a user
  *
  * components:
+ *   securitySchemes:
+ *     BasicAuth:
+ *       type: http
+ *       scheme: basic
+ * 
  *   schemas:
  *     User:
  *       type: Object
@@ -23,6 +28,7 @@
 
 import { Router } from "express";
 import { getUser } from "./controller/UserController";
+import { isAuthMiddleWare } from "../auth/controller/AuthController";
 
 const userRouter = Router();
 
@@ -32,6 +38,8 @@ const userRouter = Router();
  *   get:
  *     summary: Gets a user
  *     tags: [User]
+ *     security:
+ *       - BasicAuth: []
  *     parameters:
  *       - in: header
  *         name: id
@@ -49,6 +57,6 @@ const userRouter = Router();
  *       404:
  *         description: The user was not found
  */
-userRouter.get("/", getUser);
+userRouter.get("/", isAuthMiddleWare, getUser);
 
 export default userRouter;

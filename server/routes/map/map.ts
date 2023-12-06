@@ -69,8 +69,17 @@
  *             type: string
  *         choroplethLegend:
  *           type: object
- *           additionalProperties:
- *             type: integer
+ *           properties:
+ *             hue:
+ *               type: string
+ *             min:
+ *               type: number
+ *             max:
+ *               type: number
+ *             items:
+ *               type: object
+ *               additionalProperties:
+ *                 type: integer
  *
  *     Image:
  *       type: object

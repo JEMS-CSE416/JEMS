@@ -1,4 +1,4 @@
-import { GeoJSON, useMap, Marker } from "react-leaflet";
+import { GeoJSON, useMap, Marker, GeoJSONProps } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {
   EditPageAction,
@@ -20,10 +20,15 @@ import {
 } from "geojson";
 import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
-import React, { useContext, useRef, useState, useEffect} from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
 import { geoCentroid } from "d3-geo";
-import { onClickLabel, onDragEndLabel, onDragLabel, PointerConnection } from "./leaflet/pointers";
+import {
+  onClickLabel,
+  onDragEndLabel,
+  onDragLabel,
+  PointerConnection,
+} from "./leaflet/pointers";
 
 export default function DisplayLayer() {
   const editPageState = useEditContext();
@@ -46,7 +51,7 @@ export default function DisplayLayer() {
       "SET LEAFLET MAP PRINTER",
       setLeafletMapPrinter
     );
-    
+
     if (mapInstance && setLeafletMap && setLeafletMapPrinter) {
       setLeafletMap(mapInstance);
 
@@ -56,7 +61,7 @@ export default function DisplayLayer() {
         exportOnly: true,
         hideControlContainer: true,
       }).addTo(mapInstance);
-      
+
       setLeafletMapPrinter(printer);
 
       console.warn("LEAFLET MAP: ", mapInstance);
@@ -98,6 +103,7 @@ const Labels = (props: {
   editPageState: EditPageState;
 }) => {
   const data = props.data;
+  const editPageState = props.editPageState;
 
   const labels = data.features.map(
     (
@@ -121,7 +127,7 @@ const RegionLabel = (props: {
   const region = props.region;
   const index = props.key;
 
-  // useRef allows a ReactLeaflet child component to be accessible 
+  // useRef allows a ReactLeaflet child component to be accessible
   const markerRef = useRef(null);
   const [dragSetter, setDragSetter] = useState(() => {});
 
@@ -139,41 +145,44 @@ const RegionLabel = (props: {
       iconSize: [100, 40],
       iconAnchor: [50, 20],
     });
-
     return (
       <>
-        {
-          editPageState.map.displayPointers && 
+        {editPageState.map.displayPointers && (
           <PointerConnection
             centroid={[centroid[1], centroid[0]]}
             setDragStateSetter={(fxn: any) => setDragSetter(fxn)}
             region={region}
           />
-        }
-        
-          <Marker
-            key={index}
-            position={editPageState.map.displayPointers && region.properties.stringOffset?.length !== 1
-              ? [region.properties.stringOffset[0], region.properties.stringOffset[1]]
-              : [centroid[1], centroid[0]]}
-            icon={labelIcon}
-            interactive={true}
-            bubblingMouseEvents={true}
-            draggable={isDraggable(region, editPageState)}
-            eventHandlers={{
-                click: () => {
-                  onClickLabel(region, editPageState, setEditPageState)
-                },
-                dragend: () => {
-                  onDragEndLabel(markerRef, editPageState, setEditPageState)
-                },
-                drag: (e) => {
-                  onDragLabel(e, markerRef, dragSetter)
-                }
-              }}
-            ref={markerRef}
-          >
-          </Marker>
+        )}
+
+        <Marker
+          key={index}
+          position={
+            editPageState.map.displayPointers &&
+            region.properties.stringOffset?.length !== 1
+              ? [
+                  region.properties.stringOffset[0],
+                  region.properties.stringOffset[1],
+                ]
+              : [centroid[1], centroid[0]]
+          }
+          icon={labelIcon}
+          interactive={true}
+          bubblingMouseEvents={true}
+          draggable={isDraggable(region, editPageState)}
+          eventHandlers={{
+            click: () => {
+              onClickLabel(region, editPageState, setEditPageState);
+            },
+            dragend: () => {
+              onDragEndLabel(markerRef, editPageState, setEditPageState);
+            },
+            drag: (e) => {
+              onDragLabel(e, markerRef, dragSetter);
+            },
+          }}
+          ref={markerRef}
+        ></Marker>
       </>
     );
   }
@@ -181,12 +190,14 @@ const RegionLabel = (props: {
 };
 
 // Helper function that determines weather or not a marker is draggable
-function isDraggable(region: Feature, editPageState: EditPageState){
-  const i = region.properties?.i as number
-  const groupName = region.properties?.groupName as string
-  return editPageState.map.displayPointers && 
-    editPageState.selectedRegion?.groupName === groupName && 
-    editPageState.selectedRegion?.i === i;
+function isDraggable(region: Feature, editPageState: EditPageState) {
+  const i = region.properties?.i as number;
+  const groupName = region.properties?.groupName as string;
+  return (
+    editPageState.map.displayPointers &&
+    editPageState.selectedRegion?.groupName === groupName &&
+    editPageState.selectedRegion?.i === i
+  );
 }
 
 function getRegionStyle(
@@ -210,7 +221,14 @@ function getRegionStyle(
     style = { ...style, ...UNSELECTED_STYLE, color: "#6996db" };
   }
 
-  if (whichMap !== TemplateTypes.COLOR) {
+  if (whichMap == TemplateTypes.CHOROPLETH) {
+    style = {
+      ...style,
+      fillColor: getChoroplethStyle(region, editPageState),
+      fillOpacity: 1,
+      opacity: 1,
+    };
+  } else if (whichMap !== TemplateTypes.COLOR) {
     style = {
       ...style,
       fillColor: "#8eb8fa",
@@ -221,7 +239,64 @@ function getRegionStyle(
   return style;
 }
 
-// this function generates the pointer label and numeric labels for the map
+// function that defines the color of each region based off its numeric value and choropleth items
+function getChoroplethStyle(
+  region: Feature<Geometry, any>,
+  editPageState: EditPageState
+) {
+  const items = Object.entries(
+    editPageState.map.legend.choroplethLegend?.items || {}
+  );
+  const value = region.properties.numericLabel;
+  console.log("value: " + value);
+  if (items.length >= 5) {
+    return value >= items[0][1]
+      ? items[0][0]
+      : value >= items[1][1]
+      ? items[1][0]
+      : value >= items[2][1]
+      ? items[2][0]
+      : value >= items[3][1]
+      ? items[3][0]
+      : value >= items[4][1]
+      ? items[4][0]
+      : "#FFFFFF";
+  } else {
+    // Handle if there are 1, 2, 3, and/or 4 items in the legend
+    if (items.length == 1) {
+      return value == items[0][1] ? items[0][0] : "#FFFFFF";
+    } else if (items.length == 2) {
+      console.log("2");
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : "#FFFFFF";
+    } else if (items.length == 3) {
+      console.log("3");
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : value >= items[2][1]
+        ? items[2][0]
+        : "#FFFFFF";
+    } else if (items.length == 4) {
+      console.log("4");
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : value >= items[2][1]
+        ? items[2][0]
+        : value >= items[3][1]
+        ? items[3][0]
+        : "#FFFFFF";
+    }
+  }
+  return "#8eb8fa";
+}
+
 function labelHTML(
   region: Feature<Geometry, any>,
   editPageState: EditPageState
@@ -248,6 +323,5 @@ function initStyleFunction(
   editPageState: EditPageState
 ) {
   if (!region) return {};
-
   return getRegionStyle(region, editPageState);
 }

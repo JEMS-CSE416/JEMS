@@ -1,4 +1,4 @@
-import { handleKml, handleZip, geoJsonConvert } from "./geojson-convert";
+import { handleKml, handleZip, handleShp, geoJsonConvert } from "./geojson-convert";
 import { formatDistanceToNow } from "date-fns";
 
 export interface FileInfo {
@@ -112,6 +112,9 @@ export const handleFileConversion = async (file: File) => {
             } else if (fileExtension === "zip") {
                 // Handle ZIP file
                 geojson = await handleZip(file);
+            } else if (fileExtension === "shp") {
+                // Handle ZIP file
+                geojson = await handleShp(file);
             } else {
                 // Convert to GeoJSON
                 geojson = await geoJsonConvert(file);

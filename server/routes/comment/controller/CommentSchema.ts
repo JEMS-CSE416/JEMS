@@ -2,7 +2,6 @@ import { Schema, Types } from 'mongoose';
 
 // typescript interface:
 export interface Comment {
-    commenterId: Types.ObjectId;
     displayName: string;
     mapId: Types.ObjectId;
     content: string;
@@ -10,7 +9,6 @@ export interface Comment {
 }
 
 export const commentSchema = new Schema<Comment>({
-    commenterId: { type: Schema.Types.ObjectId, required: true },
     displayName: { type: String, required: true },
     mapId: { type: Schema.Types.ObjectId, required: true },
     content: { type: String, required: true },

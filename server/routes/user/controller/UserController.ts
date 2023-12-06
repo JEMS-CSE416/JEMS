@@ -19,17 +19,21 @@ async function getUserModel() {
  * @returns error status code
  */
 export const getUser = async (req: Request, res: Response) => {
-  const UserModel = await getUserModel();
-  const userId = req.headers.id?.toString();
+  try{
+    const UserModel = await getUserModel();
+    const userId = req.headers.id?.toString();
 
-  /* Check that the user exists */
-  const user = await UserModel.findOne({ _id: userId });
+    /* Check that the user exists */
+    const user = await UserModel.findOne({ _id: userId });
 
-  /* User found */
-  if (user) {
-    return res.status(200).send(user);
+    /* User found */
+    if (user) {
+      return res.status(200).send(user);
+    }
+
+    /* User not found */
+    return res.status(404).send("Error 404: User not found");
+  } catch (err) {
+    return res.status(500).send("Error 500: Internal Server Error");
   }
-
-  /* User not found */
-  return res.status(404).send("Error 404: User not found");
 };

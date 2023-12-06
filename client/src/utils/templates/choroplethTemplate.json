@@ -108,7 +108,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 1,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -232,7 +232,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 2,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -304,7 +304,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 3,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -464,7 +464,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 4,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -728,7 +728,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 5,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2184,7 +2184,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 10,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2272,7 +2272,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 6,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2356,7 +2356,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 7,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2460,7 +2460,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2492,7 +2492,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2520,7 +2520,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2632,7 +2632,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2676,7 +2676,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2720,7 +2720,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2888,7 +2888,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -2916,7 +2916,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3048,7 +3048,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3084,7 +3084,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3120,7 +3120,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3152,7 +3152,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3200,7 +3200,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3232,7 +3232,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3308,7 +3308,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3384,7 +3384,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3476,7 +3476,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 9,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3524,7 +3524,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 1,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3592,7 +3592,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 2,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -3644,7 +3644,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 3,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -4708,7 +4708,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 4,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -5336,7 +5336,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 5,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -5876,7 +5876,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 6,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -5960,7 +5960,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 7,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -6008,7 +6008,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -7444,7 +7444,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 9,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -7840,7 +7840,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 10,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -7896,7 +7896,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 1,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -7960,7 +7960,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 2,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -8800,7 +8800,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 3,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -8852,7 +8852,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 4,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -9112,7 +9112,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 5,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -9192,7 +9192,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 6,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -9260,7 +9260,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 7,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -9464,7 +9464,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -11240,7 +11240,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 9,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -11344,7 +11344,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 10,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -13568,7 +13568,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 1,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -14180,7 +14180,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 2,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -15012,7 +15012,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 3,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -15104,7 +15104,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 4,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -15168,7 +15168,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 5,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -15348,7 +15348,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 6,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -16668,7 +16668,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 7,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -18552,7 +18552,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -18624,7 +18624,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 9,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -18716,7 +18716,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 10,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -20064,7 +20064,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 1,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -20176,7 +20176,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 2,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -20288,7 +20288,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 3,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -20628,7 +20628,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 4,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -20856,7 +20856,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 5,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -20956,7 +20956,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 6,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -21696,7 +21696,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 7,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -22216,7 +22216,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 8,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -22384,7 +22384,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 9,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -23628,7 +23628,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 10,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -24680,7 +24680,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 1,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -24776,7 +24776,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 2,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -24836,7 +24836,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 3,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -27616,7 +27616,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 4,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 },
@@ -27740,7 +27740,7 @@
                     "stringOffset": [
                         0
                     ],
-                    "numericLabel": 0,
+                    "numericLabel": 5,
                     "numericUnit": "",
                     "color": "#8eb8fa"
                 }
@@ -27750,6 +27750,8 @@
             "colorLegend": {},
             "choroplethLegend": {
                 "hue": "#8eb8fa",
+                "min": 1,
+                "max": 10,
                 "items": {}
             },
             "_id": "656587dfcaec749a198be643"
