@@ -119,7 +119,7 @@ describe("testing MAPS routes", () => {
           .put(`/api/maps/update/?id=${id}`)
           .send(updatedMapJSON)
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(201);
+          .expect(200);
 
          // grab that same map again and check if the description is updated
           const response2 = await request(app)
