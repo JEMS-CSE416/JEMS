@@ -1,11 +1,11 @@
 import { Card, Image, Text, Badge, Group, Button, Menu } from "@mantine/core";
 import "./css/mapCard.css";
 import React from "react";
-import { formatDistanceToNow } from "date-fns";
 import { IconDots } from "@tabler/icons-react";
 import { Map } from "../../utils/models/Map";
 import { useNavigate } from "react-router-dom";
 import { downloadAsJEMS } from "../../utils/jemsExport";
+import { formatDate } from "../../utils/global_utils";
 
 type MapCardProps = {
   name?: string;
@@ -25,15 +25,6 @@ const MapCard: React.FC<MapCardProps> = ({
   duplicateAction,
 }) => {
   const navigate = useNavigate();
-
-  // splices the createdAt string to show how long ago was it made.
-  // for example: 2023-10-16T21:46:26.858+00:00 -> Created 5 minutes ago
-  function formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const formattedDate = formatDistanceToNow(date, { addSuffix: true });
-    return `Created ${formattedDate}`;
-  }
-
 
   const handleDownloadAs = (format: "PNG" | "JPEG" | "JEMS") => {
     console.log("Download as:", format);

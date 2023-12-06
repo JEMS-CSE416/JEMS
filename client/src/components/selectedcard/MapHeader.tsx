@@ -7,6 +7,7 @@ import { Text, Group, Avatar, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import {Map} from "../../utils/models/Map";
+import {User} from "../../utils/models/User";
 import {
   IconEdit,
   IconDownload,
@@ -16,9 +17,10 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 
 interface MapHeaderProps {
-  map: Map
+  map: Map,
+  mapUser: User
 }
-const MapHeader = ({map}: MapHeaderProps) => {
+const MapHeader = ({map, mapUser}: MapHeaderProps) => {
   const { isLoggedIn, user } = useAuth();
 
   // the download modal state
@@ -85,14 +87,11 @@ const MapHeader = ({map}: MapHeaderProps) => {
       <Group>
         <Group>
           <Avatar color="blue" radius="xl">
-            L
+            {mapUser.displayName[0].toUpperCase()}
           </Avatar>
           <div>
             <Text fw={500} size="sm" id="creatorName">
-              @Luffy
-            </Text>
-            <Text size="xs" c="dimmed" id="numberMaps">
-              10 maps
+              @{mapUser.displayName}
             </Text>
           </div>
         </Group>

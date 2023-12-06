@@ -173,6 +173,21 @@ export default function Properties() {
             label="Show Text Label"
           />
 
+          <Switch
+            checked={editPageState.map.displayPointers}
+            onChange={(event) => {
+              setEditPageState({
+                type: "update_map",
+                map: {
+                  ...editPageState.map,
+                  displayPointers: event.currentTarget.checked,
+                },
+              });
+            }}
+            labelPosition="left"
+            label="Allow Text Label Pointing"
+          />
+
           {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
             <>
               <Group>
