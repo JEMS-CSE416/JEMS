@@ -185,7 +185,7 @@ describe("testing MAPS routes", () => {
             description: "Duplicate Description of Region Names 2",
             public: false,
           })
-          .expect(400);
+          .expect(401);
       });
     });
   });
