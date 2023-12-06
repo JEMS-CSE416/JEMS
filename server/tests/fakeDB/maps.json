@@ -1,5 +1,5 @@
 [
-  {
+{
   "_id": "656ff2283e72ed7d266574cb",
   "creatorId": "656ff2173e72ed7d266574c3",
   "mapName": "asdasd",
@@ -17,7 +17,7 @@
     "_id": "656587dfcaec749a198be642"
   },
   "regions": {
-    "brooklyn-ny_97.geojson": [
+    "BrooklynNewYork": [
       {
         "regionName": "South Slope",
         "coordinates": [
@@ -27777,7 +27777,7 @@
     "_id": "65677b029e6feae797780d97"
   },
   "regions": {
-    "new-york-counties.geojson": [
+    "NewYorkCounties": [
       {
         "regionName": "Hamilton County",
         "coordinates": [
@@ -51947,7 +51947,7 @@
     "_id": "656ff90bfd27abc1d48a4227"
   },
   "regions": {
-    "taiwan_.json": [
+    "taiwan": [
       {
         "regionName": "Taipei City",
         "coordinates": [
