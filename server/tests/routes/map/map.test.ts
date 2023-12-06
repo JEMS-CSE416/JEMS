@@ -116,7 +116,7 @@ describe("testing MAPS routes", () => {
 
         const id = "656ff90bfd27abc1d48a4226";
         const response = await request(app)
-          .put(`/api/maps/update/?${id}`)
+          .put(`/api/maps/update/?id=${id}`)
           .send(updatedMapJSON)
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(201);
