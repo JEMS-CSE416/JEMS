@@ -1,8 +1,8 @@
-import { ObjectID} from "mongodb";
+const { ObjectID: ObjectId } = require('mongodb');
 
 export default [
   {
-    _id: new ObjectID("656ff2283e72ed7d266574cb"),
+    _id: ObjectId("656ff2283e72ed7d266574cb"),
     creatorId: "656ff2173e72ed7d266574c3",
     mapName: "asdasd",
     description: "asdasd",
@@ -7456,7 +7456,7 @@ export default [
     },
   },
   {
-    _id: new ObjectID("656ff8a4f651eef41c74c9d3"),
+    _id: ObjectId("656ff8a4f651eef41c74c9d3"),
     creatorId: "656798354546770a9d7bdc70",
     mapName: "Region Names 2",
     description: "bruhhh",
@@ -13977,7 +13977,7 @@ export default [
     },
   },
   {
-    _id: new ObjectID("656ff90bfd27abc1d48a4226"),
+    _id: ObjectId("656ff90bfd27abc1d48a4226"),
     creatorId: "65679362c240685e13225dd6",
     mapName: "taiwan",
     description: "12",
