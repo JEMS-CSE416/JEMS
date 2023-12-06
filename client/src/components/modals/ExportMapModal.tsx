@@ -7,20 +7,25 @@ import {
   useEditDispatchContext,
   useLeafletMapContext,
   SetLeafletMapContext,
-  useLeafLetMapPrinter
+  useLeafLetMapPrinter,
 } from "../../context/EditContextProvider";
+import { downloadAsJEMS } from "../../utils/jemsExport";
 
 export function ExportMapModal() {
-  const map = useLeafletMapContext();
+  // const map = useLeafletMapContext();
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
-  const printer = useLeafLetMapPrinter();
+  // const printer = useLeafLetMapPrinter();
 
-  const handlePrint = () => {
-    if (map && printer) {
-      printer.printMap("A4Landscape", 'MyMap');
-    }
-  };
+  // const handlePrint = () => {
+  //   if (map && printer) {
+  //     printer.printMap("A4Landscape", 'MyMap');
+  //   }
+  // };
+
+  const handleDownloadAsJEMS = () => {
+    downloadAsJEMS(editPageState.map);
+  }
 
   return (
     <>
@@ -35,11 +40,8 @@ export function ExportMapModal() {
         size="70%"
       >
         <Flex justify="center" gap="xl" mb="md">
-          <ExportMapButton
-            text="Export as Image"
-            onClick={handlePrint}
-          />
-          <ExportMapButton text="Export as Project" />
+          <ExportMapButton text="Export as Image" onClick={undefined} />
+          <ExportMapButton text="Export as Project" onClick={handleDownloadAsJEMS} />
         </Flex>
       </Modal>
     </>
