@@ -75,7 +75,6 @@ export async function handleKml(file: File): Promise<any> {
     // Parse the KML data to GeoJSON using togeojson.
     const geoJSON = toGeoJSON.kml(kmlData);
 
-    console.log("KML FILE:", geoJSON);
     // Return the GeoJSON object.
     return geoJSON;
   } catch (error) {
@@ -104,7 +103,9 @@ export async function handleZip(file: File): Promise<GeoJSON> {
     let dbf = zip.files[ firstAlphabeticalShpFileName + ".dbf"].async("uint8array");
 
     // combines the shp file and dbf file together
-    return await read(await shp, await dbf); // read is from the shapefile library
+    let geoJSON = await read(await shp, await dbf); // read is from the shapefile library
+    console.log("ZIP FILE IS HERE",  geoJSON)
+    return handleUntitledRegions(geoJSON);
 
   } catch (error) {
     console.error('Error handling ZIP:', error);
@@ -121,10 +122,23 @@ function handleUntitledRegions(geoJSON: GeoJSON){
 
 
   for(let i = 0; i < geoJSON.features.length; i++){
+    // HACK: this is just to fit the cnvetion the DIVA-GIS naming convention
     if(!geoJSON.features[i].properties)
       geoJSON.features[i].properties = {}
-    if(!geoJSON.features[i].properties?.name)
-      geoJSON.features[i].properties!.name = `undefined region ${counter++}`
+    if(!geoJSON.features[i].properties?.name){
+      let name = ""
+      if(geoJSON.features[i].properties?.NAME_0)
+        name = geoJSON.features[i].properties?.NAME_0
+      if(geoJSON.features[i].properties?.NAME_1)
+        name = geoJSON.features[i].properties?.NAME_1
+      if(geoJSON.features[i].properties?.NAME_2)
+        name = geoJSON.features[i].properties?.NAME_2
+
+      if(name === "")
+        geoJSON.features[i].properties!.name = `undefined region ${counter++}`
+      else
+        geoJSON.features[i].properties!.name = name
+    }
   }
 
   return geoJSON
