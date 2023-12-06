@@ -27,25 +27,25 @@ beforeAll(async () => {
 describe("testing the api/map route", () => {
   describe("GET /api/map/query/", () => {
     describe("when user is authenticated", () => {
-      // test("getting private maps, it should return status code 200", async () => {
-      //   // First, log in to create a session
-      //   const loginResponse = await request(app)
-      //     .post("/api/auth/login/")
-      //     .send({ email: "test@test.test", password: "123" })
-      //     .expect(200);
+      test("getting private maps, it should return status code 200", async () => {
+        // First, log in to create a session
+        const loginResponse = await request(app)
+          .post("/api/auth/login/")
+          .send({ email: "test@test.test", password: "123" })
+          .expect(200);
 
-      //   // Then, get private maps
-      //   const response = await request(app)
-      //     .get("/api/maps/")
-      //     .query({ private: true })
-      //     .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-      //     .expect(200);
+        // Then, get private maps
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({ private: true })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
 
-      //   expect(response.body[0]).toHaveProperty("creatorId");
-      //   expect(response.body[0]).toHaveProperty("mapName");
-      //   expect(response.body[0]).toHaveProperty("description");
-      //   expect(response.body[0]).toHaveProperty("public");
-      // });
+        expect(response.body[0]).toHaveProperty("creatorId");
+        expect(response.body[0]).toHaveProperty("mapName");
+        expect(response.body[0]).toHaveProperty("description");
+        expect(response.body[0]).toHaveProperty("public");
+      });
 
       test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
         // First, log in to create a session
@@ -61,6 +61,7 @@ describe("testing the api/map route", () => {
             private: true,
             map_name: "asdasd"
           })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(200);
         expect(response.body).toEqual([]);
       });
