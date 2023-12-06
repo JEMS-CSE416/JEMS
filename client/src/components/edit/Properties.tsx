@@ -31,7 +31,7 @@ import { AppendChoroplethLegendItems } from "../../context/EditContextProvider";
 export default function Properties() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
-
+  console.log(editPageState);
   const [groupNameState, setGroupNameState] = useState(
     editPageState.selectedRegion?.groupName
   );
@@ -54,7 +54,7 @@ export default function Properties() {
     editPageState.selectedRegion?.region.color
   );
 
-  const [hueState, setHueState] = useState("#8eb8fa");
+  const [hueState, setHueState] = useState(editPageState.map.legend.choroplethLegend.hue);
 
   const [ChoroplethColorRange, setChoroplethColorRange] = useState<{
     min: { value: string; color: string };
@@ -63,10 +63,6 @@ export default function Properties() {
     min: { value: "", color: "#000000" },
     max: { value: "", color: "#FFFFFF" },
   });
-
-  const [choroplethItems, setChoroplethItems] = useState(
-    editPageState.map.legend.choroplethLegend.items
-  );
 
   useEffect(() => {
     setGroupNameState(editPageState.selectedRegion?.groupName);
@@ -77,7 +73,7 @@ export default function Properties() {
     );
     setUnitsState(editPageState.selectedRegion?.region.numericUnit ?? "");
     setColorState(editPageState.selectedRegion?.region.color);
-    setHueState(editPageState.map.legend.choroplethLegend.hue ?? "#8eb8fa");
+    setHueState(editPageState.map.legend.choroplethLegend.hue);
     if (
       editPageState.map.legend.choroplethLegend.min &&
       editPageState.map.legend.choroplethLegend.max
@@ -93,8 +89,7 @@ export default function Properties() {
         },
       });
     }
-    setChoroplethItems(editPageState.map.legend.choroplethLegend.items);
-  }, [editPageState.selectedRegion]);
+  }, [editPageState]);
 
   const handleRegionPropertyEditing = () => {
     setEditPageState({

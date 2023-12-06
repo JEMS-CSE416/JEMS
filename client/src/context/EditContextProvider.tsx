@@ -60,10 +60,6 @@ export function EditContextProvider(props: EditContextProviderProps) {
   // initialize the map by pulling it from the backend
   useEffect(() => {
     fetchMap();
-    AppendChoroplethLegendItems(
-      editPageState,
-      editPageState.map.legend.choroplethLegend.hue
-    );
   }, []);
 
   const fetchMap = async () => {
@@ -79,10 +75,13 @@ export function EditContextProvider(props: EditContextProviderProps) {
       const minMaxValues = findChoroplethLegendMinMax(editPageState, newMap);
       const newItems = AppendChoroplethLegendItems(
         editPageState,
-        newMap.legend.choroplethLegend.hue
+        newMap.legend.choroplethLegend.hue,
+        minMaxValues.minValue,
+        minMaxValues.maxValue
       );
+      const hue = newMap.legend.choroplethLegend.hue;
       newMap.legend.choroplethLegend = {
-        ...editPageState.map.legend.choroplethLegend,
+        hue: hue,
         min: minMaxValues.minValue,
         max: minMaxValues.maxValue,
         items: newItems,
@@ -116,12 +115,25 @@ export function AppendChoroplethLegendItems(
 ) {
   let minVal: number;
   let maxVal: number;
+  console.log(editPageState);
+
+  // If updatedMin/updatedMax then updating/opening the map. Otherwise, min/max not passed in when called through
+  // update_choropleth_legend because it's used in handleMAPPropertyEditing which will does not handle numericLabel changes.
   updatedMin
     ? (minVal = updatedMin)
     : (minVal = editPageState.map.legend.choroplethLegend.min);
   updatedMax
     ? (maxVal = updatedMax)
     : (maxVal = editPageState.map.legend.choroplethLegend.max);
+
+  // No numericalLabels in the map, as a result should not append any items to the legend.
+  if (
+    minVal === Number.MAX_SAFE_INTEGER &&
+    maxVal === Number.MIN_SAFE_INTEGER
+  ) {
+    return {};
+  }
+
   const newItems = new Map<string, number>();
   let value = 0;
   let color = chroma(newHue).brighten(value).hex();
@@ -129,32 +141,38 @@ export function AppendChoroplethLegendItems(
   // set the first item to the max value
   newItems.set(color, maxVal);
 
-  if (maxVal >= 5) {
-    // set the middle items if max is greater or equal to 5
-    for (let i = 1; i < 4; i++) {
-      value += 0.5;
-      color = chroma(newHue).brighten(value).hex();
-      newItems.set(color, maxVal - i);
+  // If minVal != maxVal then there is more then one item in the legend
+  if (minVal != maxVal) {
+    console.log("tf");
+    if (maxVal >= 5) {
+      // set the middle items if max is greater or equal to 5
+      for (let i = 1; i < 4; i++) {
+        value += 0.5;
+        color = chroma(newHue).brighten(value).hex();
+        newItems.set(color, maxVal - i);
+      }
+    } else {
+      // set the middle items if max is less than 5 but greater than 1
+      for (let i = 1; i < maxVal - 1; i++) {
+        value += 0.5;
+        color = chroma(newHue).brighten(value).hex();
+        newItems.set(color, maxVal - i);
+      }
     }
-  } else {
-    // set the middle items if max is less than 5
-    for (let i = 1; i < maxVal; i++) {
-      value += 0.5;
-      color = chroma(newHue).brighten(value).hex();
-      newItems.set(color, maxVal - i);
-    }
-  }
 
-  // set the last item to the min value
-  value += 0.5;
-  color = chroma(newHue).brighten(value).hex();
-  newItems.set(color, minVal);
+    // set the last item to the min value
+    value += 0.5;
+    color = chroma(newHue).brighten(value).hex();
+    newItems.set(color, minVal);
+  }
 
   const newItemsObject = Array.from(newItems).reduce((obj, [key, value]) => {
     obj[key] = value;
     return obj;
   }, {} as { [key: string]: number });
 
+  console.log(newItems);
+  console.log(newItemsObject);
   return newItemsObject;
 }
 
@@ -277,6 +295,7 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         minMaxValues.minValue,
         minMaxValues.maxValue
       );
+      console.log(choroplethItems);
       updatedChoroplethLegend = {
         ...updatedChoroplethLegend,
         items: choroplethItems,
@@ -359,10 +378,11 @@ function findChoroplethLegendMinMax(state: EditPageState, newMap?: JemsMap) {
   let maxValue = Number.MIN_SAFE_INTEGER;
   // let numericLabelMap = new JemsMap<number | string, number>();
   let regions;
-  if(newMap) { // If newMap is defined, means we are initializing/reopening the map. Should not be using the states because it will be unready.
+  if (newMap) {
+    // If newMap is defined, means we are initializing/reopening the map. Should not be using the states because it will be unready.
     regions = newMap.regions;
-  }
-  else { // If newMap is undefined, means we are updating the map. Should be using the states.
+  } else {
+    // If newMap is undefined, means we are updating the map. Should be using the states.
     regions = state.map.regions;
   }
   const filename = Object.keys(regions);

@@ -126,7 +126,6 @@ function getRegionStyle(
   region: Feature<Geometry, any>,
   editPageState: EditPageState
 ) {
-
   // Initialize the style object with common properties
   let style: { [key: string]: any } = {
     fillColor: region.properties.color,
@@ -148,7 +147,8 @@ function getRegionStyle(
     style = {
       ...style,
       fillColor: getChoroplethStyle(region, editPageState),
-      fillOpacity: 0.9,
+      fillOpacity: 1,
+      opacity: 1,
     };
   } else if (whichMap !== TemplateTypes.COLOR) {
     style = {
@@ -170,20 +170,53 @@ function getChoroplethStyle(
     editPageState.map.legend.choroplethLegend?.items || {}
   );
   const value = region.properties.numericLabel;
-
-  if (editPageState.map.legend.choroplethLegend.max >= 5) {
+  console.log("value: " + value);
+  if (items.length >= 5) {
     return value >= items[0][1]
       ? items[0][0]
-      : value > items[1][1]
+      : value >= items[1][1]
       ? items[1][0]
-      : value > items[2][1]
+      : value >= items[2][1]
       ? items[2][0]
-      : value > items[3][1]
+      : value >= items[3][1]
       ? items[3][0]
-      : items[4][0];
+      : value >= items[4][1]
+      ? items[4][0]
+      : "#FFFFFF";
+  } else {
+    // Handle if there are 1, 2, 3, and/or 4 items in the legend
+    if (items.length == 1) {
+      return value == items[0][1] ? items[0][0] : "#FFFFFF";
+    } else if (items.length == 2) {
+      console.log("2");
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : "#FFFFFF";
+    } else if (items.length == 3) {
+      console.log("3");
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : value >= items[2][1]
+        ? items[2][0]
+        : "#FFFFFF";
+    } else if (items.length == 4) {
+      console.log("4");
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : value >= items[2][1]
+        ? items[2][0]
+        : value >= items[3][1]
+        ? items[3][0]
+        : "#FFFFFF";
+    }
   }
-  else { // handle cases where there are less than 5 items in the legend (i.e. 4,3,2, or 1)
-  }
+  return "#8eb8fa";
 }
 
 function labelHTML(

@@ -1,5 +1,6 @@
 import { NumberInput, Group, ColorSwatch } from "@mantine/core";
 import { useEditContext } from "../../context/EditContextProvider";
+import { useState } from "react";
 
 interface LegendItemsProps {
     key: number;
@@ -8,7 +9,7 @@ interface LegendItemsProps {
 }
 const LegendItems: React.FC<LegendItemsProps> = ({key, color, value}) =>{
   const editPageState = useEditContext();
-
+  const [choroplethLegendValue, setChoroplethLegendValue] = useState('');
   return (
     <Group>
       <ColorSwatch
@@ -19,7 +20,6 @@ const LegendItems: React.FC<LegendItemsProps> = ({key, color, value}) =>{
       <NumberInput
         variant="unstyled"
         placeholder={value.toString()}
-        onChange={(event) => handleValueChange(1)}
         rightSectionWidth={"0px"}
         hideControls
       />
@@ -27,6 +27,7 @@ const LegendItems: React.FC<LegendItemsProps> = ({key, color, value}) =>{
   );
 }
 
-function handleValueChange(value: number) {}
+function handleValueChange(event : Event) {
+}
 
 export default LegendItems;
