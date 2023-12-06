@@ -22,7 +22,7 @@ beforeAll(async () => {
 });
 
 // Test the map routes
-describe("testing the api/map route", () => {
+describe("testing MAPS routes", () => {
   // Test Get Map
   describe("GET /api/maps/:id", () => {
     describe("when user is authenticated", () => {
@@ -64,7 +64,7 @@ describe("testing the api/map route", () => {
         const id = "656ff8a4f651eef41c74c9d3"
         const response = await request(app)
           .get(`/api/maps/${id}`)
-          .expect(200);
+          .expect(401);
       });
     });
   });
