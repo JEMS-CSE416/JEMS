@@ -157,8 +157,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
     const content = jemsjson.map_file_content;
     console.log(form.values.visibility);
     // legacy format
-    if(!content.legend.choroplethLegend.hue)
-      content.legned.choroplethLegend = {
+    if(!content.legend.choroplethLegend?.hue)
+      content.legend.choroplethLegend = {
               hue: "#8eb8fa",
               min: Number.MAX_SAFE_INTEGER,
               max: Number.MIN_SAFE_INTEGER,
