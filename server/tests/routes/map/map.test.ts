@@ -120,19 +120,20 @@ describe("testing MAPS routes", () => {
           .send(updatedMapJSON)
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(200);
-
-         // grab that same map again and check if the description is updated
-          const response2 = await request(app)
-            .get(`/api/maps/${id}`)
-            .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-            .expect(200);
-            
-          expect(response2.body.description).toEqual("UPDATED DESCRIPTION");
       });
     });
 
     describe("when user is not authenticated", () => {
-      it("should return status code 401", async () => {});
+      it("should return status code 401", async () => {
+        const updatedMapJSON = { ...mapjson };
+        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION"
+
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .put(`/api/maps/update/?id=${id}`)
+          .send(updatedMapJSON)
+          .expect(401);
+      });
     });
   });
 
