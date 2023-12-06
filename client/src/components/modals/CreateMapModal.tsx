@@ -29,6 +29,7 @@ import { IconX } from "@tabler/icons-react";
 import stringTemplate from "../../utils/templates/stringTemplate.json";
 import colorTemplate from "../../utils/templates/colorTemplate.json";
 import numericTemplate from "../../utils/templates/numericTemplate.json";
+import pointerTemplate from "../../utils/templates/pointerTemplate.json";
 import { error } from "console";
 
 interface CreateMapModalProps {
@@ -280,9 +281,11 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         case "Numeric Label":
           req = getJemsRequest(numericTemplate);
           break;
+        case "Pointer Label":
+          req = getJemsRequest(pointerTemplate);
+          break;
         // TODO: TO BE IMPLEMENTED
         case "Choropleth Map":
-        case "Pointer Label":
         default:
           console.log(selectedValue + " currently not supported");
           break;
