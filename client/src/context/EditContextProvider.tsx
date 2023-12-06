@@ -26,6 +26,7 @@ export interface EditPageState {
     region: Region;
   };
   modal: String;
+  getUniqueColors: () => string[];
 }
 
 export interface EditPageAction {
@@ -46,6 +47,7 @@ const initState = {
   selectedRegion: undefined,
   modal: "NONE",
   leafletMap: undefined,
+  getUniqueColors: () => [] as string[]
 };
 
 export const EditContext = createContext<EditPageState>(initState);
@@ -105,6 +107,24 @@ export function EditContextProvider(props: EditContextProviderProps) {
       console.error("Error fetching map:", error);
     }
   };
+
+  // Helper functions for editPageState
+  editPageState.getUniqueColors = ()=>{
+    const res = Object.entries(editPageState.map.regions).reduce(
+      (acc, current_group: [string, Region[]]) => {
+        acc = acc.concat( current_group[1].reduce(
+            (acc, region: Region) => {
+              if(region.color !== "")
+                acc.push(region.color)
+              return acc
+            }, [] as string[]
+          )
+        )
+        return acc
+      }, [] as string[]
+    )
+    return Array.from(new Set(res))
+  }
 
   return (
     <EditContext.Provider value={editPageState}>
