@@ -117,7 +117,6 @@
  *         color:
  *           type: string
  */
-
 import express, { Router } from "express";
 import {
   queryMaps,

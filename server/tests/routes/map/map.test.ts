@@ -26,18 +26,45 @@ describe("testing the api/map route", () => {
   // Test Get Map
   describe("GET /api/maps/:id", () => {
     describe("when user is authenticated", () => {
-      test("given an ID of a map, it should return status code 201", async () => {
-        // Test logic for a valid ID of a map
+      test("given an ID of a public map, it should return status code 200", async () => {
+        // First, log in to create a session
+        const loginResponse = await request(app)
+          .post("/api/auth/login/")
+          .send({ email: "test@test.test", password: "123" })
+          .expect(200);
+
+        
+        // Then, get a map
+        const id = "656ff8a4f651eef41c74c9d3"
+        const response = await request(app)
+          .get(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
       });
 
       test("given an invalid ID of a map, it should return status code 404", async () => {
-        // Test logic for an invalid ID of a map
+        // First, log in to create a session
+        const loginResponse = await request(app)
+          .post("/api/auth/login/")
+          .send({ email: "test@test.test", password: "123" })
+          .expect(200);
+
+        
+        // Then, get a map
+        const id = "656ff8a4f651eef31c74c9d4" // this is an invalid map id that does not exist
+        const response = await request(app)
+          .get(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(404);
       });
     });
 
     describe("when user is not authenticated", () => {
       it("should return status code 401", async () => {
-        // Test logic for an unauthenticated user
+        const id = "656ff8a4f651eef41c74c9d3"
+        const response = await request(app)
+          .get(`/api/maps/${id}`)
+          .expect(200);
       });
     });
   });
