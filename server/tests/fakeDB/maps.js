@@ -7447,10 +7447,8 @@ module.exports = [
     legend: {
       colorLegend: {},
       choroplethLegend: {
-        hue: "#8eb8fa",
-        min: 1,
-        max: 10,
-        items: {},
+        "hue": "#8eb8fa",
+        "items": {}
       },
       _id: "656587dfcaec749a198be643",
     },
@@ -13972,7 +13970,10 @@ module.exports = [
     },
     legend: {
       colorLegend: {},
-      choroplethLegend: {},
+      choroplethLegend: {
+        "hue": "#8eb8fa",
+        "items": {}
+      },
       _id: "65677b029e6feae797780d98",
     },
   },
@@ -15732,7 +15733,10 @@ module.exports = [
     },
     legend: {
       colorLegend: {},
-      choroplethLegend: {},
+      choroplethLegend: {
+        "hue": "#8eb8fa",
+        "items": {}
+      },
       _id: "656ff90bfd27abc1d48a4228",
     },
   },
@@ -17492,7 +17496,10 @@ module.exports = [
     },
     legend: {
       colorLegend: {},
-      choroplethLegend: {},
+      choroplethLegend: {
+        "hue": "#8eb8fa",
+        "items": {}
+      },
       _id: "656ff90bfd27abc1d48a4228",
     },
   }

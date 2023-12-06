@@ -6752,7 +6752,10 @@ export const mapjson = {
     },
     "legend": {
       "colorLegend": {},
-      "choroplethLegend": {},
+      "choroplethLegend": {
+        "hue": "#8eb8fa",
+        "items": {}
+      },
       "_id": "656587dfcaec749a198be643"
     }
   }
