@@ -5,18 +5,20 @@
  *   description: The API that manages comments -- creating comments & grabbing them - in the future potentially deleting/updating a comment
  *
  * components:
+ *   securitySchemes:
+ *     BasicAuth:
+ *       type: http
+ *       scheme: basic
+ * 
  *   schemas:
  *     Comment:
  *       type: Object
  *       required:
- *         - commenterId
  *         - displayName
  *         - mapId
  *         - content
  *         - creationDate
  *       properties:
- *         commenterId:
- *           type: string
  *         displayName:
  *           type: string
  *         mapId:
@@ -29,7 +31,7 @@
 
 import { Router } from "express";
 import { getComments, createComment } from "./controller/CommentController";
-import { get } from "http";
+import { isAuthMiddleWare } from "../auth/controller/AuthController";
 
 const commentRouter = Router();
 
@@ -48,10 +50,6 @@ const commentRouter = Router();
  *           schema:
  *             type: Object
  *             properties:
- *               commenterId:
- *                 type: string
- *               displayName:
- *                 type: string
  *               mapId:
  *                 type: string
  *               content:
@@ -59,7 +57,7 @@ const commentRouter = Router();
  * 
  *     responses:
  *       201:
- *         description: the comment created
+ *         description: the comment being created
  *         content:
  *           application/json:
  *             schema:
@@ -79,7 +77,7 @@ const commentRouter = Router();
  *               type: string
  *
  */
-commentRouter.put("/create", createComment);
+commentRouter.put("/create", isAuthMiddleWare, createComment);
 
 /**
  * @swagger
@@ -119,7 +117,7 @@ commentRouter.put("/create", createComment);
  *             schema:
  *               type: string
  */
-commentRouter.get("/", getComments);
+commentRouter.get("/", isAuthMiddleWare, getComments);
 
 
 export default commentRouter;
