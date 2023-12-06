@@ -5,6 +5,11 @@
  *   description: The API that manages comments -- creating comments & grabbing them - in the future potentially deleting/updating a comment
  *
  * components:
+ *   securitySchemes:
+ *     BasicAuth:
+ *       type: http
+ *       scheme: basic
+ * 
  *   schemas:
  *     Comment:
  *       type: Object
@@ -29,7 +34,7 @@
 
 import { Router } from "express";
 import { getComments, createComment } from "./controller/CommentController";
-import { get } from "http";
+import { isAuthMiddleWare } from "../auth/controller/AuthController";
 
 const commentRouter = Router();
 
@@ -79,7 +84,7 @@ const commentRouter = Router();
  *               type: string
  *
  */
-commentRouter.put("/create", createComment);
+commentRouter.put("/create", isAuthMiddleWare, createComment);
 
 /**
  * @swagger
@@ -119,7 +124,7 @@ commentRouter.put("/create", createComment);
  *             schema:
  *               type: string
  */
-commentRouter.get("/", getComments);
+commentRouter.get("/", isAuthMiddleWare, getComments);
 
 
 export default commentRouter;
