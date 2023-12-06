@@ -38,30 +38,26 @@ const Comments = ({ map }: CommentsProps) => {
 
   const handleNewComment = async () => {
     console.log("new comment")
-    if (user) {
-      console.log(user, "user")
-      const req = {
-        commenterId: user._id,
-        displayName: user.displayName,
-        mapId: map._id,
-        content: comment
-      }
-
-      try {
-        console.log("Creating comment with request:", req);
-        const responseData = await createComment(req);
-        console.log("Comment created successfully:", responseData);
-        fetchComments();
-      } catch (err) {
-        console.error("Error creating comment:", err);
-      }
+    const req = {
+      mapId: map._id,
+      content: comment
     }
+
+    try {
+      console.log("Creating comment with request:", req);
+      const responseData = await createComment(req);
+      console.log("Comment created successfully:", responseData);
+      fetchComments();
+    } catch (err) {
+      console.error("Error creating comment:", err);
+    }
+
     setComment(''); // Clear the text input field
   };
 
   return (
     <>
-      <Text fw={700} size="lg" style={{textAlign: 'left', marginTop: "20px"}}>
+      <Text fw={700} size="lg" style={{ textAlign: 'left', marginTop: "20px" }}>
         Comments
       </Text>
       <Group justify="center" id="inputCommentRow">
@@ -86,12 +82,12 @@ const Comments = ({ map }: CommentsProps) => {
         ></TextInput>
       </Group >
       <Box id="comments">
-        {loading ? ( <Loader color="blue" />
+        {loading ? (<Loader color="blue" />
         ) : (
           <Stack style={{ textAlign: "left" }}>
             {commentList?.map((comment) => {
               return (
-                  <CommentCard comment={comment} />
+                <CommentCard comment={comment} />
               );
             })}
           </Stack>

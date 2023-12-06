@@ -20,9 +20,6 @@ async function getCommentModel() {
  */
 export const getComments = async (req: Request, res: Response) => {
     try {
-        const mapId = req.headers.id?.toString();
-        const mapModel = await getMapModel();
-
         /* Get the user ID from the token (this is the user that is logged in) */
         const creator = req.session.user
 
@@ -32,6 +29,8 @@ export const getComments = async (req: Request, res: Response) => {
 
         const creator_id = creator.id;
 
+        const mapId = req.headers.id?.toString();
+        const mapModel = await getMapModel();
 
         /* Check if the map exists */
         const map = await mapModel.findById(mapId);
@@ -75,8 +74,8 @@ export const getComments = async (req: Request, res: Response) => {
  */
 export const createComment = async (req: Request, res: Response) => {
     try {
-        const mapId = req.body.mapId;
-        const mapModel = await getMapModel();
+        console.log("PRINTING SESSION USER")
+        console.log(req.session.user)
         /* Get the user ID from the token (this is the user that is logged in) */
         const creator = req.session.user
 
@@ -85,6 +84,9 @@ export const createComment = async (req: Request, res: Response) => {
         }
 
         const creator_id = creator.id;
+
+        const mapId = req.body.mapId;
+        const mapModel = await getMapModel();
 
         /* Check if the map exists */
         const map = await mapModel.findById(mapId);
@@ -103,9 +105,10 @@ export const createComment = async (req: Request, res: Response) => {
         }
 
         const CommentModel = await getCommentModel();
+        console.log("PRINTING CREATOR DISPLAYnAME")
+        console.log(creator.displayName)
         const commentObj = {
-            commenterId: req.body.commenterId,
-            displayName: req.body.displayName,
+            displayName: creator.displayName,
             mapId: req.body.mapId,
             content: req.body.content,
             creationDate: new Date(),

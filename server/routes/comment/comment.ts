@@ -14,14 +14,11 @@
  *     Comment:
  *       type: Object
  *       required:
- *         - commenterId
  *         - displayName
  *         - mapId
  *         - content
  *         - creationDate
  *       properties:
- *         commenterId:
- *           type: string
  *         displayName:
  *           type: string
  *         mapId:
@@ -53,10 +50,6 @@ const commentRouter = Router();
  *           schema:
  *             type: Object
  *             properties:
- *               commenterId:
- *                 type: string
- *               displayName:
- *                 type: string
  *               mapId:
  *                 type: string
  *               content:
@@ -64,7 +57,7 @@ const commentRouter = Router();
  * 
  *     responses:
  *       201:
- *         description: the comment created
+ *         description: the comment being created
  *         content:
  *           application/json:
  *             schema:
