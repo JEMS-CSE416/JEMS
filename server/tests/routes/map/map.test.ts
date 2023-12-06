@@ -14,8 +14,6 @@ beforeAll(async () => {
     mute: true,
   });
 
-  
-
   await fixtures
     .connect("mongodb://localhost:27017")
     .then(() => fixtures.unload())
@@ -25,7 +23,27 @@ beforeAll(async () => {
 
 // Test the map routes
 describe("testing the api/map route", () => {
-  describe("GET /api/map/", () => {
+  // Test Get Map
+  describe("GET /api/maps/:id", () => {
+    describe("when user is authenticated", () => {
+      test("given an ID of a map, it should return status code 201", async () => {
+        // Test logic for a valid ID of a map
+      });
+
+      test("given an invalid ID of a map, it should return status code 404", async () => {
+        // Test logic for an invalid ID of a map
+      });
+    });
+
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        // Test logic for an unauthenticated user
+      });
+    });
+  });
+
+  // Test Query Maps
+  describe("GET /api/maps/", () => {
     describe("when user is authenticated", () => {
       test("getting private maps, it should return status code 200", async () => {
         // First, log in to create a session
@@ -59,7 +77,7 @@ describe("testing the api/map route", () => {
           .get("/api/maps/")
           .query({
             private: true,
-            map_name: "asdasd"
+            map_name: "asdasd",
           })
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(200);
@@ -78,25 +96,8 @@ describe("testing the api/map route", () => {
     });
   });
 
-  describe("GET /api/map/get/:id", () => {
-    describe("when user is authenticated", () => {
-      test("given an ID of a map, it should return status code 201", async () => {
-        // Test logic for a valid ID of a map
-      });
-
-      test("given an invalid ID of a map, it should return status code 404", async () => {
-        // Test logic for an invalid ID of a map
-      });
-    });
-
-    describe("when user is not authenticated", () => {
-      it("should return status code 401", async () => {
-        // Test logic for an unauthenticated user
-      });
-    });
-  });
-
-  describe("PUT /api/map", () => {
+  // Test Update Map
+  describe("PUT /api/maps/update/", () => {
     describe("when user is authenticated", () => {
       test("given map file details, it should return status code 201", async () => {
         // const map_2 = map_content_files[1];
@@ -122,29 +123,8 @@ describe("testing the api/map route", () => {
     });
   });
 
-  describe("POST /api/map/:id", () => {
-    describe("when user is authenticated", () => {
-      test("when ID is not valid for the user to update, it should return status code 400", async () => {
-        // Test logic for an invalid ID for the user to update
-      });
-
-      test("when contents of the request are not correct, it should return status code 400", async () => {
-        // Test logic for incorrect request contents
-      });
-
-      test("when ID is valid and all contents are valid, it should return status code 200", async () => {
-        // Test logic for a valid ID and contents
-      });
-    });
-
-    describe("when user is not authenticated", () => {
-      it("should return status code 401", async () => {
-        // Test logic for an unauthenticated user
-      });
-    });
-  });
-
-  describe("POST /api/map/duplicate", () => {
+  // Tests Duplicating Map
+  describe("POST /api/maps/duplicate", () => {
     describe("when user is authenticated", () => {
       test("with a valid map ID, it should successfully duplicate the map and return 201", async () => {
         // let response = await request(app)
@@ -199,7 +179,20 @@ describe("testing the api/map route", () => {
     });
   });
 
-  describe("DELETE /api/map/:id", () => {
+  // Test Creating Map
+  describe("PUT /api/maps/", () => {
+    describe("when user is authenticated", () => {
+    });
+
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        // Test logic for an unauthenticated user
+      });
+    });
+  });
+
+  // Test Deleting Map
+  describe("DELETE /api/maps/:id", () => {
     describe("when user is authenticated", () => {
       test("with a valid map ID, it should successfully delete the map and return status code 204: No content", async () => {
         // let response = await request(app)
