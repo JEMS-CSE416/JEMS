@@ -330,8 +330,7 @@ function editReducer(state: EditPageState, action: any): EditPageState {
           }
         }
       }
-
-
+      
       const minMaxValues = findChoroplethLegendMinMax(state);
       // Get the old choropleth legend and update it with a new legend that includes the new min and max values
       const oldChoroplethLegend = state.map.legend.choroplethLegend;
@@ -339,7 +338,7 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         ...oldChoroplethLegend,
         min: minMaxValues.minValue,
         max: minMaxValues.maxValue,
-        hue: action.map.legend.choroplethLegend.hue,
+        hue: action.map?.legend?.choroplethLegend.hue,
       };
 
       const choroplethItems = AppendChoroplethLegendItems(
