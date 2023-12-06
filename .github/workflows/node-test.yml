@@ -5,6 +5,8 @@ on: [push]
 jobs:
   TestBackend:
     runs-on: ubuntu-latest
+    environment:
+        name: test
     defaults: 
       run:
         working-directory: ./server/
@@ -21,7 +23,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    
+
     - name: Start MongoDB
       uses: supercharge/mongodb-github-action@1.10.0
       with:
@@ -33,9 +35,18 @@ jobs:
       run: npm run build --if-present
 
     - name: Run Tests
-      run: |
-        echo 'MONGO_DB_CONNECTION_STRING="mongodb://127.0.0.1:27017"' > .env
-        npm run test
+      env: 
+        CRYPT_IV: ${{ secrets.CRYPT_IV }}
+        CRYPT_SECRET: ${{ secrets.CRYPT_SECRET }}
+        EMAIL_CLIENT_ID: ${{ secrets.EMAIL_CLIENT_ID }}
+        EMAIL_CLIENT_SECRET: ${{ secrets.EMAIL_CLIENT_SECRET }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        EMAIL_REFRESH_TOKEN: ${{ secrets.EMAIL_REFRESH_TOKEN }}
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        MONGO_DB_CONNECTION_STRING: ${{ secrets.MONGO_DB_CONNECTION_STRING }}
+        SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+        STAGE: ${{ secrets.STAGE }}
+      run: npm run test
 
     - name: break down mongodb
       run: |

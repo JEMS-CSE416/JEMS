@@ -1,16 +1,14 @@
 import request from "supertest";
 import app from "../../../app";
-import map_content_files from "../../fakeCreateMaps/maps.json";
+import { mapjson } from "../../fakeCreateMaps/map";
+import { mapjson_invalid } from "../../fakeCreateMaps/map_invalid";
 
-// https://stackoverflow.com/questions/69794934/set-an-authentication-token-in-a-request-header-when-using-supertest-with-jest-a
-// for auth
-
-beforeEach(async () => {
+beforeAll(async () => {
   // populate the database with fake data
   const Fixtures = require("node-mongodb-fixtures");
   const fixtures = new Fixtures({
     dir: "tests/fakeDB",
-    filter: "maps.*",
+    filter: /\.(json|js)$/,
     mute: true,
   });
 
@@ -22,187 +20,216 @@ beforeEach(async () => {
 });
 
 // Test the map routes
-describe("testing the api/map route", () => {
-  describe("GET /api/map/query/", () => {
+describe("testing MAPS routes", () => {
+  // Test Get Map
+  describe("GET /api/maps/:id", () => {
     describe("when user is authenticated", () => {
-      test("getting private maps, it should return status code 200", async () => {
-        // /*
-        //   const map_name: string = req.query.map_name?.toString();
-        //   const map_private: string = req.query.private?.toString();
-        //   const owned: string = req.query.owned?.toString();
-        //   const creator_id: string = req.session.user.id
-        // */
-        // // First, log in to create a session
-        // let agent = request.agent(app);
-        // await agent
-        //   .post("/api/auth/login/")
-        //   .send({ username: "test@test.test", password: "123" })
-        //   .expect(200);
+      test("given an ID of a public map, it should return status code 200", async () => {
+        // First, log in to create a session
+        const loginResponse = await login();
 
-        // const response = await request(app)
-        //   .get("/api/maps/")
-        //   .query({ private: true })
-        //   .expect(200);
-
-        // expect(response.body[0]).toHaveProperty("creatorId");
-        // expect(response.body[0]).toHaveProperty("mapName");
-        // expect(response.body[0]).toHaveProperty("description");
-        // expect(response.body[0]).toHaveProperty("public");
-      });
-
-      test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
-        // const response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({
-        //     private: true,
-        //     creator_id: "6119dbef8b0915f12c818a3a",
-        //     session_token: "6119dbef8b0915f12c818a37",
-        //   })
-        //   .expect(200);
-
-        // expect(response.body).toEqual([]);
-      });
-
-      test("getting all maps created by a user", async () => {
-        // const response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({
-        //     creator_id: "6119dbef8b0915f12c818a3a",
-        //   })
-        //   .expect(200);
-
-        // expect(response.body.length).toEqual(0);
-      });
-    });
-
-    describe("when user is not authenticated", () => {
-      it("should return status code 401", async () => {
-        // // Test logic for an unauthenticated user
-        // const response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({ private: true })
-        //   .expect(401);
-      });
-    });
-  });
-
-  describe("GET /api/map/get/:id", () => {
-    describe("when user is authenticated", () => {
-      test("given an ID of a map, it should return status code 201", async () => {
-        // Test logic for a valid ID of a map
+        // Then, get a map
+        const id = "656ff8a4f651eef41c74c9d3";
+        const response = await request(app)
+          .get(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
       });
 
       test("given an invalid ID of a map, it should return status code 404", async () => {
-        // Test logic for an invalid ID of a map
+        // First, log in to create a session
+        const loginResponse = await login();
+
+        // Then, get a map
+        const id = "656ff8a4f651eef31c74c9d4"; // this is an invalid map id that does not exist
+        const response = await request(app)
+          .get(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(404);
+      });
+    });
+
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        const id = "656ff8a4f651eef41c74c9d3";
+        const response = await request(app).get(`/api/maps/${id}`).expect(401);
+      });
+    });
+  });
+
+  // Test Query Maps
+  describe("GET /api/maps/", () => {
+    describe("when user is authenticated", () => {
+      test("getting private maps, it should return status code 200", async () => {
+        // First, log in to create a session
+        const loginResponse = await login();
+
+        // Then, get private maps
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({ private: true })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
+
+        expect(response.body[0]).toHaveProperty("creatorId");
+        expect(response.body[0]).toHaveProperty("mapName");
+        expect(response.body[0]).toHaveProperty("description");
+        expect(response.body[0]).toHaveProperty("public");
+      });
+
+      test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
+        // First, log in to create a session
+        const loginResponse = await login();
+
+        // Attempt to get a private map that does not belong to you
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({
+            private: true,
+            map_name: "asdasd",
+          })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
+        expect(response.body).toEqual([]);
       });
     });
 
     describe("when user is not authenticated", () => {
       it("should return status code 401", async () => {
         // Test logic for an unauthenticated user
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({ private: true })
+          .expect(401);
       });
     });
   });
 
-  describe("PUT /api/map", () => {
+  // Test Update Map
+  describe("PUT /api/maps/update/", () => {
     describe("when user is authenticated", () => {
-      test("given map file details, it should return status code 201", async () => {
-        // const map_2 = map_content_files[1];
+      test("with valid JSON map data, it should successfully update a map and return 201", async () => {
+        const loginResponse = await login();
 
-        // const response = await request(app)
-        //   .put("/api/maps/")
-        //   .send(map_2)
-        //   .expect(201);
-      });
+        const updatedMapJSON = { ...mapjson };
+        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION"
 
-      test("given no map file details, it should return status code 400", async () => {
-        // const authenticated = true;
-        // const response = await request(app)
-        //   .put("/api/maps/")
-        //   .send({})
-        //   .expect(400);
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .put(`/api/maps/update/?id=${id}`)
+          .send(updatedMapJSON)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
       });
     });
 
     describe("when user is not authenticated", () => {
       it("should return status code 401", async () => {
-        // Test logic for an unauthenticated user
+        const updatedMapJSON = { ...mapjson };
+        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION"
+
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .put(`/api/maps/update/?id=${id}`)
+          .send(updatedMapJSON)
+          .expect(401);
       });
     });
   });
 
-  describe("POST /api/map/:id", () => {
+  // Test Duplicating Map
+  describe("POST /api/maps/duplicate", () => {
     describe("when user is authenticated", () => {
-      test("when ID is not valid for the user to update, it should return status code 400", async () => {
-        // Test logic for an invalid ID for the user to update
+      test("with a valid public map ID, it should successfully duplicate the map and return 201", async () => {
+        const loginResponse = await login();
+
+        // duplicate a map
+        const id = "656ff8a4f651eef41c74c9d3";
+        const response = await request(app)
+          .post(`/api/maps/duplicate`)
+          .send({
+            map_id: id,
+            map_name: "Duplicate of Region Names 2",
+            description: "Duplicate Description of Region Names 2",
+            public: false,
+          })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(201);
       });
 
-      test("when contents of the request are not correct, it should return status code 400", async () => {
-        // Test logic for incorrect request contents
-      });
+      test("with a valid private map ID, it should fail to duplicate the map and return 401", async () => {
+        const loginResponse = await login();
 
-      test("when ID is valid and all contents are valid, it should return status code 200", async () => {
-        // Test logic for a valid ID and contents
-      });
-    });
-
-    describe("when user is not authenticated", () => {
-      it("should return status code 401", async () => {
-        // Test logic for an unauthenticated user
-      });
-    });
-  });
-
-  describe("POST /api/map/duplicate", () => {
-    describe("when user is authenticated", () => {
-      test("with a valid map ID, it should successfully duplicate the map and return 201", async () => {
-        // let response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({
-        //     creator_id: "6119dbef8b0915f12c818a3b",
-        //     session_token: "6119dbef8b0915f12c818a37",
-        //   })
-        //   .expect(200);
-
-        // expect(response.body[0]).toHaveProperty("creatorId");
-        // expect(response.body[0]).toHaveProperty("mapName");
-        // expect(response.body[0]).toHaveProperty("description");
-        // expect(response.body[0]).toHaveProperty("public");
-
-        // const mapID = response.body[0]._id;
-        // const map_name = "Copy Of" + response.body[0].mapName;
-        // const description = "Copy Of" + response.body[0].description;
-        // const isPublic = "false";
-        // const token = "6119dbef8b0915f12c818a37";
-
-        // response = await request(app)
-        //   .post("/api/maps/duplicate/")
-        //   .set("Authorization", "Bearer " + token)
-        //   .send({
-        //     map_id: mapID,
-        //     map_name: map_name,
-        //     description: description,
-        //     public: isPublic,
-        //   })
-        //   .expect(201);
-
-        // expect(response.body).toHaveProperty("creatorId");
-        // expect(response.body).toHaveProperty("mapName");
-        // expect(response.body).toHaveProperty("description");
-        // expect(response.body).toHaveProperty("public");
-
-        // // check response.body.creatorId == token
-        // expect(response.body.creatorId).toEqual(token);
-        // // check response.body.mapName == map_name
-        // expect(response.body.mapName).toEqual(map_name);
-        // // check response.body.description == description
-        // expect(response.body.description).toEqual(description);
-        // // check response.body.public == isPublic
-        // expect(response.body.public).toEqual(false);
+        // duplicate a map
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .post(`/api/maps/duplicate`)
+          .send({
+            map_id: id,
+            map_name: "Duplicate of taiwan",
+            description: "Duplicate Description of 12",
+            public: false,
+          })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(201);
       });
 
       test("with an invalid map ID, it should return a specific error and return 400", async () => {
-        // Test logic for duplicating a map with an invalid ID
+        const loginResponse = await login();
+
+        // duplicate a map
+        const id = "656ff90bfd27aba1d48a4222"; // invalid non existant map id
+        const response = await request(app)
+          .post(`/api/maps/duplicate`)
+          .send({
+            map_id: id,
+            map_name: "Duplicate of taiwan",
+            description: "Duplicate Description of 12",
+            public: false,
+          })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(404);
+      });
+    });
+
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        // duplicate a map
+        const id = "656ff8a4f651eef41c74c9d3";
+        const response = await request(app)
+          .post(`/api/maps/duplicate`)
+          .send({
+            map_id: id,
+            map_name: "Duplicate of Region Names 2",
+            description: "Duplicate Description of Region Names 2",
+            public: false,
+          })
+          .expect(401);
+      });
+    });
+  });
+
+  // Test Creating Map
+  describe("PUT /api/maps/", () => {
+    describe("when user is authenticated", () => {
+      test("with valid JSON map data, it should successfully create a map and return 201", async () => {
+        const loginResponse = await login();
+
+        const response = await request(app)
+          .put(`/api/maps/`)
+          .send(mapjson)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(201);
+      });
+
+      test("with invalid JSON map data, it should return a specific error and return 400", async () => {
+        const loginResponse = await login();
+
+        const response = await request(app)
+          .put(`/api/maps/`)
+          .send(mapjson_invalid)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(400);
       });
     });
 
@@ -213,47 +240,55 @@ describe("testing the api/map route", () => {
     });
   });
 
-  describe("DELETE /api/map/:id", () => {
+  // Test Deleting Map
+  describe("DELETE /api/maps/:id", () => {
     describe("when user is authenticated", () => {
       test("with a valid map ID, it should successfully delete the map and return status code 204: No content", async () => {
-        // let response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({
-        //     map_name: "Sample Map 4",
-        //     creator_id: "6119dbef8b0915f12c818a3a",
-        //     session_token: "6119dbef8b0915f12c818a3a",
-        //   })
-        //   .expect(200);
+        const loginResponse = await login();
 
-        // expect(response.body[0]).toHaveProperty("_id");
-
-        // const mapID = response.body[0]._id;
-
-        // const token = "6119dbef8b0915f12c818a3a"; // TODO: the token will be the userID for now
-
-        // response = await request(app)
-        //   .delete(`/api/maps/${mapID}`)
-        //   .set("Authorization", "Bearer " + token)
-        //   .expect(204);
+        const id = "6570ae07e245dce73cc1acbe";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(204);
       });
 
       test("with an invalid map ID, it should return a specific error and return status code 404: Not Found", async () => {
-        // Test logic for deleting a map with an invalid ID
+        const loginResponse = await login();
+
+        const id = "6570ae07e242dce73cc1acde"; // an invalid non existing map id
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(404);
       });
 
       test("with a valid map ID that does not belong to the user, it should return a specific error and return status code 401: Unauthorized", async () => {
-        // Test logic for deleting a map with a valid ID that does not belong to the user
+        const loginResponse = await login();
+
+        const id = "656ff2283e72ed7d266574cb";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(401);
       });
     });
 
     describe("when user is not authenticated", () => {
-      test("when the user provides no auth token, it should return status code 401: Unauthorized", async () => {
-        // Test logic for an unauthenticated user
-      });
-
-      test("when the user provides an invalid auth token, it should return status code 401: Unauthorized", async () => {
-        // Test logic for an unauthenticated user
+      it("it should return status code 401: Unauthorized", async () => {
+        const id = "656ff2283e72ed7d266574cb";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .expect(401);
       });
     });
   });
 });
+
+async function login() {
+  const loginResponse = await request(app)
+    .post("/api/auth/login/")
+    .send({ email: "test@test.test", password: "123" })
+    .expect(200);
+  return loginResponse;
+}

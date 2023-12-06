@@ -61,7 +61,7 @@ const regionSchema = new Schema<Region>({
 const legendSchema = new Schema<Legend>({
   colorLegend: { type: Map, of: String, required: true },
   choroplethLegend: {
-    hue: { type: String, required: true },
+    hue: { type: String},
     min: { type: Number },
     max: { type: Number },
     items: { type: Map, of: Number },
