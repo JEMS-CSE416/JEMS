@@ -156,6 +156,14 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   function getJemsRequest(jemsjson: any) {
     const content = jemsjson.map_file_content;
     console.log(form.values.visibility);
+    // legacy format
+    if(!content.legend.choroplethLegend?.hue)
+      content.legend.choroplethLegend = {
+              hue: "#8eb8fa",
+              min: Number.MAX_SAFE_INTEGER,
+              max: Number.MIN_SAFE_INTEGER,
+              items: {},
+            }
     // Create the request body
     const req = {
       map_file_content: {
