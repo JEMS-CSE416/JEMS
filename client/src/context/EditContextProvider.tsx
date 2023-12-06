@@ -139,6 +139,8 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         action.selectedRegion.region.regionName;
       newRegions[oldGroupName][state.selectedRegion!.i].stringLabel =
         action.selectedRegion.region.stringLabel;
+      newRegions[oldGroupName][state.selectedRegion!.i].stringOffset =
+        action.selectedRegion.region.stringOffset;
       newRegions[oldGroupName][state.selectedRegion!.i].numericLabel =
         action.selectedRegion.region.numericLabel;
       newRegions[oldGroupName][state.selectedRegion!.i].numericUnit =
@@ -192,21 +194,20 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         }
       }
 
+      const newMap = {
+        ...state.map,
+        regions: newRegions
+      }
+
       console.log("updated state: ", {
         ...state,
-        map: {
-          ...state.map,
-          regions: newRegions,
-        },
+        map: newMap,
         selectedRegion: updatedSelectedRegionInfo,
       });
 
       return {
         ...state,
-        map: {
-          ...state.map,
-          regions: newRegions,
-        },
+        map: newMap,
         selectedRegion: updatedSelectedRegionInfo,
       };
     case "update_map":
