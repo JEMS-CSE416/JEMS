@@ -20,7 +20,7 @@ import {
 } from "geojson";
 import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect} from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
 import { geoCentroid } from "d3-geo";
 import { onClickLabel, onDragEndLabel, onDragLabel, PointerConnection } from "./leaflet/pointers";
