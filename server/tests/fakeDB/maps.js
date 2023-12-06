@@ -1,6 +1,6 @@
 const { ObjectID: ObjectId } = require('mongodb');
 
-export default [
+module.exports = [
   {
     _id: ObjectId("656ff2283e72ed7d266574cb"),
     creatorId: "656ff2173e72ed7d266574c3",
