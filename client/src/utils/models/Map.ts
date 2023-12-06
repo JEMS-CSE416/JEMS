@@ -12,7 +12,7 @@ export interface Legend {
     hue: string;
     min: number;
     max: number;
-    items?: { [key: string]: Number };
+    items: { [key: string]: Number };
   };
 }
 
@@ -68,7 +68,7 @@ export const ErrorMap = {
       "#ffffff": "white",
     },
     choroplethLegend: {
-      hue: "red",
+      hue: "#8eb8fa",
       min: 0,
       max: 10,
       items: {

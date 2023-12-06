@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
-import { ErrorMap, Map, Region } from "../utils/models/Map";
+import { ErrorMap, Map as JemsMap, Region } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
 import { update } from "cypress/types/lodash";
 import { getMap } from "../api/MapApiAccessor";
 import { EditModalEnum } from "../utils/enums";
+import chroma from "chroma-js";
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
@@ -11,7 +12,7 @@ interface EditContextProviderProps {
 }
 
 export interface EditPageState {
-  map: Map;
+  map: JemsMap;
   selectedRegion?: {
     groupName: string; // does not change when being edited. Only changes when user edits and locks it in by pressing enter.
     i: number;
@@ -22,7 +23,7 @@ export interface EditPageState {
 
 export interface EditPageAction {
   type: String;
-  map?: Map;
+  map?: JemsMap;
   modal?: String;
   selectedRegion?: {
     groupName: string;
@@ -59,6 +60,10 @@ export function EditContextProvider(props: EditContextProviderProps) {
   // initialize the map by pulling it from the backend
   useEffect(() => {
     fetchMap();
+    AppendChoroplethLegendItems(
+      editPageState,
+      editPageState.map.legend.choroplethLegend.hue
+    );
   }, []);
 
   const fetchMap = async () => {
@@ -69,6 +74,17 @@ export function EditContextProvider(props: EditContextProviderProps) {
       console.log(`fetching map for id: ${mapId}`);
       const res = await getMap({ id: mapId as string });
       const newMap = res;
+
+      // Append choropleth legend items to the newly created map
+      const newItems = AppendChoroplethLegendItems(
+        editPageState,
+        newMap.legend.choroplethLegend.hue
+      );
+      newMap.legend.choroplethLegend = {
+        ...editPageState.map.legend.choroplethLegend,
+        items: newItems,
+      };
+
       console.log("newMap", newMap);
       dispatch({
         type: "init_map",
@@ -86,6 +102,57 @@ export function EditContextProvider(props: EditContextProviderProps) {
       </EditDispatchContext.Provider>
     </EditContext.Provider>
   );
+}
+
+// Function that arbitrarily appends 5 new items to choropleth legend based on the max value. If the max value is less than five, it will append the max value number of items.
+export function AppendChoroplethLegendItems(
+  editPageState: EditPageState,
+  newHue: string,
+  updatedMin?: number,
+  updatedMax?: number
+) {
+  let minVal: number;
+  let maxVal: number;
+  updatedMin
+    ? (minVal = updatedMin)
+    : (minVal = editPageState.map.legend.choroplethLegend.min);
+  updatedMax
+    ? (maxVal = updatedMax)
+    : (maxVal = editPageState.map.legend.choroplethLegend.max);
+  const newItems = new Map<string, number>();
+  let value = 0;
+  let color = chroma(newHue).brighten(value).hex();
+
+  // set the first item to the max value
+  newItems.set(color, maxVal);
+
+  if (maxVal >= 5) {
+    // set the middle items if max is greater or equal to 5
+    for (let i = 1; i < 4; i++) {
+      value += 0.5;
+      color = chroma(newHue).brighten(value).hex();
+      newItems.set(color, maxVal - i);
+    }
+  } else {
+    // set the middle items if max is less than 5
+    for (let i = 1; i < maxVal; i++) {
+      value += 0.5;
+      color = chroma(newHue).brighten(value).hex();
+      newItems.set(color, maxVal - i);
+    }
+  }
+
+  // set the last item to the min value
+  value += 0.5;
+  color = chroma(newHue).brighten(value).hex();
+  newItems.set(color, minVal);
+
+  const newItemsObject = Array.from(newItems).reduce((obj, [key, value]) => {
+    obj[key] = value;
+    return obj;
+  }, {} as { [key: string]: number });
+
+  return newItemsObject;
 }
 
 // TODO: change any action
@@ -194,11 +261,22 @@ function editReducer(state: EditPageState, action: any): EditPageState {
       const minMaxValues = findChoroplethLegendMinMax(state);
       // Get the old choropleth legend and update it with a new legend that includes the new min and max values
       const oldChoroplethLegend = state.map.legend.choroplethLegend;
-      const updatedChoroplethLegend = {
+      let updatedChoroplethLegend = {
         ...oldChoroplethLegend,
         min: minMaxValues.minValue,
         max: minMaxValues.maxValue,
         hue: action.map.legend.choroplethLegend.hue,
+      };
+
+      const choroplethItems = AppendChoroplethLegendItems(
+        state,
+        updatedChoroplethLegend.hue,
+        minMaxValues.minValue,
+        minMaxValues.maxValue
+      );
+      updatedChoroplethLegend = {
+        ...updatedChoroplethLegend,
+        items: choroplethItems,
       };
 
       console.log("updated state: ", {
@@ -209,7 +287,7 @@ function editReducer(state: EditPageState, action: any): EditPageState {
           legend: {
             ...state.map.legend,
             choroplethLegend: updatedChoroplethLegend,
-          }
+          },
         },
         selectedRegion: updatedSelectedRegionInfo,
       });
@@ -222,7 +300,7 @@ function editReducer(state: EditPageState, action: any): EditPageState {
           legend: {
             ...state.map.legend,
             choroplethLegend: updatedChoroplethLegend,
-          }
+          },
         },
         selectedRegion: updatedSelectedRegionInfo,
       };
@@ -243,13 +321,28 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         },
       };
     case "update_choropleth_legend":
+      const oldChoroplethLegend2 = state.map.legend.choroplethLegend;
+      let updatedChoroplethLegend2 = {
+        ...oldChoroplethLegend2,
+        hue: action.map.legend.choroplethLegend.hue,
+      };
+
+      const choroplethItems2 = AppendChoroplethLegendItems(
+        state,
+        updatedChoroplethLegend2.hue
+      );
+      updatedChoroplethLegend2 = {
+        ...updatedChoroplethLegend2,
+        items: choroplethItems2,
+      };
+
       return {
         ...state,
         map: {
           ...state.map,
           legend: {
             ...state.map.legend,
-            choroplethLegend: action.map.legend.choroplethLegend,
+            choroplethLegend: updatedChoroplethLegend2,
           },
         },
       };
@@ -257,11 +350,11 @@ function editReducer(state: EditPageState, action: any): EditPageState {
   return state;
 }
 
-// Find the min and max values for the choropleth legend
+/* Function that finds the min and max values for the choropleth legend */
 function findChoroplethLegendMinMax(state: EditPageState) {
   let minValue = Number.MAX_SAFE_INTEGER;
   let maxValue = Number.MIN_SAFE_INTEGER;
-  // let numericLabelMap = new Map<number | string, number>();
+  // let numericLabelMap = new JemsMap<number | string, number>();
   const regions = state.map.regions;
   const filename = Object.keys(regions);
 
@@ -285,7 +378,7 @@ function findChoroplethLegendMinMax(state: EditPageState) {
   console.log(minValue);
   console.log(maxValue);
 
-  return({minValue, maxValue});
+  return { minValue, maxValue };
 }
 
 export function useEditContext() {

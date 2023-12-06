@@ -62,8 +62,8 @@ const legendSchema = new Schema<Legend>({
   colorLegend: { type: Map, of: String, required: true },
   choroplethLegend: {
     hue: { type: String, required: true },
-    min: { type: Number, required: true },
-    max: { type: Number, required: true },
+    min: { type: Number },
+    max: { type: Number },
     items: { type: Map, of: Number },
   },
 });

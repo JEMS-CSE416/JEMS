@@ -27748,7 +27748,12 @@
         },
         "legend": {
             "colorLegend": {},
-            "choroplethLegend": {},
+            "choroplethLegend": {
+                "hue": "#8eb8fa",
+                "min": 1,
+                "max": 10,
+                "items": {}
+            },
             "_id": "656587dfcaec749a198be643"
         },
         "__v": 0
