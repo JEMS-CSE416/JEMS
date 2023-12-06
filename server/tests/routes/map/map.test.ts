@@ -1,8 +1,7 @@
 import request from "supertest";
 import app from "../../../app";
-import {mapjson} from "../../fakeCreateMaps/map";
-import {mapjson_invalid} from "../../fakeCreateMaps/map_invalid";
-
+import { mapjson } from "../../fakeCreateMaps/map";
+import { mapjson_invalid } from "../../fakeCreateMaps/map_invalid";
 
 beforeAll(async () => {
   // populate the database with fake data
@@ -108,12 +107,32 @@ describe("testing MAPS routes", () => {
 
   // TODO Test Update Map
   describe("PUT /api/maps/update/", () => {
-    describe("when user is authenticated", () => {});
+    describe("when user is authenticated", () => {
+      test("with valid JSON map data, it should successfully update a map and return 201", async () => {
+        const loginResponse = await login();
+
+        const updatedMapJSON = { ...mapjson };
+        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION"
+
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .put(`/api/maps/update/?${id}`)
+          .send(updatedMapJSON)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(201);
+
+         // grab that same map again and check if the description is updated
+          const response2 = await request(app)
+            .get(`/api/maps/${id}`)
+            .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+            .expect(200);
+            
+          expect(response2.body.description).toEqual("UPDATED DESCRIPTION");
+      });
+    });
 
     describe("when user is not authenticated", () => {
-      it("should return status code 401", async () => {
-        // Test logic for an unauthenticated user
-      });
+      it("should return status code 401", async () => {});
     });
   });
 
