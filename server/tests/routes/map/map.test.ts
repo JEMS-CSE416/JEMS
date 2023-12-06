@@ -41,7 +41,6 @@ describe("testing the api/map route", () => {
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(200);
 
-        console.log(response.body);
         expect(response.body[0]).toHaveProperty("creatorId");
         expect(response.body[0]).toHaveProperty("mapName");
         expect(response.body[0]).toHaveProperty("description");
@@ -54,7 +53,8 @@ describe("testing the api/map route", () => {
           .post("/api/auth/login/")
           .send({ email: "test@test.test", password: "123" })
           .expect(200);
-          
+
+        // Attempt to get a private map that does not belong to you
         const response = await request(app)
           .get("/api/maps/")
           .query({
