@@ -126,6 +126,7 @@ function getRegionStyle(
   region: Feature<Geometry, any>,
   editPageState: EditPageState
 ) {
+
   // Initialize the style object with common properties
   let style: { [key: string]: any } = {
     fillColor: region.properties.color,
@@ -133,7 +134,6 @@ function getRegionStyle(
   };
 
   const whichMap = editPageState.map.colorType;
-  console.log(whichMap);
   const isSelected =
     region.properties.i === editPageState.selectedRegion?.i &&
     region.properties.groupName === editPageState.selectedRegion?.groupName;
@@ -144,7 +144,13 @@ function getRegionStyle(
     style = { ...style, ...UNSELECTED_STYLE, color: "#6996db" };
   }
 
-  if (whichMap !== TemplateTypes.COLOR) {
+  if (whichMap == TemplateTypes.CHOROPLETH) {
+    style = {
+      ...style,
+      fillColor: getChoroplethStyle(region, editPageState),
+      fillOpacity: 0.9,
+    };
+  } else if (whichMap !== TemplateTypes.COLOR) {
     style = {
       ...style,
       fillColor: "#8eb8fa",
@@ -153,6 +159,31 @@ function getRegionStyle(
   }
 
   return style;
+}
+
+// function that defines the color of each region based off its numeric value and choropleth items
+function getChoroplethStyle(
+  region: Feature<Geometry, any>,
+  editPageState: EditPageState
+) {
+  const items = Object.entries(
+    editPageState.map.legend.choroplethLegend?.items || {}
+  );
+  const value = region.properties.numericLabel;
+
+  if (editPageState.map.legend.choroplethLegend.max >= 5) {
+    return value >= items[0][1]
+      ? items[0][0]
+      : value > items[1][1]
+      ? items[1][0]
+      : value > items[2][1]
+      ? items[2][0]
+      : value > items[3][1]
+      ? items[3][0]
+      : items[4][0];
+  }
+  else { // handle cases where there are less than 5 items in the legend (i.e. 4,3,2, or 1)
+  }
 }
 
 function labelHTML(
@@ -167,7 +198,9 @@ function labelHTML(
   let contents = `
   <div style="pointer-events: none;">
     <p style="margin: 0;">${displayStrings ? StringsLabel : ""}</p>
-    <p style="margin: 0;">${displayNumerics ? NumericsLabel + ` ${UnitsLabel}`: ""}</p>
+    <p style="margin: 0;">${
+      displayNumerics ? NumericsLabel + ` ${UnitsLabel}` : ""
+    }</p>
   </div>
 `;
 
@@ -179,6 +212,5 @@ function initStyleFunction(
   editPageState: EditPageState
 ) {
   if (!region) return {};
-
   return getRegionStyle(region, editPageState);
 }

@@ -75,13 +75,16 @@ export function EditContextProvider(props: EditContextProviderProps) {
       const res = await getMap({ id: mapId as string });
       const newMap = res;
 
-      // Append choropleth legend items to the newly created map
+      // Append min/max and choropleth legend items to the newly created map
+      const minMaxValues = findChoroplethLegendMinMax(editPageState, newMap);
       const newItems = AppendChoroplethLegendItems(
         editPageState,
         newMap.legend.choroplethLegend.hue
       );
       newMap.legend.choroplethLegend = {
         ...editPageState.map.legend.choroplethLegend,
+        min: minMaxValues.minValue,
+        max: minMaxValues.maxValue,
         items: newItems,
       };
 
@@ -351,11 +354,17 @@ function editReducer(state: EditPageState, action: any): EditPageState {
 }
 
 /* Function that finds the min and max values for the choropleth legend */
-function findChoroplethLegendMinMax(state: EditPageState) {
+function findChoroplethLegendMinMax(state: EditPageState, newMap?: JemsMap) {
   let minValue = Number.MAX_SAFE_INTEGER;
   let maxValue = Number.MIN_SAFE_INTEGER;
   // let numericLabelMap = new JemsMap<number | string, number>();
-  const regions = state.map.regions;
+  let regions;
+  if(newMap) { // If newMap is defined, means we are initializing/reopening the map. Should not be using the states because it will be unready.
+    regions = newMap.regions;
+  }
+  else { // If newMap is undefined, means we are updating the map. Should be using the states.
+    regions = state.map.regions;
+  }
   const filename = Object.keys(regions);
 
   // Iterate through each region filename and find the min and max values
