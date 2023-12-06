@@ -26,28 +26,24 @@ describe("testing the api/map route", () => {
   describe("GET /api/map/query/", () => {
     describe("when user is authenticated", () => {
       test("getting private maps, it should return status code 200", async () => {
-        // /*
-        //   const map_name: string = req.query.map_name?.toString();
-        //   const map_private: string = req.query.private?.toString();
-        //   const owned: string = req.query.owned?.toString();
-        //   const creator_id: string = req.session.user.id
-        // */
-        // // First, log in to create a session
-        // let agent = request.agent(app);
-        // await agent
-        //   .post("/api/auth/login/")
-        //   .send({ username: "test@test.test", password: "123" })
-        //   .expect(200);
+        // First, log in to create a session
+        const loginResponse = await request(app)
+          .post("/api/auth/login/")
+          .send({ email: "test@test.test", password: "123" })
+          .expect(200);
 
-        // const response = await request(app)
-        //   .get("/api/maps/")
-        //   .query({ private: true })
-        //   .expect(200);
+        // Then, get private maps
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({ private: true })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
 
-        // expect(response.body[0]).toHaveProperty("creatorId");
-        // expect(response.body[0]).toHaveProperty("mapName");
-        // expect(response.body[0]).toHaveProperty("description");
-        // expect(response.body[0]).toHaveProperty("public");
+        console.log(response.body);
+        expect(response.body[0]).toHaveProperty("creatorId");
+        expect(response.body[0]).toHaveProperty("mapName");
+        expect(response.body[0]).toHaveProperty("description");
+        expect(response.body[0]).toHaveProperty("public");
       });
 
       test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
@@ -59,7 +55,6 @@ describe("testing the api/map route", () => {
         //     session_token: "6119dbef8b0915f12c818a37",
         //   })
         //   .expect(200);
-
         // expect(response.body).toEqual([]);
       });
 
@@ -70,7 +65,6 @@ describe("testing the api/map route", () => {
         //     creator_id: "6119dbef8b0915f12c818a3a",
         //   })
         //   .expect(200);
-
         // expect(response.body.length).toEqual(0);
       });
     });
@@ -108,7 +102,6 @@ describe("testing the api/map route", () => {
     describe("when user is authenticated", () => {
       test("given map file details, it should return status code 201", async () => {
         // const map_2 = map_content_files[1];
-
         // const response = await request(app)
         //   .put("/api/maps/")
         //   .send(map_2)
@@ -163,18 +156,15 @@ describe("testing the api/map route", () => {
         //     session_token: "6119dbef8b0915f12c818a37",
         //   })
         //   .expect(200);
-
         // expect(response.body[0]).toHaveProperty("creatorId");
         // expect(response.body[0]).toHaveProperty("mapName");
         // expect(response.body[0]).toHaveProperty("description");
         // expect(response.body[0]).toHaveProperty("public");
-
         // const mapID = response.body[0]._id;
         // const map_name = "Copy Of" + response.body[0].mapName;
         // const description = "Copy Of" + response.body[0].description;
         // const isPublic = "false";
         // const token = "6119dbef8b0915f12c818a37";
-
         // response = await request(app)
         //   .post("/api/maps/duplicate/")
         //   .set("Authorization", "Bearer " + token)
@@ -185,12 +175,10 @@ describe("testing the api/map route", () => {
         //     public: isPublic,
         //   })
         //   .expect(201);
-
         // expect(response.body).toHaveProperty("creatorId");
         // expect(response.body).toHaveProperty("mapName");
         // expect(response.body).toHaveProperty("description");
         // expect(response.body).toHaveProperty("public");
-
         // // check response.body.creatorId == token
         // expect(response.body.creatorId).toEqual(token);
         // // check response.body.mapName == map_name
@@ -224,13 +212,9 @@ describe("testing the api/map route", () => {
         //     session_token: "6119dbef8b0915f12c818a3a",
         //   })
         //   .expect(200);
-
         // expect(response.body[0]).toHaveProperty("_id");
-
         // const mapID = response.body[0]._id;
-
         // const token = "6119dbef8b0915f12c818a3a"; // TODO: the token will be the userID for now
-
         // response = await request(app)
         //   .delete(`/api/maps/${mapID}`)
         //   .set("Authorization", "Bearer " + token)

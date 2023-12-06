@@ -5,6 +5,8 @@ on: [push]
 jobs:
   TestBackend:
     runs-on: ubuntu-latest
+    environment:
+        name: test
     defaults: 
       run:
         working-directory: ./server/
