@@ -107,7 +107,7 @@ describe("testing MAPS routes", () => {
     });
   });
 
-  // Test Update Map
+  // TODO Test Update Map
   describe("PUT /api/maps/update/", () => {
     describe("when user is authenticated", () => {});
 
@@ -190,7 +190,7 @@ describe("testing MAPS routes", () => {
     });
   });
 
-  // Test Creating Map
+  // TODO: Test Creating Map 
   describe("PUT /api/maps/", () => {
     describe("when user is authenticated", () => {});
 
@@ -205,39 +205,42 @@ describe("testing MAPS routes", () => {
   describe("DELETE /api/maps/:id", () => {
     describe("when user is authenticated", () => {
       test("with a valid map ID, it should successfully delete the map and return status code 204: No content", async () => {
-        // let response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({
-        //     map_name: "Sample Map 4",
-        //     creator_id: "6119dbef8b0915f12c818a3a",
-        //     session_token: "6119dbef8b0915f12c818a3a",
-        //   })
-        //   .expect(200);
-        // expect(response.body[0]).toHaveProperty("_id");
-        // const mapID = response.body[0]._id;
-        // const token = "6119dbef8b0915f12c818a3a"; // TODO: the token will be the userID for now
-        // response = await request(app)
-        //   .delete(`/api/maps/${mapID}`)
-        //   .set("Authorization", "Bearer " + token)
-        //   .expect(204);
+        const loginResponse = await login();
+
+        const id = "6570ae07e245dce73cc1acbe";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(204);
       });
 
       test("with an invalid map ID, it should return a specific error and return status code 404: Not Found", async () => {
-        // Test logic for deleting a map with an invalid ID
+        const loginResponse = await login();
+
+        const id = "6570ae07e242dce73cc1acde"; // an invalid non existing map id
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(404);
       });
 
       test("with a valid map ID that does not belong to the user, it should return a specific error and return status code 401: Unauthorized", async () => {
-        // Test logic for deleting a map with a valid ID that does not belong to the user
+        const loginResponse = await login();
+
+        const id = "656ff2283e72ed7d266574cb";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(401);
       });
     });
 
     describe("when user is not authenticated", () => {
-      test("when the user provides no auth token, it should return status code 401: Unauthorized", async () => {
-        // Test logic for an unauthenticated user
-      });
-
-      test("when the user provides an invalid auth token, it should return status code 401: Unauthorized", async () => {
-        // Test logic for an unauthenticated user
+      it("it should return status code 401: Unauthorized", async () => {
+        const id = "656ff2283e72ed7d266574cb";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .expect(401);
       });
     });
   });
