@@ -5,7 +5,7 @@ import map_content_files from "../../fakeCreateMaps/maps.json";
 // https://stackoverflow.com/questions/69794934/set-an-authentication-token-in-a-request-header-when-using-supertest-with-jest-a
 // for auth
 
-beforeEach(async () => {
+beforeAll(async () => {
   // populate the database with fake data
   const Fixtures = require("node-mongodb-fixtures");
   const fixtures = new Fixtures({
