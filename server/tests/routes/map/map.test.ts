@@ -10,9 +10,11 @@ beforeEach(async () => {
   const Fixtures = require("node-mongodb-fixtures");
   const fixtures = new Fixtures({
     dir: "tests/fakeDB",
-    filter: "maps.*",
+    filter: "admin.maps.json",
     mute: true,
   });
+
+  
 
   await fixtures
     .connect("mongodb://localhost:27017")
