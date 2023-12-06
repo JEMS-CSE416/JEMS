@@ -16,6 +16,12 @@ export function onDragEndLabel(
     const latLng = marker.getLatLng()
     setEditPageState({
       type: "update_selected_region_info",
+      map:{
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend
+        }
+      },
       selectedRegion: {
         ...editPageState.selectedRegion!,
         region: {
