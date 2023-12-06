@@ -105,7 +105,7 @@ describe("testing MAPS routes", () => {
     });
   });
 
-  // TODO Test Update Map
+  // Test Update Map
   describe("PUT /api/maps/update/", () => {
     describe("when user is authenticated", () => {
       test("with valid JSON map data, it should successfully update a map and return 201", async () => {
@@ -137,7 +137,7 @@ describe("testing MAPS routes", () => {
     });
   });
 
-  // Tests Duplicating Map
+  // Test Duplicating Map
   describe("POST /api/maps/duplicate", () => {
     describe("when user is authenticated", () => {
       test("with a valid public map ID, it should successfully duplicate the map and return 201", async () => {
@@ -209,7 +209,7 @@ describe("testing MAPS routes", () => {
     });
   });
 
-  // Tests Creating Map
+  // Test Creating Map
   describe("PUT /api/maps/", () => {
     describe("when user is authenticated", () => {
       test("with valid JSON map data, it should successfully create a map and return 201", async () => {
