@@ -5,15 +5,15 @@ import { formatDistanceToNow } from "date-fns";
 import { IconDots } from "@tabler/icons-react";
 import { Map } from "../../utils/models/Map";
 import { useNavigate } from "react-router-dom";
+import { downloadAsJEMS } from "../../utils/jemsExport";
 
 type MapCardProps = {
   name?: string;
   description?: string;
   isPrivate?: boolean;
-  id?: string;
-  map?: Map;
+  id: string;
+  map: Map;
   duplicateAction?: () => void;
-  downloadAs?: (format: "PNG" | "JPEG" | "JEMS") => void;
 };
 
 const MapCard: React.FC<MapCardProps> = ({
@@ -23,7 +23,6 @@ const MapCard: React.FC<MapCardProps> = ({
   id,
   map,
   duplicateAction,
-  downloadAs,
 }) => {
   const navigate = useNavigate();
 
@@ -33,6 +32,16 @@ const MapCard: React.FC<MapCardProps> = ({
     const date = new Date(dateString);
     const formattedDate = formatDistanceToNow(date, { addSuffix: true });
     return `Created ${formattedDate}`;
+  }
+
+
+  const handleDownloadAs = (format: "PNG" | "JPEG" | "JEMS") => {
+    console.log("Download as:", format);
+      if(format === "JEMS"){
+        downloadAsJEMS(map!);
+      } else {
+        // downloadAsImage(format);
+      }
   }
 
   return (
@@ -104,7 +113,7 @@ const MapCard: React.FC<MapCardProps> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  downloadAs?.("PNG");
+                  handleDownloadAs("PNG");
                 }}
               >
                 Download as PNG
@@ -113,7 +122,6 @@ const MapCard: React.FC<MapCardProps> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  downloadAs?.("JPEG");
                 }}
               >
                 Download as JPG
@@ -122,7 +130,7 @@ const MapCard: React.FC<MapCardProps> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  downloadAs?.("JEMS");
+                  handleDownloadAs("JEMS");
                 }}
               >
                 Download as JEMS

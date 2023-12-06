@@ -32,6 +32,7 @@ const MapHeader = ({map}: MapHeaderProps) => {
     <>
       {/* Show download modal when needed */}
       <DownloadMapModal
+        map={map}
         opened={downloadModalOpened}
         onClose={setDownloadModal.close}
       />
