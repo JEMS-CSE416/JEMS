@@ -1,9 +1,7 @@
 import request from "supertest";
 import app from "../../../app";
-import jemsjson from "../../fakeCreateMaps/JEMS.json";
-
-// https://stackoverflow.com/questions/69794934/set-an-authentication-token-in-a-request-header-when-using-supertest-with-jest-a
-// for auth
+import mapjson from "../../fakeCreateMaps/map.json";
+import mapjson_invalid from "../../fakeCreateMaps/map_invalid.json";
 
 beforeAll(async () => {
   // populate the database with fake data
@@ -190,26 +188,28 @@ describe("testing MAPS routes", () => {
     });
   });
 
-  // TODO: Test Creating Map 
+  // Tests Creating Map
   describe("PUT /api/maps/", () => {
     describe("when user is authenticated", () => {
-      test("with valid JEMSJSON map data, it should successfully create a map and return 201", async () => {
+      test("with valid JSON map data, it should successfully create a map and return 201", async () => {
         const loginResponse = await login();
 
         const response = await request(app)
           .put(`/api/maps/`)
-          .send(jemsjson)
+          .send(mapjson)
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(201);
       });
 
-      // TODO: Test with invalid JEMSJSON map data
-      
-      // TODO: Test with valid GEOJSON map data
-      // TODO: Test with invalid GEOJSON map data
-      
-      // TODO: Test with valid KML map data
-      // TODO: Test with invalid KML map data
+      test("with invalid JSON map data, it should return a specific error and return 400", async () => {
+        const loginResponse = await login();
+
+        const response = await request(app)
+          .put(`/api/maps/`)
+          .send(mapjson_invalid)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(400);
+      });
     });
 
     describe("when user is not authenticated", () => {
