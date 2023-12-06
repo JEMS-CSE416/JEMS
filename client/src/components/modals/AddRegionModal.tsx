@@ -31,6 +31,7 @@ function AddRegionModalBase() {
 
   // This function adds new regions onto map.regions
   function regionUpdate(regionsToAdd: any, filename: string, jemsjson?: boolean) {
+    console.log("LOOKING AT SHP REGIONS", regionsToAdd)
     const existingRegions = editPageState.map.regions;
     let newRegions;
     // add new regions to existing regions

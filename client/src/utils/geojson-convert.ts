@@ -1,5 +1,5 @@
 import { read } from "shapefile";
-import { GeoJSON } from "geojson";
+import { FeatureCollection, GeoJSON } from "geojson";
 import * as toGeoJSON from '@tmcw/togeojson';
 import JSZip from "jszip";
 import { getFileType } from "./global_utils";
@@ -36,8 +36,9 @@ async function handleGeoJson(file: File): Promise<GeoJSON> {
   return JSON.parse(await file.text()); //if already a geojson, handle itself
 }
 
-async function handleShp(file: File): Promise<GeoJSON> {
-  return await read(await file.arrayBuffer()); // read is from the shapefile library
+export async function handleShp(file: File): Promise<GeoJSON> {
+  let geoJSON = await read(await file.arrayBuffer()); // read is from the shapefile library
+  return handleUntitledRegions(geoJSON);
 }
 
 export async function readFileContent(file: File): Promise<string> {
@@ -74,6 +75,7 @@ export async function handleKml(file: File): Promise<any> {
     // Parse the KML data to GeoJSON using togeojson.
     const geoJSON = toGeoJSON.kml(kmlData);
 
+    console.log("KML FILE:", geoJSON);
     // Return the GeoJSON object.
     return geoJSON;
   } catch (error) {
@@ -108,4 +110,22 @@ export async function handleZip(file: File): Promise<GeoJSON> {
     console.error('Error handling ZIP:', error);
     throw error;
   }
+}
+
+function handleUntitledRegions(geoJSON: GeoJSON){
+  let counter = 0;
+  if(geoJSON.type !== "FeatureCollection")
+    throw new Error("geojson after being converted is not a feature collection")
+  
+  geoJSON = geoJSON as FeatureCollection
+
+
+  for(let i = 0; i < geoJSON.features.length; i++){
+    if(!geoJSON.features[i].properties)
+      geoJSON.features[i].properties = {}
+    if(!geoJSON.features[i].properties?.name)
+      geoJSON.features[i].properties!.name = `undefined region ${counter++}`
+  }
+
+  return geoJSON
 }
