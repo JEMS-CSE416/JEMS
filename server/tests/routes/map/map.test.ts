@@ -25,7 +25,7 @@ beforeAll(async () => {
 
 // Test the map routes
 describe("testing the api/map route", () => {
-  describe("GET /api/map/query/", () => {
+  describe("GET /api/map/", () => {
     describe("when user is authenticated", () => {
       test("getting private maps, it should return status code 200", async () => {
         // First, log in to create a session
@@ -65,25 +65,15 @@ describe("testing the api/map route", () => {
           .expect(200);
         expect(response.body).toEqual([]);
       });
-
-      test("getting all maps created by a user", async () => {
-        // const response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({
-        //     creator_id: "6119dbef8b0915f12c818a3a",
-        //   })
-        //   .expect(200);
-        // expect(response.body.length).toEqual(0);
-      });
     });
 
     describe("when user is not authenticated", () => {
       it("should return status code 401", async () => {
-        // // Test logic for an unauthenticated user
-        // const response = await request(app)
-        //   .get("/api/maps/query/")
-        //   .query({ private: true })
-        //   .expect(401);
+        // Test logic for an unauthenticated user
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({ private: true })
+          .expect(401);
       });
     });
   });
