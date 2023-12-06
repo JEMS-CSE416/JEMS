@@ -1,4 +1,4 @@
-{
+export const mapjson = {
   "map_file_content": {
     "mapName": "Private Map",
     "description": "DO NOT DELETE",
