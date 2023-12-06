@@ -26,11 +26,12 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { useEffect, useState } from "react";
 import { set } from "cypress/types/lodash";
+import { AppendChoroplethLegendItems } from "../../context/EditContextProvider";
 
 export default function Properties() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
-
+  console.log(editPageState);
   const [groupNameState, setGroupNameState] = useState(
     editPageState.selectedRegion?.groupName
   );
@@ -52,6 +53,9 @@ export default function Properties() {
   const [colorState, setColorState] = useState(
     editPageState.selectedRegion?.region.color
   );
+
+  const [hueState, setHueState] = useState(editPageState.map.legend.choroplethLegend.hue);
+
   const [ChoroplethColorRange, setChoroplethColorRange] = useState<{
     min: { value: string; color: string };
     max: { value: string; color: string };
@@ -69,11 +73,37 @@ export default function Properties() {
     );
     setUnitsState(editPageState.selectedRegion?.region.numericUnit ?? "");
     setColorState(editPageState.selectedRegion?.region.color);
-  }, [editPageState.selectedRegion]);
+    setHueState(editPageState.map.legend.choroplethLegend.hue);
+    if (
+      editPageState.map.legend.choroplethLegend.min &&
+      editPageState.map.legend.choroplethLegend.max
+    ) {
+      setChoroplethColorRange({
+        min: {
+          value: editPageState.map.legend.choroplethLegend.min.toString(),
+          color: ChoroplethColorRange.min.color,
+        },
+        max: {
+          value: editPageState.map.legend.choroplethLegend.max.toString(),
+          color: ChoroplethColorRange.max.color,
+        },
+      });
+    }
+  }, [editPageState]);
 
   const handleRegionPropertyEditing = () => {
     setEditPageState({
       type: "update_selected_region_info",
+      map: {
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend,
+          choroplethLegend: {
+            ...editPageState.map.legend.choroplethLegend,
+            hue: hueState,
+          },
+        },
+      },
       selectedRegion: {
         ...editPageState.selectedRegion!,
         region: {
@@ -93,6 +123,27 @@ export default function Properties() {
             : groupNameState!,
       },
     });
+
+    console.log(editPageState);
+  };
+
+  // Function that updates state for Map Properties
+  const handleMapPropertyEditing = () => {
+    setEditPageState({
+      type: "update_choropleth_legend",
+      map: {
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend,
+          choroplethLegend: {
+            ...editPageState.map.legend.choroplethLegend,
+            hue: hueState,
+          },
+        },
+      },
+    });
+
+    console.log(editPageState);
   };
 
   return (
@@ -190,61 +241,21 @@ export default function Properties() {
 
           {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
             <>
-              <Group>
-                <ColorInput
-                  label="Max"
-                  placeholder="#000000"
-                  value={ChoroplethColorRange.max.color}
-                  withPicker={true}
-                  format="rgba"
-                  onChange={(value: string) => {
-                    setChoroplethColorRange((prevState) => ({
-                      ...prevState,
-                      max: { ...prevState.max, color: value },
-                    }));
-                  }}
-                />
-                <NumberInput
-                  value={ChoroplethColorRange.max.value}
-                  placeholder="Max Value"
-                  hideControls
-                  w="45%"
-                  onChange={(value: string | number) => {
-                    setChoroplethColorRange((prevState) => ({
-                      ...prevState,
-                      max: { ...prevState.max, value: value.toString() },
-                    }));
-                  }}
-                />
-              </Group>
-
-              <Group>
-                <ColorInput
-                  label="Min"
-                  placeholder="#000000"
-                  value={ChoroplethColorRange.min.color}
-                  withPicker={true}
-                  onChange={(value: string) => {
-                    setChoroplethColorRange((prevState) => ({
-                      ...prevState,
-                      min: { ...prevState.min, color: value },
-                    }));
-                  }}
-                />
-                <NumberInput
-                  value={ChoroplethColorRange.min.value}
-                  onChange={(value: string | number) => {
-                    setChoroplethColorRange((prevState) => ({
-                      ...prevState,
-                      max: { ...prevState.min, value: value.toString() },
-                    }));
-                  }}
-                  placeholder="Min Value"
-                  hideControls
-                  w="45%"
-                />
-              </Group>
+              <ColorInput
+                label="Hue"
+                placeholder="#000000"
+                value={hueState}
+                onChange={setHueState}
+              />
             </>
+          )}
+
+          {!editPageState.selectedRegion ? (
+            <Button onClick={handleMapPropertyEditing} radius="xl">
+              Done
+            </Button>
+          ) : (
+            <></>
           )}
         </Stack>
 

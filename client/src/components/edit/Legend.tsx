@@ -17,7 +17,48 @@ import {
 } from "../../context/EditContextProvider";
 import { TemplateTypes } from "../../utils/enums";
 import { Map, Region, Legend as legend } from "../../utils/models/Map";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import LegendItems from "./LegendItems";
+
+export default function Legend() {
+  const editPageState = useEditContext();
+  const setEditPageState = useEditDispatchContext();
+
+  useEffect(() => {
+    ChoroplethLegend({ editPageState: editPageState });
+  }, [editPageState]);
+
+  return (
+    <Box>
+      {editPageState.map.displayLegend && (
+        <Paper
+          shadow="xl"
+          withBorder
+          p="lg"
+          pos="absolute"
+          right={15}
+          bottom={15}
+          style={{ zIndex: 1000000 }}
+          radius="l"
+        >
+          <Title order={3} style={{ textAlign: "left" }}>
+            {" "}
+            Legend
+          </Title>
+
+          <Stack pl={10} gap="xs" p="sm">
+            {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
+              <ChoroplethLegend editPageState={editPageState} />
+            )}
+            {editPageState.map.colorType === TemplateTypes.COLOR && (
+              <ColorLegend />
+            )}
+          </Stack>
+        </Paper>
+      )}
+    </Box>
+  );
+}
 
 export function ColorLegend() {
   const editPageState = useEditContext();
@@ -29,7 +70,6 @@ export function ColorLegend() {
   // TODO: update state every change is computationally intensive
   const handleLabelChange = (color: string, newLabel: string) => {
     // setLegend((prevLegend) => ({ ...prevLegend, [color]: newLabel }));
-
 
     setEditPageState({
       type: "update_color_legend",
@@ -72,86 +112,30 @@ export function ColorLegend() {
   );
 }
 
-export function ChoroplethLegend() {
-  const gradientId = "gradient";
-  const maxColor = "blue";
-  const minColor = "green";
-
-  return (
-    <Paper>
-      <Group justify="center">
-        <span>Max:</span>
-        <NumberInput
-          hideControls
-          style={{ width: "20%" }}
-          size="sm"
-          variant="unstyled"
-          placeholder="1000"
-        />
-      </Group>
-      <svg width="50" height="100%">
-        <defs>
-          <linearGradient id={gradientId} x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" style={{ stopColor: maxColor }} />
-            <stop offset="100%" style={{ stopColor: minColor }} />
-          </linearGradient>
-        </defs>
-        <rect
-          x="0"
-          y="0"
-          width="100%"
-          height="100%"
-          fill={`url(#${gradientId})`}
-        />
-      </svg>
-      <Group justify="center">
-        <span>Min:</span>
-        <NumberInput
-          hideControls
-          style={{ width: "20%" }}
-          size="sm"
-          variant="unstyled"
-          placeholder="0"
-        />
-      </Group>
-    </Paper>
+export function ChoroplethLegend({
+  editPageState,
+}: {
+  editPageState: EditPageState;
+}) {
+  const items = Object.entries(
+    editPageState.map.legend.choroplethLegend?.items || {}
   );
-}
-
-export default function Legend() {
-  const editPageState = useEditContext();
-  const setEditPageState = useEditDispatchContext();
 
   return (
-    <Box>
-      {editPageState.map.displayLegend && (
-        <Paper
-          shadow="xl"
-          withBorder
-          p="lg"
-          pos="absolute"
-          right={15}
-          bottom={15}
-          style={{ zIndex: 1000000 }}
-          radius="l"
-        >
-          <Title order={3} style={{ textAlign: "left" }}>
-            {" "}
-            Legend
-          </Title>
-
-          <Stack pl={10} gap="xs" p="sm">
-            {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
-              <ChoroplethLegend />
-            )}
-            {editPageState.map.colorType === TemplateTypes.COLOR && (
-            <>
-              <ColorLegend />
-              </>
-            )}
-          </Stack>
-        </Paper>
-      )}
-    </Box>
+    <div>
+      <ScrollArea style={{ maxHeight: 200, overflowY: "auto" }}>
+        {items.map(([color, value], index) => (
+          <Group>
+            <ColorSwatch color={color} mr={20} radius={"5px"} />
+            <NumberInput
+              variant="unstyled"
+              placeholder={value.toString()}
+              rightSectionWidth={"0px"}
+              hideControls
+            />
+          </Group>
+        ))}
+      </ScrollArea>
+    </div>
   );
 }

@@ -29,6 +29,7 @@ import { IconX } from "@tabler/icons-react";
 import stringTemplate from "../../utils/templates/stringTemplate.json";
 import colorTemplate from "../../utils/templates/colorTemplate.json";
 import numericTemplate from "../../utils/templates/numericTemplate.json";
+import choroplethTemplate from "../../utils/templates/choroplethTemplate.json";
 import pointerTemplate from "../../utils/templates/pointerTemplate.json";
 import { error } from "console";
 
@@ -44,7 +45,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 }) => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
-  const [selectedValue, setSelectedValue] = useState<string|null>();
+  const [selectedValue, setSelectedValue] = useState<string | null>();
 
   // This function handles the file drop & sets the file state
   const handleFilesDrop = (droppedFile: File) => {
@@ -164,7 +165,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         public: form.values.visibility === "Public" ? true : false,
         template: content.template,
         colorType: getColorType(),
-        displayStrings: selectedValue == "String Label Map" ? true : content.displayStrings,
+        displayStrings:
+          selectedValue == "String Label Map" ? true : content.displayStrings,
         displayNumerics: content.displayNumerics,
         displayLegend: content.displayLegend,
         displayPointers: content.displayPointers,
@@ -203,7 +205,12 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
           },
           legend: {
             colorLegend: {},
-            choroplethLegend: {},
+            choroplethLegend: {
+              hue: "#8eb8fa",
+              min: Number.MAX_SAFE_INTEGER,
+              max: Number.MIN_SAFE_INTEGER,
+              items: {},
+            },
           },
         },
       };
@@ -269,8 +276,8 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         }
         req = getGeoJsonRequest(geojson);
       }
-    } 
-    else if (selectedValue) { // If file does not exist, check if a template was selected
+    } else if (selectedValue) {
+      // If file does not exist, check if a template was selected
       switch (selectedValue) {
         case "String Label Map":
           req = getJemsRequest(stringTemplate);
@@ -286,11 +293,14 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
           break;
         // TODO: TO BE IMPLEMENTED
         case "Choropleth Map":
+          req = getJemsRequest(choroplethTemplate);
+          break;
+        case "Pointer Label":
         default:
           console.log(selectedValue + " currently not supported");
           break;
-      } 
-    }else {
+      }
+    } else {
       // create an empty map
       req = getEmptyMap();
     }
@@ -432,9 +442,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   style={{ width: "90%" }}
                   {...form.getInputProps("template")}
                   value={selectedValue}
-                  onChange={(selectedValue) =>
-                    setSelectedValue(selectedValue)
-                  }
+                  onChange={(selectedValue) => setSelectedValue(selectedValue)}
                 />
               </Grid.Col>
             </Grid>
