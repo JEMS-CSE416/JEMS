@@ -23,7 +23,14 @@ export const getComments = async (req: Request, res: Response) => {
     const mapModel = await getMapModel();
 
     /* Get the user ID from the token (this is the user that is logged in) */
-    const creator_id = req.session.user.id;
+    const creator = req.session.user
+    
+    if(!creator){
+        return res.status(401).send("Error 401: Unauthorized. Not logged in.");
+    }
+
+    const creator_id = creator.id;
+
 
     /* Check if the map exists */
     const map = await mapModel.findById(mapId);
@@ -67,7 +74,14 @@ export const createComment = async (req: Request, res: Response) => {
     const mapModel = await getMapModel();
 
     /* Get the user ID from the token (this is the user that is logged in) */
-    const creator_id = req.session.user.id;
+    const creator = req.session.user
+    
+    if(!creator){
+        return res.status(401).send("Error 401: Unauthorized. Not logged in.");
+    }
+
+    const creator_id = creator.id;
+
 
     /* Check if the map exists */
     const map = await mapModel.findById(mapId);
