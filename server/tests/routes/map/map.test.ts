@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../../app";
-const mapjson = require("../../fakeCreateMaps/map");
-const mapjson_invalid = require("../../fakeCreateMaps/map_invalid");
+import {mapjson} from "../../fakeCreateMaps/map";
+import {mapjson_invalid} from "../../fakeCreateMaps/map_invalid";
 
 
 beforeAll(async () => {
