@@ -63,44 +63,44 @@ function SettingsMapModalBase() {
       // Upload the image to the DO space
       const imageUrl = await uploadImage(file, filePath);
 
-      // Update the edit page state 
-      editPageState.map.mapName = form.values.mapName;
-      editPageState.map.description = form.values.description;
-      //update map visibility if changed
-      if(form.values.visibility){
-        editPageState.map.public = form.values.visibility === "Public" ? true : false;
-      }
       editPageState.map.thumbnail.imageUrl = imageUrl;
       editPageState.map.thumbnail.imageType = getFileType(imageUrl);
-
-      console.log(editPageState.map, "updated editPageState.map");
-      setEditPageState({ type: "update_map", map: editPageState.map });
-
-      try {
-        // Update the map in the database
-        const responseData = await updateMap({ map: editPageState.map });
-        console.log("Map updated successfully:", responseData);
-
-        // Show a notification
-        notifications.show({
-          icon: <IconCheck />,
-          title: 'Your map has been updated!',
-          message: 'Yay an updated map :D',
-        });
-      } catch (error) {
-        console.log(error);
-
-        // Show a notification
-        notifications.show({
-          icon: <IconX />,
-          title: 'Error updating map',
-          message: 'Please try again',
-        });
-      }
-
-      // Close the modal
-      setEditPageState({ type: "change_modal", modal: "NONE" })
     }
+    // Update the edit page state 
+    editPageState.map.mapName = form.values.mapName;
+    editPageState.map.description = form.values.description;
+    //update map visibility if changed
+    if (form.values.visibility) {
+      editPageState.map.public = form.values.visibility === "Public" ? true : false;
+    }
+
+    console.log(editPageState.map, "updated editPageState.map");
+    setEditPageState({ type: "update_map", map: editPageState.map });
+    
+    try {
+      // Update the map in the database
+      const responseData = await updateMap({ map: editPageState.map });
+      console.log("Map updated successfully:", responseData);
+
+      // Show a notification
+      notifications.show({
+        icon: <IconCheck />,
+        title: 'Your map has been updated!',
+        message: 'Yay an updated map :D',
+      });
+    } catch (error) {
+      console.log(error);
+
+      // Show a notification
+      notifications.show({
+        icon: <IconX />,
+        title: 'Error updating map',
+        message: 'Please try again',
+      });
+    }
+
+    // Close the modal
+    setEditPageState({ type: "change_modal", modal: "NONE" })
   };
 
   // This function is used to display the image preview after the user uploads an image
