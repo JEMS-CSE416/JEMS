@@ -157,13 +157,13 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
     const content = jemsjson.map_file_content;
     console.log(form.values.visibility);
     // legacy format
-    if(!content.legend.choroplethLegend?.hue)
+    if (!content.legend.choroplethLegend?.hue)
       content.legend.choroplethLegend = {
-              hue: "#8eb8fa",
-              min: Number.MAX_SAFE_INTEGER,
-              max: Number.MIN_SAFE_INTEGER,
-              items: {},
-            }
+        hue: "#8eb8fa",
+        min: Number.MAX_SAFE_INTEGER,
+        max: Number.MIN_SAFE_INTEGER,
+        items: {},
+      }
     // Create the request body
     const req = {
       map_file_content: {
@@ -317,6 +317,12 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 
   // Handle form submission and close the modal
   const handleFormSubmit = async () => {
+    // Check if either a file or a template is selected
+    if (!selectedValue && !file) {
+      // Show an error message
+      alert("Either a file or a template must be selected");
+      return;
+    }
     const req = await createRequest();
 
     // Create the map
@@ -359,6 +365,13 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         // Return `null` if it's valid, or an error message if it's invalid
         if (value.trim() === "") {
           return "Description is required";
+        }
+        return null;
+      },
+      visibility: (value) => {
+        // Return `null` if it's valid, or an error message if it's invalid
+        if (value.trim() === "") {
+          return "Visibility is required";
         }
         return null;
       },
@@ -428,6 +441,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
               </Grid.Col>
               <Grid.Col span={7}>
                 <FileDropZone
+                  disabled={selectedValue ? true : false}
                   fileUploadType="MAP_UPLOAD"
                   onFilesDrop={handleFilesDrop}
                 />
