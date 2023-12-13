@@ -127,8 +127,8 @@ const SplashScreen = (props?: {passReset?: boolean;}) => {
                         src={jemsLogo}
                         style={{ width: "90%" }}
                       />
-                      <h1>
-                        Premium Map Creation/Editing Software that’s really good!!!
+                      <h1 id="splash-screen-title">
+                        Premium Map Creation/Editing Software that’s really good!
                       </h1>
                       <Button id="splash-button" onClick={handleOpenLoginModal}>
                         Get Started
