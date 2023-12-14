@@ -120,7 +120,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
       });
     } catch (error: any) {
       console.error("Error fetching map:", error);
-      navigate('/', {state:{err401: true}})
+      navigate('/home/', {state:{err401: true}})
     }
   };
 

@@ -10,6 +10,9 @@ import { useDisclosure } from "@mantine/hooks";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
 import { useLoadingData } from "../hooks/useLoadingData";
 import NothingHere from "../common/NothingHere";
+import { notifications } from "@mantine/notifications";
+import { IconX } from "@tabler/icons-react";
+import { useEffect } from "react";
 
 const HomePage = () => {
   const location = useLocation();
@@ -22,6 +25,14 @@ const HomePage = () => {
     getMaps,
     [{ ownedMaps: true }]
   );
+  useEffect( () => {
+    if(location.state?.err401)
+      notifications.show({
+        icon: <IconX />,
+        title: 'Error 401! You aren\'t Authenicated!',
+        message: 'Not authenticated to see that map!',
+      });
+  }, []); // eslint-disable-line
 
   // Create a getMap function that takes in a mapId and returns the map object
   const getMap = async () => {
