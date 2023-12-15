@@ -35,11 +35,13 @@ const SelectedCardPage = ({}) => {
         } catch (error) {
           console.error(error);
         }
-      }
-    };
+      }     };
+
+    if(!map && !mapLoading)
+      navigate('/home/', {state:{err401: true}})
 
     fetchUser();
-  }, [map]);
+  }, [map, mapLoading, navigate]);
 
   if (!isLoggedIn) {
     navigate("/login");

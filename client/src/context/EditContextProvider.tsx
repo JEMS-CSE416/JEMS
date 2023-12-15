@@ -8,6 +8,7 @@ import { EditModalEnum } from "../utils/enums";
 import chroma from "chroma-js";
 import { Map as LeafletMap } from "leaflet";
 import * as L from "leaflet";
+import { useNavigate } from "react-router-dom";
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
@@ -80,6 +81,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
     undefined
   );
   const [leafletMapPrinter, setLeafletMapPrinter] = useState<any>(undefined);
+  const navigate = useNavigate();
 
   // initialize the map by pulling it from the backend
   useEffect(() => {
@@ -116,8 +118,9 @@ export function EditContextProvider(props: EditContextProviderProps) {
         type: "init_map",
         map: newMap,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching map:", error);
+      navigate('/home/', {state:{err401: true}})
     }
   };
 

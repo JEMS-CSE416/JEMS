@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 import { createContext } from "react";
 import { User } from "../utils/models/User";
 
+const LOCAL_STORE_KEY = "AUTH_USER"
+
 interface AuthState {
   user?: User
 }
@@ -29,11 +31,14 @@ export function useSetAuthContext() {
  */
 export function AuthContextProvider(props: {children: React.ReactNode}) {
   // auth state begins null
-  const [authState, setAuthState] = useState({});
+  const [authState, setAuthState] = useState(JSON.parse(window.localStorage.getItem(LOCAL_STORE_KEY)??"{}"));
 
   function setAuthStateWrapper(props: any){
     console.log("in wrpaper", props);
     setAuthState(props);
+    window.localStorage.setItem(LOCAL_STORE_KEY, JSON.stringify(props));
+    console.log("stored in local")
+    console.log(window.localStorage.getItem(LOCAL_STORE_KEY));
   }
 
   return (

@@ -64,6 +64,7 @@ export function logout(): Promise<string> {
     fetch(`${authUrl}/logout/`, { // First fetch sign up
       method: "get",
       headers: { "Content-Typpose": "application/json" },
+      credentials: "include"
     })
     .then( (res) => { // Then handle the http response
       if(res.ok)
