@@ -68,6 +68,8 @@ export default function DisplayLayer() {
     }
   }, [mapInstance, setLeafletMap]);
 
+  console.debug(map.getBounds().getCenter()) // returns LatLng for centering the map?
+
   return (
     <>
       <GeoJSON
@@ -132,6 +134,7 @@ const RegionLabel = (props: {
   const [dragSetter, setDragSetter] = useState(() => {});
 
   const centroid = geoCentroid(region);
+  
   if (
     region.properties &&
     ((editPageState.map.displayStrings &&
