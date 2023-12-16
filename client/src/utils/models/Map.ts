@@ -61,7 +61,9 @@ export const ErrorMap = {
     imageUrl: "dummyUrl.com",
     imageType: "jpg",
   },
-  regions: {},
+  regions: {
+    
+  },
   legend: {
     colorLegend: {
       "#000000": "black",

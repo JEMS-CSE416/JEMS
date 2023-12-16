@@ -1,18 +1,12 @@
 import "./css/canvas.css";
-import { Image } from "@mantine/core";
 import { Map as JEMSMap } from "../../utils/models/Map";
-import { useSelectedMap } from "../hooks/useSelectedMap";
-import { MapContainer, TileLayer, GeoJSON, Marker} from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet";
+import * as turf from "@turf/turf";
 import { convertToGeoJSON } from "../edit/utils/jemsconvert";
 import { TemplateTypes } from "../../utils/enums";
-import {
-  Feature,
-  GeoJsonProperties,
-  Geometry,
-  FeatureCollection,
-} from "geojson";
-import { Layer, Map, divIcon, marker } from "leaflet";
-import { geoCentroid } from "d3-geo";
+import { Feature, Geometry, FeatureCollection } from "geojson";
+import { NonInteractiveLabels as Labels } from "../CanvasComponents/NonInteractiveLabels";
+import { Canvas as CanvasBase } from "../CanvasComponents/Canvas";
 
 interface CanvasProps {
   map: JEMSMap;
@@ -20,22 +14,13 @@ interface CanvasProps {
 const Canvas = ({ map }: CanvasProps) => {
   const convertedGeoJSON = convertToGeoJSON(map);
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
+
+  // calculates center of geojson data. if it can't then it defaults to a 0,0 center
+  const centerCoords = turf.centerMean(data).geometry.coordinates
+
   return (
     <>
-      <MapContainer
-        center={[40.6482, -73.9442]}
-        zoom={12}
-        style={{
-          width: "100%",
-          height: "calc(100Vh - 60px)",
-          zIndex: 125,
-        }}
-      >
-        <TileLayer
-          noWrap={true}
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
+      <CanvasBase centerCoords={[centerCoords[0],centerCoords[1]]}>
         <GeoJSON
           data={data}
           style={(region: Feature<Geometry, any> | undefined) =>
@@ -43,7 +28,7 @@ const Canvas = ({ map }: CanvasProps) => {
           }
         />
         <Labels data={data} map={map} />
-      </MapContainer>
+      </CanvasBase>
     </>
   );
 };
@@ -76,71 +61,6 @@ function initStyleFunction(
   if (!region) return {};
 
   return getRegionStyle(region, map);
-}
-
-interface LabelsProps {
-  data: FeatureCollection;
-  map: JEMSMap;
-}
-function Labels({data, map}: LabelsProps) {
-  const labels = data.features.map(
-    (
-      region: Feature<Geometry, GeoJsonProperties>,
-      index: React.Key | null | undefined
-    ) => {
-      return <RegionLabel key={index} region={region} map={map} />;
-    }
-  );
-
-  return <>{labels}</>;
-}
-
-interface RegionLabelProps {
-  key: React.Key | null | undefined;
-  region: Feature<Geometry, GeoJsonProperties>;
-  map: JEMSMap;
-}
-function RegionLabel({key, region, map}: RegionLabelProps) {
-  const centroid = geoCentroid(region);
-  if (
-    region.properties &&
-    ((map.displayStrings && region.properties.stringLabel !== "") ||
-      (map.displayNumerics && region.properties.numericLabel !== ""))
-  ) {
-    let labelIcon = divIcon({
-      className: "map-label",
-      html: `<div>${labelHTML(region, map)}</div>`,
-      iconSize: [100, 40],
-      iconAnchor: [50, 20],
-    });
-    return (
-      <Marker
-        key={key}
-        position={[centroid[1], centroid[0]]}
-        icon={labelIcon}
-        interactive={false}
-      />
-    );
-  }
-  return <></>;
-}
-
-function labelHTML(region: Feature<Geometry, any>, map: JEMSMap) {
-  const displayStrings = map.displayStrings;
-  const displayNumerics = map.displayNumerics;
-  const StringsLabel = region.properties.stringLabel;
-  const NumericsLabel = region.properties.numericLabel;
-  const UnitsLabel = region.properties.numericUnit;
-  let contents = `
-  <div style="pointer-events: none;">
-    <p style="margin: 0;">${displayStrings ? StringsLabel : ""}</p>
-    <p style="margin: 0;">${
-      displayNumerics ? NumericsLabel + ` ${UnitsLabel}` : ""
-    }</p>
-  </div>
-`;
-
-  return contents;
 }
 
 export default Canvas;

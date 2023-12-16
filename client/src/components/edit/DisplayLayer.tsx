@@ -12,6 +12,7 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { Layer, Map, divIcon } from "leaflet";
 import * as L from "leaflet";
+import * as turf from "@turf/turf";
 import {
   Feature,
   GeoJsonProperties,
@@ -66,9 +67,8 @@ export default function DisplayLayer() {
 
       console.warn("LEAFLET MAP: ", mapInstance);
     }
-  }, [mapInstance, setLeafletMap]);
 
-  console.debug(map.getBounds().getCenter()) // returns LatLng for centering the map?
+  }, [mapInstance, setLeafletMap]);
 
   return (
     <>
@@ -134,7 +134,7 @@ const RegionLabel = (props: {
   const [dragSetter, setDragSetter] = useState(() => {});
 
   const centroid = geoCentroid(region);
-  
+
   if (
     region.properties &&
     ((editPageState.map.displayStrings &&
