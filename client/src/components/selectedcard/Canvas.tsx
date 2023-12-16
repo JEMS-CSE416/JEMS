@@ -102,6 +102,7 @@ interface RegionLabelProps {
 }
 function RegionLabel({key, region, map}: RegionLabelProps) {
   const centroid = geoCentroid(region);
+  console.log(`CENTROID: ${centroid}`)
   if (
     region.properties &&
     ((map.displayStrings && region.properties.stringLabel !== "") ||

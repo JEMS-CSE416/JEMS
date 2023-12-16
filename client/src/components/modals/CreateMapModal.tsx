@@ -15,7 +15,7 @@ import { useForm } from "@mantine/form";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import FileDropZone from "../common/FileDropZone";
-import { getFileType } from "../../utils/global_utils";
+import { getFileType, getRegions } from "../../utils/global_utils";
 import {
   geoJsonConvert,
   handleKml,
@@ -79,6 +79,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
   };
 
   // This function parses and grabs regions properties from GeoJSON
+  /*
   const getRegions = (geojson: any) => {
     let regions = [] as any[];
     if (geojson && geojson.features) {
@@ -132,6 +133,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
     }
     return regions;
   };
+  */
 
   // This function gets the color type based on the template
   const getColorType = () => {
