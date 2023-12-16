@@ -5,12 +5,12 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mantine/core": "^7.1.7",
-    "@mantine/dropzone": "^7.1.7",
-    "@mantine/ds": "^7.1.7",
-    "@mantine/form": "^7.1.7",
-    "@mantine/hooks": "^7.1.7",
-    "@mantine/notifications": "^7.2.1",
+    "@mantine/core": "^7.3.2",
+    "@mantine/dropzone": "^7.3.2",
+    "@mantine/ds": "^7.2.2",
+    "@mantine/form": "^7.3.2",
+    "@mantine/hooks": "^7.3.2",
+    "@mantine/notifications": "^7.3.2",
     "@tabler/icons-react": "^2.40.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -76,7 +76,7 @@
     "@types/leaflet": "^1.9.4",
     "cypress": "^13.4.0",
     "postcss": "^8.4.31",
-    "postcss-preset-mantine": "^1.9.0",
+    "postcss-preset-mantine": "^1.11.1",
     "postcss-simple-vars": "^7.0.1"
   }
 }
