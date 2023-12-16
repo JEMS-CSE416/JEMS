@@ -154,6 +154,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 
   // This function gets the request body for JEMS JSON
   function getJemsRequest(jemsjson: any) {
+    console.debug("in here")
     const content = jemsjson.map_file_content;
     console.log(form.values.visibility);
     // legacy format
@@ -164,6 +165,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         max: Number.MIN_SAFE_INTEGER,
         items: {},
       }
+
     // Create the request body
     const req = {
       map_file_content: {
@@ -172,7 +174,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         creationDate: new Date().toISOString(),
         public: form.values.visibility === "Public" ? true : false,
         template: content.template,
-        colorType: getColorType(),
+        colorType: jemsjson.map_file_content.colorType,
         displayStrings:
           selectedValue == "String Label Map" ? true : content.displayStrings,
         displayNumerics: content.displayNumerics,
@@ -261,15 +263,14 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 
       // Get the file extension
       let fileExtension = getFileType(file.name);
-
       // Check the file type and handle accordingly
       if (fileExtension === "json") {
         const file_content = await file.text();
         const json_file = JSON.parse(file_content);
-
         if (json_file.map_file_content) {
           // Handles getting request when file uploaded is a JEMS JSON
           req = getJemsRequest(json_file);
+          
         } else {
           // Handles getting request when file uploaded is converted to GeoJSON
           req = getGeoJsonRequest(json_file);
