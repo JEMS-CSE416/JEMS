@@ -294,7 +294,7 @@ function getChoroplethStyle(
         : "#FFFFFF";
     }
   }
-  return "#8eb8fa";
+  return "#FFFFFF";
 }
 
 function labelHTML(
