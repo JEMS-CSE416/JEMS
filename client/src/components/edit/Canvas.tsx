@@ -17,18 +17,13 @@ export default function Canvas() {
   const centerCoords =
     data.features.length != 0
       ? turf.centerMean(data).geometry.coordinates
-      : false;
+      : [0, 0];
 
-  console.debug("CENTER COORDS: ", centerCoords);
-
-  // if center coords is false then it's an error and will return nothing
-  if (!centerCoords) {
-    return <div>This GeoJSON is not supported</div>;
-  }
+  console.debug("map center", editPageState.map._id);
 
   return (
     <>
-      <CanvasBase centerCoords={centerCoords} noWrap>
+      <CanvasBase centerCoords={[centerCoords[0], centerCoords[1]]} noWrap>
         <DisplayLayer />
         <Legend />
       </CanvasBase>

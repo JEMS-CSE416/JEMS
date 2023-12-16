@@ -11,7 +11,7 @@ import {
   FeatureCollection,
 } from "geojson";
 import React, { useRef, useState, useEffect } from "react";
-import { geoCentroid } from "d3-geo";
+// import { geoCentroid } from "d3-geo";
 import { PointerConnection } from "../edit/leaflet/pointers";
 import { Map } from "../../utils/models/Map";
 
@@ -47,7 +47,7 @@ function RegionLabel({ index, region, map }: RegionLabelProps) {
   const markerRef = useRef(null);
   const [dragSetter, setDragSetter] = useState(() => {});
 
-  const centroid = geoCentroid(region);
+  const centroid = turf.centerMean(region).geometry.coordinates;
 
   if (
     region.properties &&
