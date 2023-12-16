@@ -16,11 +16,14 @@ const Canvas = ({ map }: CanvasProps) => {
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
 
   // calculates center of geojson data. if it can't then it defaults to a 0,0 center
-  const centerCoords = data.features.length === 0 ? [0,0] : turf.centerMean(data).geometry.coordinates 
+  const centerCoords =
+    data.features.length === 0
+      ? [0, 0]
+      : turf.centerMean(data).geometry.coordinates;
 
   return (
     <>
-      <CanvasBase centerCoords={[centerCoords[0],centerCoords[1]]}>
+      <CanvasBase centerCoords={[centerCoords[0], centerCoords[1]]}>
         <GeoJSON
           data={data}
           style={(region: Feature<Geometry, any> | undefined) =>
@@ -42,8 +45,15 @@ function getRegionStyle(region: Feature<Geometry, any>, map: JEMSMap) {
 
   const whichMap = map.colorType;
   style = { ...style, weight: 2, color: "#6996db" };
-
-  if (whichMap !== TemplateTypes.COLOR) {
+  // console.debug(map)
+  if (whichMap == TemplateTypes.CHOROPLETH) {
+    style = {
+      ...style,
+      fillColor: getChoroplethStyle(region, map),
+      fillOpacity: 1,
+      opacity: 1,
+    };
+  } else if (whichMap !== TemplateTypes.COLOR) {
     style = {
       ...style,
       fillColor: "#8eb8fa",
@@ -61,6 +71,66 @@ function initStyleFunction(
   if (!region) return {};
 
   return getRegionStyle(region, map);
+}
+
+// function that defines the color of each region based off its numeric value and choropleth items
+function getChoroplethStyle(
+  region: Feature<Geometry, any>,
+  map: JEMSMap
+) {
+
+  console.debug(map)
+
+  const items = Object.entries(
+    map.legend.choroplethLegend?.items || {}
+  );
+
+  // console.debug(items)
+
+  const value = region.properties.numericLabel;
+  if (items.length >= 5) {
+    return value >= items[0][1]
+      ? items[0][0]
+      : value >= items[1][1]
+      ? items[1][0]
+      : value >= items[2][1]
+      ? items[2][0]
+      : value >= items[3][1]
+      ? items[3][0]
+      : value >= items[4][1]
+      ? items[4][0]
+      : "#FFFFFF";
+  } else {
+    // Handle if there are 1, 2, 3, and/or 4 items in the legend
+    if (items.length == 1) {
+      return value == items[0][1] ? items[0][0] : "#FFFFFF";
+    } else if (items.length == 2) {
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : "#FFFFFF";
+    } else if (items.length == 3) {
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : value >= items[2][1]
+        ? items[2][0]
+        : "#FFFFFF";
+    } else if (items.length == 4) {
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : value >= items[2][1]
+        ? items[2][0]
+        : value >= items[3][1]
+        ? items[3][0]
+        : "#FFFFFF";
+    }
+  }
+  return "#8eb8fa";
 }
 
 export default Canvas;
