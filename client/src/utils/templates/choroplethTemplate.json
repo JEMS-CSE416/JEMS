@@ -27749,7 +27749,7 @@
         "legend": {
             "colorLegend": {},
             "choroplethLegend": {
-                "hue": "#8eb8fa",
+                "hue": "#297cff",
                 "min": 1,
                 "max": 10,
                 "items": {}
