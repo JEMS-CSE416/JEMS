@@ -389,7 +389,6 @@ function findChoroplethItems(
 
       //if numericLabel is an existing key in uniqueValues, skip
       if (uniqueValues.some((value) => value.numericLabel === numericLabel)) {
-        console.log("continued: " + numericLabel);
         continue;
       }
       if (numericLabel === "") continue;
@@ -409,8 +408,6 @@ function findChoroplethItems(
     newItems[color] = value.numericLabelNumber;
   });
 
-  console.log(uniqueValues);
-  console.log(newItems);
   return newItems;
 }
 

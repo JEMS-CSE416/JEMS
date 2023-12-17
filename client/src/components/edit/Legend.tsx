@@ -8,6 +8,7 @@ import {
   NumberInput,
   Group,
   ColorSwatch,
+  Button,
 } from "@mantine/core";
 import {
   EditPageAction,
@@ -18,15 +19,30 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { Map, Region, Legend as legend } from "../../utils/models/Map";
 import { useEffect, useState } from "react";
-import LegendItems from "./LegendItems";
+import { UseFormReturnType, useForm } from "@mantine/form";
 
 export default function Legend() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+  const [legendSubmit, setLegendSubmit] = useState(false);
 
   useEffect(() => {
-    ChoroplethLegend({ editPageState: editPageState });
+    ChoroplethLegend({ editPageState: editPageState, form: form, legendSubmit: legendSubmit, setLegendSubmit: setLegendSubmit});
   }, [editPageState]);
+  const items = Object.entries(
+    editPageState.map.legend.choroplethLegend?.items || {}
+  );
+
+  const form = useForm({
+    // Initial values should be the current legend items
+    initialValues: {
+      items: items,
+    },
+
+    validate: {
+      items: (value) => (value ? null : "Invalid email"),
+    },
+  });
 
   return (
     <Box>
@@ -48,7 +64,7 @@ export default function Legend() {
 
           <Stack pl={10} gap="xs" p="sm">
             {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
-              <ChoroplethLegend editPageState={editPageState} />
+              <ChoroplethLegend editPageState={editPageState} form={form} legendSubmit={legendSubmit} setLegendSubmit={setLegendSubmit}/>
             )}
             {editPageState.map.colorType === TemplateTypes.COLOR && (
               <ColorLegend />
@@ -114,8 +130,21 @@ export function ColorLegend() {
 
 export function ChoroplethLegend({
   editPageState,
+  form,
+  legendSubmit,
+  setLegendSubmit,
 }: {
   editPageState: EditPageState;
+  form: UseFormReturnType<
+    {
+      items: [string, Number][];
+    },
+    (values: { items: [string, Number][] }) => {
+      items: [string, Number][];
+    }
+  >;
+  legendSubmit: boolean;
+  setLegendSubmit: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const items = Object.entries(
     editPageState.map.legend.choroplethLegend?.items || {}
@@ -124,18 +153,30 @@ export function ChoroplethLegend({
   return (
     <div>
       <ScrollArea style={{ maxHeight: 200, overflowY: "auto" }}>
-        {items.map(([color, value], index) => (
-          <Group>
-            <ColorSwatch color={color} mr={20} radius={"5px"} />
-            <NumberInput
-              variant="unstyled"
-              placeholder={value.toString()}
-              rightSectionWidth={"0px"}
-              hideControls
-            />
-          </Group>
-        ))}
+        <form onSubmit={form.onSubmit((values) => handleLegendItemsSubmit(legendSubmit, setLegendSubmit))}>
+          {items.map(([color, value], index) => (
+            <Group>
+              <ColorSwatch color={color} mr={20} radius={"5px"} />
+              <NumberInput
+                variant="unstyled"
+                placeholder={value.toString()}
+                rightSectionWidth={"0px"}
+                hideControls
+                onChange={(value) => {
+                  console.log(index);
+                  setLegendSubmit(true);
+                }}
+              />
+            </Group>
+          ))}
+          {legendSubmit ? <Button type="submit" radius="xl">Submit</Button> : <></>}
+        </form>
       </ScrollArea>
     </div>
   );
+}
+
+function handleLegendItemsSubmit(legendSubmit: boolean, setLegendSubmit: React.Dispatch<React.SetStateAction<boolean>>) {
+  setLegendSubmit(false);
+  // Get all values from number input component above and store them in array
 }

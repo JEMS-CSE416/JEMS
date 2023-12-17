@@ -248,7 +248,6 @@ function getChoroplethStyle(
     editPageState.map.legend.choroplethLegend?.items || {}
   );
   const value = region.properties.numericLabel;
-  console.log("value: " + value);
   if (items.length >= 5) {
     return value >= items[0][1]
       ? items[0][0]
@@ -266,14 +265,12 @@ function getChoroplethStyle(
     if (items.length == 1) {
       return value == items[0][1] ? items[0][0] : "#FFFFFF";
     } else if (items.length == 2) {
-      console.log("2");
       return value >= items[0][1]
         ? items[0][0]
         : value >= items[1][1]
         ? items[1][0]
         : "#FFFFFF";
     } else if (items.length == 3) {
-      console.log("3");
       return value >= items[0][1]
         ? items[0][0]
         : value >= items[1][1]
@@ -282,7 +279,6 @@ function getChoroplethStyle(
         ? items[2][0]
         : "#FFFFFF";
     } else if (items.length == 4) {
-      console.log("4");
       return value >= items[0][1]
         ? items[0][0]
         : value >= items[1][1]
