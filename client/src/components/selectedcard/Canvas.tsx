@@ -12,9 +12,7 @@ import {
   FeatureCollection,
 } from "geojson";
 import { Layer, Map, divIcon, marker } from "leaflet";
-import { useMap } from "react-leaflet";
 import { geoCentroid } from "d3-geo";
-import { useEffect } from "react";
 import EasyPrint from "../common/EasyPrint";
 
 interface CanvasProps {
@@ -23,6 +21,12 @@ interface CanvasProps {
 const Canvas = ({ map }: CanvasProps) => {
   const convertedGeoJSON = convertToGeoJSON(map);
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
+  console.debug("Rendering Canvas");
+  
+  // if(map._id === "ERROR/TEST Map"){
+  //   return <></>
+  // }
+
 
   return (
     <>
