@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { connect, model, Types } from "mongoose";
-import { Map, mapSchema } from "./MapSchema";
+import { Map, mapSchema, regionSchema } from "./MapSchema";
 import { ObjectId } from "mongodb";
 
 /**
@@ -10,6 +10,35 @@ import { ObjectId } from "mongodb";
 export async function getMapModel() {
   await connect(process.env.MONGO_DB_CONNECTION_STRING);
   return model("Map", mapSchema);
+}
+
+export async function getRegionModel() {
+  await connect(process.env.MONGO_DB_CONNECTION_STRING);
+  return model("Region", regionSchema);
+}
+
+/*
+* this function will take a map file with its regions as ObjectIds and turns them
+* into maps of region objects
+*/
+async function fillRegions(map: any){
+  const regionModel = await getRegionModel();
+
+  for (const [key, regions] of Object.entries(map.regions)){
+    // create an array of promises that will resolve to an array of 
+    const promises = (regions as any).map((region: any)=> {
+      console.log(region.regionName)
+      // map each region to an actual region
+      if(ObjectId.isValid(region)){
+        return regionModel.findById(region)
+      } else { // if region is just a region, not an object id, just return a promise that resolves to 
+        return Promise.resolve(region)
+      }
+    })
+
+    map.regions[key] = await Promise.all(promises);
+  }
+  return map;
 }
 
 /**
@@ -85,7 +114,7 @@ const getMap = async (req: Request, res: Response) => {
 
 
   /* Check map exists */
-  const map = await mapModel.findById(map_id);
+  let map = await mapModel.findById(map_id);
   if (!map) {
     return res.status(404).send("Error 404: Map not found" + map_id);
   }
@@ -94,6 +123,7 @@ const getMap = async (req: Request, res: Response) => {
   if (map.public == false) {
     /* Private Map */
     if (map.creatorId.toString() == creator_id) {
+      map = await fillRegions(map)
       /* check if the user is authenticated */
       return res.status(200).send(map);
     }
@@ -101,6 +131,7 @@ const getMap = async (req: Request, res: Response) => {
       .status(401)
       .send("Error 401: Unauthorized. Your token is invalid.");
   } else if (map.public == true) {
+    map = await fillRegions(map)
     /* Public Map */
     return res.status(200).send(map);
   } else {

@@ -18,7 +18,9 @@ interface Legend {
 
 interface Region {
   regionName: string;
-  coordinates: Types.Array<Types.Array<Number>>;
+  coordinates: any;
+  type: string;
+  geometries: any;
   stringLabel: string;
   stringOffset: Types.Array<Number>;
   numericLabel: String;
@@ -38,7 +40,7 @@ export interface Map {
   displayLegend: boolean;
   displayPointers: boolean;
   thumbnail: Image;
-  regions: { [key: string]: Region[] };
+  regions: { [key: string]: (Region | Types.ObjectId)[]};
   legend: Legend;
 }
 
@@ -48,9 +50,11 @@ const imageSchema = new Schema<Image>({
   imageType: { type: String },
 });
 
-const regionSchema = new Schema<Region>({
+export const regionSchema = new Schema<Region>({
   regionName: { type: String },
-  coordinates: { type: [[Number]], required: true },
+  coordinates: { type: {} },
+  geometries: { type: {} },
+  type: { type: String },
   stringLabel: { type: String },
   stringOffset: { type: [Number] },
   numericLabel: { type: Number },
@@ -80,6 +84,6 @@ export const mapSchema = new Schema<Map>({
   displayLegend: { type: Boolean },
   displayPointers: { type: Boolean },
   thumbnail: { type: imageSchema },
-  regions: { type: {}, of: [regionSchema] },
+  regions: { type: {}, of: [regionSchema, Schema.Types.ObjectId] },
   legend: { type: legendSchema },
 });
