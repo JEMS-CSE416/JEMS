@@ -26,7 +26,6 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { useEffect, useState } from "react";
 import { set } from "cypress/types/lodash";
-import { AppendChoroplethLegendItems } from "../../context/EditContextProvider";
 
 export default function Properties() {
   const editPageState = useEditContext();
