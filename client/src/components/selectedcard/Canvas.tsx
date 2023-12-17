@@ -2,7 +2,7 @@ import "./css/canvas.css";
 import { Image } from "@mantine/core";
 import { Map as JEMSMap } from "../../utils/models/Map";
 import { useSelectedMap } from "../hooks/useSelectedMap";
-import { MapContainer, TileLayer, GeoJSON, Marker} from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet";
 import { convertToGeoJSON } from "../edit/utils/jemsconvert";
 import { TemplateTypes } from "../../utils/enums";
 import {
@@ -12,7 +12,10 @@ import {
   FeatureCollection,
 } from "geojson";
 import { Layer, Map, divIcon, marker } from "leaflet";
+import { useMap } from "react-leaflet";
 import { geoCentroid } from "d3-geo";
+import { useEffect } from "react";
+import EasyPrint from "../common/EasyPrint";
 
 interface CanvasProps {
   map: JEMSMap;
@@ -20,6 +23,7 @@ interface CanvasProps {
 const Canvas = ({ map }: CanvasProps) => {
   const convertedGeoJSON = convertToGeoJSON(map);
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
+
   return (
     <>
       <MapContainer
@@ -31,6 +35,7 @@ const Canvas = ({ map }: CanvasProps) => {
           zIndex: 125,
         }}
       >
+        <EasyPrint />
         <TileLayer
           noWrap={true}
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -82,7 +87,7 @@ interface LabelsProps {
   data: FeatureCollection;
   map: JEMSMap;
 }
-function Labels({data, map}: LabelsProps) {
+function Labels({ data, map }: LabelsProps) {
   const labels = data.features.map(
     (
       region: Feature<Geometry, GeoJsonProperties>,
@@ -100,7 +105,7 @@ interface RegionLabelProps {
   region: Feature<Geometry, GeoJsonProperties>;
   map: JEMSMap;
 }
-function RegionLabel({key, region, map}: RegionLabelProps) {
+function RegionLabel({ key, region, map }: RegionLabelProps) {
   const centroid = geoCentroid(region);
   if (
     region.properties &&
