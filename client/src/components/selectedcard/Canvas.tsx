@@ -130,7 +130,9 @@ function getChoroplethStyle(
         : "#FFFFFF";
     }
   }
-  return "#8eb8fa";
+  return "#FFFFFF";
 }
+
+
 
 export default Canvas;
