@@ -104,23 +104,6 @@ const MapCard: React.FC<MapCardProps> = ({
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  handleDownloadAs("PNG");
-                }}
-              >
-                Download as PNG
-              </Menu.Item>
-              <Menu.Item
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                Download as JPG
-              </Menu.Item>
-              <Menu.Item
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
                   handleDownloadAs("JEMS");
                 }}
               >
