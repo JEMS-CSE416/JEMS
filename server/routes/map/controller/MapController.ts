@@ -39,7 +39,7 @@ const queryMaps = async (req: Request, res: Response) => {
 
   /* does the request want to search by map name too? */
   if (map_name) {
-    query.mapName = map_name;
+    query.mapName = { $regex: new RegExp(map_name, 'i') };
   }
 
   /** Now that we've gone through the different fields that you can search by,

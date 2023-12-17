@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import jemsLogo from "../../assets/images/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useDisclosure, useForceUpdate} from "@mantine/hooks";
+import { useDisclosure, useForceUpdate } from "@mantine/hooks";
 import CreateMapModal from "../modals/CreateMapModal";
 import {
   IconLogout,
@@ -51,10 +51,10 @@ export function BaseNavbar(props: NavbarProps) {
   const handelLogOut = () => {
     logout()
       .then((res) => {
-        navigate("/")
+        navigate("/");
       })
       .catch((err) => {
-          console.log(`ERROR WHEN LOGGING OUT: ${err}`);
+        console.log(`ERROR WHEN LOGGING OUT: ${err}`);
       });
   };
 
@@ -99,7 +99,7 @@ export function BaseNavbar(props: NavbarProps) {
             <Menu>
               <Menu.Target>
                 <Avatar color="blue" radius="xl" className="cursor-pointer">
-                  {user.name?.charAt(0)?? '?'}
+                  {user.name?.charAt(0) ?? "?"}
                 </Avatar>
               </Menu.Target>
               <Menu.Dropdown>
@@ -149,20 +149,17 @@ export default function NavBar() {
   return (
     <BaseNavbar
       /* This is the modal that will open when the user clicks on the create map*/
-      modals={
-        <CreateMapModal opened={opened} onClose={close}/>
-      }
+      modals={<CreateMapModal opened={opened} onClose={close} />}
       center_component={<SearchBar />}
       right_component={<CreateMap open={open} />}
     />
   );
 }
 
-
-
 function SearchBar() {
   // This is the hook that controls the search bar
   const [search, setSearch] = useState("");
+
   // This is the hook that allows us to navigate to different pages
   const navigate = useNavigate();
 
@@ -177,18 +174,23 @@ function SearchBar() {
       // the reason for {state: forceRefresh: true} is because we want
       // to force a refresh of the page incase the user just wants to recieve
       // new updagtes on the results
-      const searchFor = "/maps/search/" + search
+      const searchFor = "/maps/search/" + search;
       navigate(searchFor);
     }
   };
+
+
+  // creates the search bar
   return (
-    <input
-      type="search"
-      id="search"
-      placeholder="Search"
-      onKeyDown={handleKeyPress}
-      onChange={(e) => setSearch(e.target.value)}
-    />
+    <Box>
+      <input
+        type="search"
+        id="search"
+        placeholder="Search"
+        onKeyDown={handleKeyPress}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+    </Box>
   );
 }
 
