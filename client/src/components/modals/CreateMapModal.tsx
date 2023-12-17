@@ -159,7 +159,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
     // legacy format
     if (!content.legend.choroplethLegend?.hue)
       content.legend.choroplethLegend = {
-        hue: "#8eb8fa",
+        hue: "#297cff",
         min: Number.MAX_SAFE_INTEGER,
         max: Number.MIN_SAFE_INTEGER,
         items: {},
@@ -214,7 +214,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
           legend: {
             colorLegend: {},
             choroplethLegend: {
-              hue: "#8eb8fa",
+              hue: "#297cff",
               min: Number.MAX_SAFE_INTEGER,
               max: Number.MIN_SAFE_INTEGER,
               items: {},
