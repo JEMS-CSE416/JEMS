@@ -12,6 +12,7 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { Layer, Map, divIcon } from "leaflet";
 import * as L from "leaflet";
+import * as turf from "@turf/turf";
 import {
   Feature,
   GeoJsonProperties,
@@ -22,7 +23,6 @@ import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
 import React, { useContext, useRef, useState, useEffect } from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
-import { geoCentroid } from "d3-geo";
 import {
   onClickLabel,
   onDragEndLabel,
@@ -43,14 +43,14 @@ export default function DisplayLayer() {
   const leafletMapPrinter = useLeafLetMapPrinter();
 
   useEffect(() => {
-    console.debug(
-      "MAP INSTANCE: ",
-      mapInstance,
-      "SET LEAFLET MAP",
-      setLeafletMap,
-      "SET LEAFLET MAP PRINTER",
-      setLeafletMapPrinter
-    );
+    // console.debug(
+    //   "MAP INSTANCE: ",
+    //   mapInstance,
+    //   "SET LEAFLET MAP",
+    //   setLeafletMap,
+    //   "SET LEAFLET MAP PRINTER",
+    //   setLeafletMapPrinter
+    // );
 
     if (mapInstance && setLeafletMap && setLeafletMapPrinter) {
       setLeafletMap(mapInstance);
@@ -131,7 +131,8 @@ const RegionLabel = (props: {
   const markerRef = useRef(null);
   const [dragSetter, setDragSetter] = useState(() => {});
 
-  const centroid = geoCentroid(region);
+  const centroid = turf.centerMean(region).geometry.coordinates;
+
   if (
     region.properties &&
     ((editPageState.map.displayStrings &&

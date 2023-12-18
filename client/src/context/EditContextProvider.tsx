@@ -87,10 +87,12 @@ export function EditContextProvider(props: EditContextProviderProps) {
   );
   const [leafletMapPrinter, setLeafletMapPrinter] = useState<any>(undefined);
   const navigate = useNavigate();
+  const [loaded, setLoaded] = useState(false);
 
   // initialize the map by pulling it from the backend
   useEffect(() => {
     fetchMap();
+    setLoaded(true);
   }, []);
 
   const fetchMap = async () => {
@@ -163,6 +165,14 @@ export function EditContextProvider(props: EditContextProviderProps) {
     );
     return Array.from(new Set(res));
   };
+
+
+  if (!loaded) {
+    return <>Loading Data</>;
+  }
+  if(loaded && editPageState.map._id === "ERROR/TEST Map"){
+    return <>Loading Data</>;
+  }
 
   return (
     <EditContext.Provider value={editPageState}>
