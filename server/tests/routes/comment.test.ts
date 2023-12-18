@@ -3,7 +3,7 @@ import app from "../../app";
 
 // Test the comment routes
 describe("testing the comment routes", () => {
-  describe("GET /comments", () => {
+  describe("GET /api/comment/", () => {
     describe("when user is authenticated", () => {
       test("with a valid map ID, it should return status code 200", async () => {
         // First, log in to create a session
@@ -50,7 +50,7 @@ describe("testing the comment routes", () => {
     });
   });
 
-  describe("PUT /comment", () => {
+  describe("PUT /api/comment/create/", () => {
     describe("when user is authenticated", () => {
       test("with a comment, it should return status code 200", async () => {
         // First, log in to create a session
