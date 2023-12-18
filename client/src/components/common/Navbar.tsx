@@ -197,7 +197,7 @@ function SearchBar() {
 function CreateMap(props: any) {
   return (
     <Box ta="right">
-      <Button radius="xl" id="createMapButton" onClick={props.open}>
+      <Button radius="xl" id="create-map-modal-button" onClick={props.open}>
         + Create Map
       </Button>
     </Box>

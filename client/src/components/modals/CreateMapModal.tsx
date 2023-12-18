@@ -414,6 +414,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
             <Grid gutter="xl">
               <Grid.Col span={5}>
                 <TextInput
+                  id="create-map-modal-map-name-input"
                   label="Map Name"
                   description="Enter a name to describe your map"
                   placeholder="Map of Grand Line"
@@ -423,6 +424,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   {...form.getInputProps("mapName")}
                 />
                 <Textarea
+                  id="create-map-modal-map-description-input"
                   label="Map Description"
                   description="Enter a description to describe your map"
                   placeholder="This is a map of the Grand Line"
@@ -433,6 +435,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   {...form.getInputProps("description")}
                 />
                 <Select
+                  id="create-map-modal-map-visibility-input"
                   label="Visibility"
                   data={["Public", "Private"]}
                   style={{ width: "100%", marginBottom: "20px" }}
@@ -453,6 +456,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   style={{ margin: "10px 0" }}
                 />
                 <Select
+                  id="create-map-modal-map-template-input"
                   label="Template"
                   data={[
                     "String Label Map",
@@ -470,7 +474,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
               </Grid.Col>
             </Grid>
             <Group justify="flex-end" mt="xl">
-              <Button type="submit">Submit</Button>
+              <Button type="submit" id="create-map-modal-submit-button">Submit</Button>
             </Group>
           </form>
         </Box>
