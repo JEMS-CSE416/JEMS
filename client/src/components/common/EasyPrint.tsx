@@ -8,7 +8,7 @@ function EasyPrint() {
   useEffect(() => {
     if (map) {
       const printer = L.easyPrint({
-        sizeModes: ["Current", "A4Portrait", "A4Landscape"],
+        sizeModes: ["A4Landscape"],
         filename: "MyMap",
         exportOnly: true,
         hideControlContainer: true,
