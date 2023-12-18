@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { connect, model, Types } from "mongoose";
-import { Map, mapSchema, regionSchema } from "./MapSchema";
-import { ObjectId } from "mongodb";
+import { Map, mapSchema } from "./MapSchema";
+import { GridFSBucket, ObjectId } from "mongodb";
+import { Readable } from "stream";
 
 /**
  * Connects to the mongodb server and returns a queriable object
@@ -12,34 +13,82 @@ export async function getMapModel() {
   return model("Map", mapSchema);
 }
 
-export async function getRegionModel() {
-  await connect(process.env.MONGO_DB_CONNECTION_STRING);
-  return model("Region", regionSchema);
+export async function getGrid(){
+
+  const grid = await new Promise(resolve =>{
+    connect(process.env.MONGO_DB_CONNECTION_STRING).then(
+            (mongoose) => {
+              resolve(new GridFSBucket(mongoose.connection.db));
+            }
+           );
+  })
+  return grid as GridFSBucket
 }
 
 /*
-* this function will take a map file with its regions as ObjectIds and turns them
+* this function will take a map file with either regions
 * into maps of region objects
 */
 async function fillRegions(map: any){
-  const regionModel = await getRegionModel();
+  if(!map.regionsFile)
+    return map
 
-  for (const [key, regions] of Object.entries(map.regions)){
-    // create an array of promises that will resolve to an array of 
-    const promises = (regions as any).map((region: any)=> {
-      console.log(region.regionName)
-      // map each region to an actual region
-      if(ObjectId.isValid(region)){
-        return regionModel.findById(region)
-      } else { // if region is just a region, not an object id, just return a promise that resolves to 
-        return Promise.resolve(region)
-      }
-    })
+  const gfs = await getGrid() as any;
 
-    map.regions[key] = await Promise.all(promises);
-  }
+  var readStream = gfs.openDownloadStream(map.regionsFile);
+
+  const chunks = [] as any[]
+  const regionsString = new Promise((resolve, reject) => {
+    readStream.on('data', (chunk: any) => chunks.push(Buffer.from(chunk)));
+    readStream.on('error', (err: any) => reject(err));
+    readStream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  })
+
+
+  map.regions = JSON.parse(await regionsString as string)
   return map;
 }
+
+/*
+* This function takes a map with valid regions, stores the regions in the db
+* and adds ObjectId references to the passed map, returning it
+*/
+async function storeAndLinkRegions(map: any){
+  const gfs = await getGrid();
+  const gridStream = gfs.openUploadStream(`${map.mapName}`)
+
+  // create a stream from the regions
+  const regionsString = JSON.stringify(map.regions);
+  const regionsStream = new Readable({
+    read(size) {return true}
+  });
+  regionsStream.push(regionsString);
+  regionsStream.push(null);
+
+  regionsStream.pipe(gridStream)
+
+  map.regionsFile = gridStream.id;
+
+  map.regions = {}
+  await new Promise(resolve => gridStream.on('finish', () =>{
+    console.log("finished uploading file")
+    resolve(undefined)
+  }))
+  return map;
+}
+
+/*
+* This function deletes all regions associated with a map with ObjectIds
+*/
+async function deleteRegionsFile(map: any){
+  if(!ObjectId.isValid(map.regionsFile))
+    return
+  const gfs = await getGrid() as any;
+
+  await gfs.delete( map.regionsFile)
+
+}
+
 
 /**
  * Queries the database for matching query and returns a list.
@@ -109,7 +158,6 @@ const getMap = async (req: Request, res: Response) => {
   /* Get collection of maps */
   const mapModel = await getMapModel();
   const map_id = req.params.id?.toString();
-  console.log(map_id)
   const creator_id: string = req.session.user.id;
 
 
@@ -162,7 +210,8 @@ const duplicateMap = async (req: Request, res: Response) => {
   // CHECKING AUTH SHOULD CHECK WITH A FUNCTION FROM THE AUTH CONTROLLER
 
   /* Check if the map exists */
-  const map = await mapModel.findById(map_id);
+  let map = await mapModel.findById(map_id);
+  map = await fillRegions(map);
   if (!map) {
     return res.status(404).send("Error 404: Map not found");
   }
@@ -177,7 +226,7 @@ const duplicateMap = async (req: Request, res: Response) => {
     }
   }
 
-  const duplicateMap = {
+  let duplicateMap = {
     ...map.toObject(),
     mapName: map_name,
     description: description,
@@ -187,6 +236,7 @@ const duplicateMap = async (req: Request, res: Response) => {
     _id: new Types.ObjectId(),
   };
 
+  duplicateMap = await storeAndLinkRegions(duplicateMap);
 
   /* Duplicate the map */
   const newMap = new mapModel(duplicateMap);
@@ -203,14 +253,16 @@ const duplicateMap = async (req: Request, res: Response) => {
  * @returns a map
  */
 const createMap = async (req: Request, res: Response) => {
-  console.log("inside create map");
   const MapModel = await getMapModel();
   const mapStr = {
     ...req.body.map_file_content,
     creatorId:req.session.user.id
   }
-  console.log(req.body);
-  const map = new MapModel(mapStr);
+  const processed_map = await storeAndLinkRegions(mapStr);
+
+  //if(!processed_map.legend.choroplethLegend.min) processed_map.min = 0;
+  //if(!processed_map.legend.choroplethLegend.max) processed_map.max = 1;
+  const map = new MapModel(processed_map);
 
   map
     .save()
@@ -265,6 +317,8 @@ const updateMap = async (req: Request, res: Response) => {
   }
 
   try {
+    await deleteRegionsFile(map)
+    const regionizedMap = await storeAndLinkRegions({mapName: mapName, regions: regions});
     const mapUpdateResponse = await mapModel.updateOne(
       { _id: map_id },
       {
@@ -278,12 +332,13 @@ const updateMap = async (req: Request, res: Response) => {
           displayLegend: displayLegend,
           displayPointers: displayPointers,
           thumbnail: thumbnail,
-          regions: regions,
+          regions: {},
+          regionsFile: regionizedMap.regionsFile,
           legend: legend,
         },
       }
     );
-    res.status(200).send(mapUpdateResponse);
+    res.status(200).send(await fillRegions(mapUpdateResponse));
   } catch (error) {
     console.log(error);
   }
@@ -317,6 +372,7 @@ const deleteMap = async (req: Request, res: Response) => {
   }
 
   /* Delete the map */
+  deleteRegionsFile(map);
   await map.deleteOne();
 
   /* Return success */

@@ -40,7 +40,8 @@ export interface Map {
   displayLegend: boolean;
   displayPointers: boolean;
   thumbnail: Image;
-  regions: { [key: string]: (Region | Types.ObjectId)[]};
+  regions: { [key: string]: Region[]};
+  regionsFile: Types.ObjectId;
   legend: Legend;
 }
 
@@ -84,6 +85,7 @@ export const mapSchema = new Schema<Map>({
   displayLegend: { type: Boolean },
   displayPointers: { type: Boolean },
   thumbnail: { type: imageSchema },
-  regions: { type: {}, of: [regionSchema, Schema.Types.ObjectId] },
+  regions: { type: {}, of: [regionSchema] },
+  regionsFile: { type: Schema.Types.ObjectId},
   legend: { type: legendSchema },
 });
