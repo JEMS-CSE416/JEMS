@@ -14,6 +14,7 @@ import chroma from "chroma-js";
 import { Map as LeafletMap } from "leaflet";
 import * as L from "leaflet";
 import { useNavigate } from "react-router-dom";
+import { UndoRedo } from "./UndoRedo";
 
 interface EditContextProviderProps {
   children?: React.ReactNode;
@@ -166,7 +167,9 @@ export function EditContextProvider(props: EditContextProviderProps) {
               <setLeafletMapPrinterContext.Provider
                 value={setLeafletMapPrinter}
               >
-                {props.children}
+                <UndoRedo>
+                  {props.children}
+                </UndoRedo>
               </setLeafletMapPrinterContext.Provider>
             </leafletMapPrinterContext.Provider>
           </SetLeafletMapContext.Provider>
@@ -439,3 +442,8 @@ export function useEditContext() {
 export function useEditDispatchContext() {
   return useContext(EditDispatchContext);
 }
+
+
+
+
+

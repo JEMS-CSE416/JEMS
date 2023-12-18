@@ -13,12 +13,14 @@ import { getFileType, handleFileConversion, getRegions } from "../../utils/globa
 import { updateMap } from "../../api/MapApiAccessor";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import { UndoableAddRegion, useUndoRedoContext } from "../../context/UndoRedo";
 
 // The base Settings modal with all the logic
 function AddRegionModalBase() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
   const [file, setFile] = useState<File | null>(null);
+  const addToUndoRedo = useUndoRedoContext();
 
   const handleFilesDrop = (droppedFiles: File) => {
     setFile(droppedFiles);
@@ -36,21 +38,22 @@ function AddRegionModalBase() {
     // add new regions to existing regions
     if (jemsjson) {
       newRegions = {
-        ...existingRegions,
+        //...existingRegions,
         ...regionsToAdd
       };
     }
     else {
       newRegions = {
-        ...existingRegions,
+        //...existingRegions,
         [filename]: regionsToAdd
       };
     }
 
-    editPageState.map.regions = newRegions;
+    //editPageState.map.regions = newRegions;
 
     // Update the edit page state
-    setEditPageState({ type: "update_map", map: editPageState.map });
+    //setEditPageState({ type: "update_map", map: editPageState.map });
+    addToUndoRedo(new UndoableAddRegion(newRegions))
     console.log(editPageState.map, "updated editPageState.map????");
   }
 
