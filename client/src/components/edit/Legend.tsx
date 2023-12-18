@@ -9,6 +9,7 @@ import {
   Group,
   ColorSwatch,
   Button,
+  Text,
 } from "@mantine/core";
 import {
   EditPageAction,
@@ -24,6 +25,7 @@ import { IconX } from "@tabler/icons-react";
 import { valid } from "chroma-js";
 import "./css/Legend.css";
 import { useLegendContext } from "../../context/LegendContextProvider";
+import { use } from "chai";
 
 export default function Legend() {
   const editPageState = useEditContext();
@@ -33,7 +35,8 @@ export default function Legend() {
     new Map<number, string>()
   );
   const { legendSubmit, setLegendSubmit } = useLegendContext();
-  const { validChoroplethLegend, setvalidChoroplethLegend } = useLegendContext();
+  const { validChoroplethLegend, setvalidChoroplethLegend } =
+    useLegendContext();
 
   useEffect(() => {
     ChoroplethLegend({
@@ -58,10 +61,20 @@ export default function Legend() {
     />;
   }, [editPageState, validChoroplethLegend]);
 
-  let invalidChoroplethLegendClassName =
+  // When user changes color type, reset legend to default
+  useEffect(() => {
+    setvalidChoroplethLegend(true);
+    setLegendSubmit(false);
+  }, [editPageState.map.colorType]);
+
+  let invalidLegendEditing =
     editPageState.map.colorType === TemplateTypes.CHOROPLETH
       ? "invalidChoroplethLegend"
       : "invalidColorLegend";
+  let legendEditingClassName =
+    editPageState.map.colorType === TemplateTypes.CHOROPLETH
+      ? "choroplethLegendEditing"
+      : "colorLegendEditing";
   let legendClassName =
     editPageState.map.colorType === TemplateTypes.CHOROPLETH
       ? "choroplethLegend"
@@ -78,7 +91,13 @@ export default function Legend() {
           bottom={15}
           style={{ zIndex: 1000000 }}
           radius="l"
-          className={validChoroplethLegend ? legendClassName : invalidChoroplethLegendClassName}
+          className={
+            validChoroplethLegend
+              ? legendSubmit
+                ? legendEditingClassName
+                : legendClassName
+              : invalidLegendEditing
+          }
         >
           <Title order={3} style={{ textAlign: "left" }}>
             {" "}
@@ -184,12 +203,12 @@ export function ChoroplethLegend({
   );
 
   return (
-    //set border style to red if legend is invalid
     <div>
       <ScrollArea style={{ maxHeight: 200, overflowY: "auto" }}>
         {items.map(([color, value], index) => (
           <Group>
             <ColorSwatch color={color} mr={20} radius={"5px"} />
+            <Text size="md">{">"}=</Text>
             <NumberInput
               variant="unstyled"
               placeholder={value.toString()}
@@ -197,15 +216,16 @@ export function ChoroplethLegend({
               rightSectionWidth={"0px"}
               hideControls
               withErrorStyles={validChoroplethLegend}
-              disabled={index==0 || index==items.length-1}
+              disabled={index == 0 || index == items.length - 1}
               onChange={(value) => {
                 console.log(index + " " + value);
 
                 setNewLegendInput(newLegendInput.set(index, value.toString()));
-
                 setLegendSubmit(true);
                 console.log(newLegendInput);
               }}
+              onClick={() => setLegendSubmit(true)}
+              className="choroplethLegendNumberInput"
             />
           </Group>
         ))}

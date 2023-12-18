@@ -16,6 +16,7 @@ import {
   Select,
   Group,
   ScrollArea,
+  Tooltip,
 } from "@mantine/core";
 import {
   EditPageAction,
@@ -162,28 +163,56 @@ export default function Properties() {
         <Title order={3}> Map Properties </Title>
 
         <Stack pl={10} gap="sm" p="sm" className="mapProperties">
-          <Select
-            label="Map Style"
-            placeholder="Select a map type"
-            value={editPageState.map.colorType}
-            data={[
-              TemplateTypes.NONE,
-              TemplateTypes.COLOR,
-              TemplateTypes.CHOROPLETH,
-            ]}
-            allowDeselect={false}
-            onChange={(value) => {
-              if (value !== null) {
-                setEditPageState({
-                  type: "update_map",
-                  map: {
-                    ...editPageState.map,
-                    colorType: value as TemplateTypes,
-                  },
-                });
-              }
-            }}
-          />
+          {legendSubmit ? (
+            <Tooltip label="Cannot change with active legend editing.">
+              <Select
+                label="Map Style"
+                placeholder="Select a map type"
+                value={editPageState.map.colorType}
+                data={[
+                  TemplateTypes.NONE,
+                  TemplateTypes.COLOR,
+                  TemplateTypes.CHOROPLETH,
+                ]}
+                allowDeselect={false}
+                onChange={(value) => {
+                  if (value !== null) {
+                    setEditPageState({
+                      type: "update_map",
+                      map: {
+                        ...editPageState.map,
+                        colorType: value as TemplateTypes,
+                      },
+                    });
+                  }
+                }}
+                disabled={true}
+              />
+            </Tooltip>
+          ) : (
+            <Select
+              label="Map Style"
+              placeholder="Select a map type"
+              value={editPageState.map.colorType}
+              data={[
+                TemplateTypes.NONE,
+                TemplateTypes.COLOR,
+                TemplateTypes.CHOROPLETH,
+              ]}
+              allowDeselect={false}
+              onChange={(value) => {
+                if (value !== null) {
+                  setEditPageState({
+                    type: "update_map",
+                    map: {
+                      ...editPageState.map,
+                      colorType: value as TemplateTypes,
+                    },
+                  });
+                }
+              }}
+            />
+          )}
 
           <Switch
             checked={editPageState.map.displayLegend}
@@ -306,17 +335,32 @@ export default function Properties() {
                   }}
                 />
 
-                <NumberInput
-                  disabled={legendSubmit}
-                  hideControls
-                  label="Numeric Label"
-                  placeholder="100, 250, etc."
-                  value={numericLabelState}
-                  onChange={(value) => {
-                    console.log(value);
-                    setNumericLabelState(value);
-                  }}
-                />
+                {legendSubmit ? (
+                  <Tooltip label="Cannot edit with active legend editing.">
+                    <NumberInput
+                      disabled={legendSubmit}
+                      hideControls
+                      label="Numeric Label"
+                      placeholder="100, 250, etc."
+                      value={numericLabelState}
+                      onChange={(value) => {
+                        console.log(value);
+                        setNumericLabelState(value);
+                      }}
+                    />
+                  </Tooltip>
+                ) : (
+                  <NumberInput
+                    hideControls
+                    label="Numeric Label"
+                    placeholder="100, 250, etc."
+                    value={numericLabelState}
+                    onChange={(value) => {
+                      console.log(value);
+                      setNumericLabelState(value);
+                    }}
+                  />
+                )}
 
                 <TextInput
                   label="Units"
