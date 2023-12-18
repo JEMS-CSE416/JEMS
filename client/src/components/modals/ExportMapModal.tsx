@@ -40,7 +40,6 @@ export function ExportMapModal() {
         size="70%"
       >
         <Flex justify="center" gap="xl" mb="md">
-          <ExportMapButton text="Export as Image" onClick={undefined} />
           <ExportMapButton text="Export as Project" onClick={handleDownloadAsJEMS} />
         </Flex>
       </Modal>

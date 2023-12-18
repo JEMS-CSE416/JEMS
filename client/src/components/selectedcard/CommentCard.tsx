@@ -11,7 +11,7 @@ type CommentCardProps = {
 export const CommentCard: React.FC<CommentCardProps> = ({ comment }) => {
   return (
     <Box>
-      <Group gap="lg" id="commentsContainer">
+      <Group gap="lg" className="commentsContainer">
         <Avatar color="blue" radius="xl">
           {comment.displayName[0].toUpperCase()}
         </Avatar>
@@ -26,10 +26,10 @@ export const CommentCard: React.FC<CommentCardProps> = ({ comment }) => {
             maxHeight={43}
             showLabel="Show more >"
             hideLabel="Hide"
-            id="commentSpoiler"
+            className="commentSpoiler"
             style={{ width: "100%" }}
           >
-            <Text size="sm" id="commentText">
+            <Text size="sm" className="commentText">
               {comment.content}
             </Text>
           </Spoiler>

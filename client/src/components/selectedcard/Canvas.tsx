@@ -7,7 +7,7 @@ import { TemplateTypes } from "../../utils/enums";
 import { Feature, Geometry, FeatureCollection } from "geojson";
 import { NonInteractiveLabels as Labels } from "../CanvasComponents/NonInteractiveLabels";
 import { Canvas as CanvasBase } from "../CanvasComponents/Canvas";
-
+import EasyPrint from "../common/EasyPrint";
 interface CanvasProps {
   map: JEMSMap;
 }
@@ -31,6 +31,7 @@ const Canvas = ({ map }: CanvasProps) => {
           }
         />
         <Labels data={data} map={map} />
+        <EasyPrint/>
       </CanvasBase>
     </>
   );
