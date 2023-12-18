@@ -26,10 +26,12 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { useEffect, useState } from "react";
 import { set } from "cypress/types/lodash";
+import { UndoableChangeMapProp, useUndoRedoContext } from "../../context/UndoRedo";
 
 export default function Properties() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+  const addToUndoStack = useUndoRedoContext();
   console.log(editPageState);
   const [groupNameState, setGroupNameState] = useState(
     editPageState.selectedRegion?.groupName
@@ -167,6 +169,10 @@ export default function Properties() {
             allowDeselect={false}
             onChange={(value) => {
               if (value !== null) {
+                addToUndoStack(new UndoableChangeMapProp(
+                  { colorType: value as TemplateTypes},
+                  { colorType: editPageState.map.colorType},
+                ));
                 setEditPageState({
                   type: "update_map",
                   map: {
@@ -181,13 +187,17 @@ export default function Properties() {
           <Switch
             checked={editPageState.map.displayLegend}
             onChange={(event) => {
-              setEditPageState({
-                type: "update_map",
-                map: {
-                  ...editPageState.map,
-                  displayLegend: event.currentTarget.checked,
-                },
-              });
+              addToUndoStack(new UndoableChangeMapProp(
+                { displayLegend: event.currentTarget.checked},
+                { displayLegend: editPageState.map.displayLegend},
+              ));
+              //setEditPageState({
+                //type: "update_map",
+                //map: {
+                  //...editPageState.map,
+                  //displayLegend: event.currentTarget.checked,
+                //},
+              //});
             }}
             labelPosition="left"
             label="Legend"
@@ -196,13 +206,17 @@ export default function Properties() {
           <Switch
             checked={editPageState.map.displayNumerics}
             onChange={(event) => {
-              setEditPageState({
-                type: "update_map",
-                map: {
-                  ...editPageState.map,
-                  displayNumerics: event.currentTarget.checked,
-                },
-              });
+              addToUndoStack(new UndoableChangeMapProp(
+                { displayNumerics: event.currentTarget.checked},
+                { displayNumerics: editPageState.map.displayNumerics},
+              ));
+              //setEditPageState({
+                //type: "update_map",
+                //map: {
+                  //...editPageState.map,
+                  //displayNumerics: event.currentTarget.checked,
+                //},
+              //});
             }}
             labelPosition="left"
             label="Show Numeric Label"
@@ -211,13 +225,17 @@ export default function Properties() {
           <Switch
             checked={editPageState.map.displayStrings}
             onChange={(event) => {
-              setEditPageState({
-                type: "update_map",
-                map: {
-                  ...editPageState.map,
-                  displayStrings: event.currentTarget.checked,
-                },
-              });
+              addToUndoStack(new UndoableChangeMapProp(
+                { displayStrings: event.currentTarget.checked},
+                { displayStrings: editPageState.map.displayStrings},
+              ));
+              //setEditPageState({
+                //type: "update_map",
+                //map: {
+                  //...editPageState.map,
+                  //displayStrings: event.currentTarget.checked,
+                //},
+              //});
             }}
             labelPosition="left"
             label="Show Text Label"
@@ -226,13 +244,17 @@ export default function Properties() {
           <Switch
             checked={editPageState.map.displayPointers}
             onChange={(event) => {
-              setEditPageState({
-                type: "update_map",
-                map: {
-                  ...editPageState.map,
-                  displayPointers: event.currentTarget.checked,
-                },
-              });
+              addToUndoStack(new UndoableChangeMapProp(
+                { displayPointers: event.currentTarget.checked},
+                { displayPointers: editPageState.map.displayPointers},
+              ));
+              //setEditPageState({
+                //type: "update_map",
+                //map: {
+                  //...editPageState.map,
+                  //displayPointers: event.currentTarget.checked,
+                //},
+              //});
             }}
             labelPosition="left"
             label="Allow Text Label Pointing"

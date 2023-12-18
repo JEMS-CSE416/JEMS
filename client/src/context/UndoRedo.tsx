@@ -114,6 +114,34 @@ export class UndoableDeleteRegion extends UndoableAddRegion{
   }
 }
 
+export class UndoableChangeMapProp implements Undoable{
+  mapKeyVal: {[key: string]: any}
+  prevMapKeyVal: {[key: string]: any}
+  constructor(mapKeyVal: {[key: string]: any}, prevMapKeyVal: {[key: string]: any}){
+    this.mapKeyVal = mapKeyVal
+    this.prevMapKeyVal = prevMapKeyVal
+
+  }
+
+  firstTime(editState: EditPageState, setEditState: React.Dispatch<EditPageAction>){
+    this.redo(editState, setEditState);
+  }
+
+  undo(editPageState: EditPageState, setEditPageState: React.Dispatch<EditPageAction>){
+    setEditPageState({ type: "update_map", map: {
+      ...editPageState.map ,
+      ...this.prevMapKeyVal
+    }});
+  }
+
+  redo(editPageState: EditPageState, setEditPageState: React.Dispatch<EditPageAction>){
+    setEditPageState({ type: "update_map", map: {
+      ...editPageState.map ,
+      ...this.mapKeyVal
+    }});
+  }
+}
+
 
 export function useUndoRedoContext() {
   return useContext(UndoRedoContext);
