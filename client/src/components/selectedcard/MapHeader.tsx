@@ -1,6 +1,6 @@
 import "./css/mapHeader.css";
 import { Link } from "react-router-dom";
-import DownloadMapModal from "../modals/DownloadMapModal";
+import { downloadAsJEMS } from "../../utils/jemsExport";
 import DuplicateMapModal from "../modals/DuplicateMapModal";
 import DeleteMapModal from "../modals/DeleteMapModal";
 import { Text, Group, Avatar, Button } from "@mantine/core";
@@ -23,8 +23,6 @@ interface MapHeaderProps {
 const MapHeader = ({map, mapUser}: MapHeaderProps) => {
   const { isLoggedIn, user } = useAuth();
 
-  // the download modal state
-  const [downloadModalOpened, setDownloadModal] = useDisclosure(false);
   // the duplicate modal state
   const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
   // the delete modal state
@@ -32,13 +30,6 @@ const MapHeader = ({map, mapUser}: MapHeaderProps) => {
 
   return (
     <>
-      {/* Show download modal when needed */}
-      <DownloadMapModal
-        map={map}
-        opened={downloadModalOpened}
-        onClose={setDownloadModal.close}
-      />
-
       {/* Show duplicate modal when needed */}
       <DuplicateMapModal
         opened={duplicateModalOpened}
@@ -100,10 +91,10 @@ const MapHeader = ({map, mapUser}: MapHeaderProps) => {
             leftSection={<IconDownload size={14} />}
             variant="subtle"
             color="gray"
-            onClick={setDownloadModal.open}
+            onClick={()=>downloadAsJEMS(map)}
             id="download-button"
           >
-            Download
+            Download JEMS Project
           </Button>
 
           <Button

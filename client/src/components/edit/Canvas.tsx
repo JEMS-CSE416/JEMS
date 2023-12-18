@@ -6,6 +6,7 @@ import { convertToGeoJSON } from "./utils/jemsconvert";
 import { FeatureCollection } from "geojson";
 import * as turf from "@turf/turf";
 import { Canvas as CanvasBase } from "../CanvasComponents/Canvas";
+import EasyPrint from "../common/EasyPrint";
 
 export default function Canvas() {
   const editPageState = useEditContext();
@@ -24,6 +25,7 @@ export default function Canvas() {
   return (
     <>
       <CanvasBase centerCoords={[centerCoords[0], centerCoords[1]]} noWrap>
+        <EasyPrint />
         <DisplayLayer />
         <Legend />
       </CanvasBase>
