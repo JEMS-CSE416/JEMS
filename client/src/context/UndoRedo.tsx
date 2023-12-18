@@ -142,6 +142,53 @@ export class UndoableChangeMapProp implements Undoable{
   }
 }
 
+export class UndoableColorLegend implements Undoable{
+  key: string;
+  prev: string;
+  curr: string;
+  constructor(key: string, curr: string, prev: string){
+    this.key = key;
+    this.prev = prev;
+    this.curr = curr;
+
+  }
+
+  firstTime(editState: EditPageState, setEditState: React.Dispatch<EditPageAction>){
+    this.redo(editState, setEditState);
+  }
+
+  undo(editPageState: EditPageState, setEditPageState: React.Dispatch<EditPageAction>){
+    setEditPageState({
+      type: "update_color_legend",
+      map: {
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend,
+          colorLegend: {
+            ...editPageState.map.legend.colorLegend,
+            [this.key]: this.prev,
+          },
+        },
+      },
+    });
+  }
+
+  redo(editPageState: EditPageState, setEditPageState: React.Dispatch<EditPageAction>){
+    setEditPageState({
+      type: "update_color_legend",
+      map: {
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend,
+          colorLegend: {
+            ...editPageState.map.legend.colorLegend,
+            [this.key]: this.curr,
+          },
+        },
+      },
+    });
+  }
+}
 
 export function useUndoRedoContext() {
   return useContext(UndoRedoContext);

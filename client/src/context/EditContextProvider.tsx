@@ -328,11 +328,6 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         map: newMap,
         selectedRegion: updatedSelectedRegionInfo,
       };
-    case "update_map":
-      return {
-        ...state,
-        map: action.map,
-      };
     case "update_color_legend":
       return {
         ...state,

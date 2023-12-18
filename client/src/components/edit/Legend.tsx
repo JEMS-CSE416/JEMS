@@ -19,6 +19,7 @@ import { TemplateTypes } from "../../utils/enums";
 import { Map, Region, Legend as legend } from "../../utils/models/Map";
 import { useEffect, useState } from "react";
 import LegendItems from "./LegendItems";
+import { UndoableColorLegend, useUndoRedoContext } from "../../context/UndoRedo";
 
 export default function Legend() {
   const editPageState = useEditContext();
@@ -63,6 +64,7 @@ export default function Legend() {
 export function ColorLegend() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+  const addToUndoStack = useUndoRedoContext();
 
   const initialLegend = editPageState.map.legend.colorLegend;
   // const [legend, setLegend] = useState(initialLegend);
@@ -70,20 +72,9 @@ export function ColorLegend() {
   // TODO: update state every change is computationally intensive
   const handleLabelChange = (color: string, newLabel: string) => {
     // setLegend((prevLegend) => ({ ...prevLegend, [color]: newLabel }));
-
-    setEditPageState({
-      type: "update_color_legend",
-      map: {
-        ...editPageState.map,
-        legend: {
-          ...editPageState.map.legend,
-          colorLegend: {
-            ...editPageState.map.legend.colorLegend,
-            [color]: newLabel,
-          },
-        },
-      },
-    });
+    
+    addToUndoStack( new UndoableColorLegend(color, newLabel, editPageState.map.legend.colorLegend[color]))
+    
   };
 
   return (
