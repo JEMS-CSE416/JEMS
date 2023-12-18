@@ -1,35 +1,44 @@
-import { EditPageAction, EditPageState } from "../../../context/EditContextProvider";
+import { EditPageAction, EditPageState, useEditContext } from "../../../context/EditContextProvider";
 import React, { useEffect, useState } from "react";
 import { LatLngTuple, LeafletEvent, LeafletMouseEvent, type Marker as LeafletMarker, } from 'leaflet';
 import { Feature } from "geojson";
 import { Polyline } from "react-leaflet";
+import { UndoableDrag } from "../../../context/UndoRedo";
 
 // heavier region and update page state
 export function onDragEndLabel(
   markerRef: React.MutableRefObject<LeafletMarker<any>> | React.MutableRefObject<null>,
   editPageState: EditPageState,
-  setEditPageState: React.Dispatch<EditPageAction>
+  setEditPageState: React.Dispatch<EditPageAction>,
+  addToUndoStack: any
 ){
 
   const marker = markerRef.current;
   if(marker != null){
     const latLng = marker.getLatLng()
-    setEditPageState({
-      type: "update_selected_region_info",
-      map:{
-        ...editPageState.map,
-        legend: {
-          ...editPageState.map.legend
-        }
-      },
-      selectedRegion: {
-        ...editPageState.selectedRegion!,
-        region: {
-          ...editPageState.selectedRegion!.region,
-          stringOffset: [latLng.lat, latLng.lng]
-        },
-      },
-    });
+    
+    addToUndoStack(new UndoableDrag(
+      [latLng.lat, latLng.lng],
+      editPageState.selectedRegion?.region.stringOffset?? [0],
+      editPageState.selectedRegion?.groupName?? "",
+      editPageState.selectedRegion?.i?? 0
+    ))
+    //setEditPageState({
+      //type: "update_selected_region_info",
+      //map:{
+        //...editPageState.map,
+        //legend: {
+          //...editPageState.map.legend
+        //}
+      //},
+      //selectedRegion: {
+        //...editPageState.selectedRegion!,
+        //region: {
+          //...editPageState.selectedRegion!.region,
+          //stringOffset: [latLng.lat, latLng.lng]
+        //},
+      //},
+    //});
   }
 }
 
@@ -66,10 +75,13 @@ export function PointerConnection(
     setDragStateSetter: any
     region: Feature
   }){
+  const editPageState = useEditContext()
+  const groupName = props.region.properties?.groupName
+  const i = props.region.properties?.i
 
   const [mousePos, setMousePos] = useState(
     props.region.properties?.stringOffset?.length !== 1
-      ? props.region.properties?.stringOffset as LatLngTuple
+      ? editPageState.map.regions[groupName][i].stringOffset as LatLngTuple
       : props.centroid
   );
   useEffect(() =>{
@@ -77,6 +89,15 @@ export function PointerConnection(
         setMousePos(coords)
       });
   }, []) // eslint-disable-line
+
+  useEffect( () =>{
+    if(editPageState.map.regions[groupName][i].stringOffset !== null
+      && props.region.properties?.stringOffset?.length !== 1
+      )
+      setMousePos( editPageState.map.regions[groupName][i].stringOffset as LatLngTuple)
+    else
+      setMousePos(props.centroid)
+  },[editPageState, groupName, i, props]);
 
   return <Polyline
       positions={[

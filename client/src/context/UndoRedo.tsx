@@ -190,6 +190,73 @@ export class UndoableColorLegend implements Undoable{
   }
 }
 
+export class UndoableDrag implements Undoable{
+  currOffset: Number[];
+  prevOffset: Number[];
+  groupName: string;
+  i: number;
+  constructor(currOffset: Number[], prevOffset: Number[], groupName: string, i: number){
+    this.currOffset = currOffset 
+    this.prevOffset = prevOffset
+    this.groupName = groupName
+    this.i = i
+
+  }
+
+  firstTime(editState: EditPageState, setEditState: React.Dispatch<EditPageAction>){
+    this.redo(editState, setEditState);
+  }
+
+  undo(editPageState: EditPageState, setEditPageState: React.Dispatch<EditPageAction>){
+    setEditPageState({
+      type: "update_selected_region_info",
+      map:{
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend
+        }
+      },
+      oldGroupDetails: {
+        i: this.i,
+        groupName: this.groupName,
+      },
+      selectedRegion: {
+        i: this.i,
+        groupName: this.groupName,
+        region: {
+          ...editPageState.map.regions[this.groupName][this.i],
+          stringOffset: this.prevOffset
+        },
+      },
+    });
+  }
+
+  redo(editPageState: EditPageState, setEditPageState: React.Dispatch<EditPageAction>){
+    setEditPageState({
+      type: "update_selected_region_info",
+      map:{
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend
+        }
+      },
+      oldGroupDetails: {
+        i: this.i,
+        groupName: this.groupName,
+      },
+      selectedRegion: {
+        i: this.i,
+        groupName: this.groupName,
+        region: {
+          ...editPageState.map.regions[this.groupName][this.i],
+          stringOffset: this.currOffset
+        },
+      },
+    });
+  }
+}
+
+
 export function useUndoRedoContext() {
   return useContext(UndoRedoContext);
 }

@@ -29,6 +29,7 @@ import {
   onDragLabel,
   PointerConnection,
 } from "./leaflet/pointers";
+import { useUndoRedoContext } from "../../context/UndoRedo";
 
 export default function DisplayLayer() {
   const editPageState = useEditContext();
@@ -126,6 +127,7 @@ const RegionLabel = (props: {
   const setEditPageState = useEditDispatchContext();
   const region = props.region;
   const index = props.key;
+  const addToUndoStack = useUndoRedoContext()
 
   // useRef allows a ReactLeaflet child component to be accessible
   const markerRef = useRef(null);
@@ -176,7 +178,7 @@ const RegionLabel = (props: {
               onClickLabel(region, editPageState, setEditPageState);
             },
             dragend: () => {
-              onDragEndLabel(markerRef, editPageState, setEditPageState);
+              onDragEndLabel(markerRef, editPageState, setEditPageState, addToUndoStack);
             },
             drag: (e) => {
               onDragLabel(e, markerRef, dragSetter);
