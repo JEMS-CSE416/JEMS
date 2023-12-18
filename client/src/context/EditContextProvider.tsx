@@ -103,7 +103,10 @@ export function EditContextProvider(props: EditContextProviderProps) {
       const newMap = res;
 
       // If choroplethlegend items is empty, then we need to populate it, otherwise use values stored
-      if (Object.keys(newMap.legend.choroplethLegend.items).length === 0 && newMap.regions) {
+      if (
+        Object.keys(newMap.legend.choroplethLegend.items).length === 0 &&
+        newMap.regions
+      ) {
         console.log("choroplethLegend items is empty, populating it");
         // Append min/max and choropleth legend items to the newly created map
         const items = findChoroplethItems(
@@ -112,8 +115,12 @@ export function EditContextProvider(props: EditContextProviderProps) {
           newMap
         );
         // Get min/max values from choroItems
-        const min = Math.min(...Object.values(items)) ? Math.min(...Object.values(items)) : Number.MAX_SAFE_INTEGER;
-        const max = Math.max(...Object.values(items)) ? Math.max(...Object.values(items)) : Number.MIN_SAFE_INTEGER;
+        const min = Math.min(...Object.values(items))
+          ? Math.min(...Object.values(items))
+          : Number.MAX_SAFE_INTEGER;
+        const max = Math.max(...Object.values(items))
+          ? Math.max(...Object.values(items))
+          : Number.MIN_SAFE_INTEGER;
         const hue = newMap.legend.choroplethLegend.hue;
         newMap.legend.choroplethLegend = {
           hue: hue,
@@ -195,9 +202,45 @@ function editReducer(state: EditPageState, action: any): EditPageState {
           : "NONE",
       };
     case "update_map":
+      console.log("inside update_map 1");
+
+      // When region is being deleted, update the choropleth legend information.
+      let updatedChoroplethLegend3 = state.map.legend.choroplethLegend;
+      const choroItems3 = findChoroplethItems(
+        state,
+        updatedChoroplethLegend3.hue
+      );
+      updatedChoroplethLegend3 = {
+        ...updatedChoroplethLegend3,
+        items: choroItems3,
+      };
+
+      // Get min/max values from choroItems
+      const min3 = Math.min(
+        ...Object.values(updatedChoroplethLegend3.items as unknown as number[])
+      );
+
+      const max3 = Math.max(
+        ...Object.values(updatedChoroplethLegend3.items as unknown as number[])
+      );
+
+      updatedChoroplethLegend3 = {
+        ...updatedChoroplethLegend3,
+        min: min3,
+        max: max3,
+      };
+
+      const newMap2 = {
+        ...state.map,
+        ...action.map,
+        legend: {
+          ...state.map.legend,
+          choroplethLegend: updatedChoroplethLegend3,
+        },
+      };
       return {
         ...state,
-        map: action.map ?? ErrorMap,
+        map: newMap2 ?? ErrorMap,
       };
     case "select_region":
       const selectedRegion = {
@@ -346,11 +389,11 @@ function editReducer(state: EditPageState, action: any): EditPageState {
       let updatedChoroplethLegend2 = {
         ...oldChoroplethLegend2,
         hue: action.map.legend.choroplethLegend?.hue,
-        items: action.map.legend.choroplethLegend?.items,
+        items: action.map.legend.choroplethLegend?.items, // If items defined, then being called from Legend.tsx
       };
 
       if (action.map.legend.choroplethLegend?.items === undefined) {
-        console.log("should not be entering this if statement");
+        // If items undefined, then being called from Properties.tsx
         const choroItems2 = findChoroplethItems(
           state,
           updatedChoroplethLegend2.hue
@@ -401,41 +444,46 @@ function findChoroplethItems(
     // If newMap is undefined, means we are updating the map. Should be using the states.
     regions = state.map.regions;
   }
-  const filename = Object.keys(regions);
-  let value = 0;
-  let color = chroma(newHue).brighten(value).hex();
+  console.log(regions);
 
-  //Get unique numeric label values
-  const uniqueValues: { numericLabel: string; numericLabelNumber: number }[] =
-    [];
-  for (let i = 0; i < filename.length; i++) {
-    const region = regions[filename[i]];
-    for (let j = 0; j < region.length; j++) {
-      const numericLabel: string = region[j].numericLabel;
-      const numericLabelNumber = Number(numericLabel);
+  //Objects of {color, value} to be returned
+  let newItems: { [key: string]: number } = {};
+  if (regions) {
+    const filename = Object.keys(regions);
+    let value = 0;
+    let color = chroma(newHue).brighten(value).hex();
 
-      //if numericLabel is an existing key in uniqueValues, skip
-      if (uniqueValues.some((value) => value.numericLabel === numericLabel)) {
-        continue;
+    //Get unique numeric label values
+    const uniqueValues: { numericLabel: string; numericLabelNumber: number }[] =
+      [];
+    for (let i = 0; i < filename.length; i++) {
+      const region = regions[filename[i]];
+      for (let j = 0; j < region.length; j++) {
+        const numericLabel: string = region[j].numericLabel;
+        const numericLabelNumber = Number(numericLabel);
+
+        //if numericLabel is an existing key in uniqueValues, skip
+        if (uniqueValues.some((value) => value.numericLabel === numericLabel)) {
+          continue;
+        }
+        if (numericLabel === "") continue;
+        else uniqueValues.push({ numericLabel, numericLabelNumber });
       }
-      if (numericLabel === "") continue;
-      else uniqueValues.push({ numericLabel, numericLabelNumber });
     }
+    console.log(uniqueValues);
+
+    //Sort the unique values in decreasing order
+    uniqueValues.sort((a, b) => b.numericLabelNumber - a.numericLabelNumber);
+
+    uniqueValues.forEach((value, index) => {
+      color = chroma(newHue)
+        .brighten(index - 0.5)
+        .hex();
+      newItems[color] = value.numericLabelNumber;
+    });
   }
-  console.log(uniqueValues);
-
-  //Sort the unique values in decreasing order
-  uniqueValues.sort((a, b) => b.numericLabelNumber - a.numericLabelNumber);
-
-  const newItems: { [key: string]: number } = {};
-  uniqueValues.forEach((value, index) => {
-    color = chroma(newHue)
-      .brighten(index - 0.5)
-      .hex();
-    newItems[color] = value.numericLabelNumber;
-  });
-
-  return newItems;
+  console.log(newItems);
+  return newItems ;
 }
 
 export function useLeafletMapContext() {
