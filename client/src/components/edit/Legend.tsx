@@ -204,9 +204,8 @@ export function ChoroplethLegend({
 
   return (
     <div>
-      <ScrollArea style={{ maxHeight: 200, overflowY: "auto" }}>
         {items.map(([color, value], index) => (
-          <Group>
+          <Group wrap="nowrap">
             <ColorSwatch color={color} mr={20} radius={"5px"} />
             <Text size="md">{">"}=</Text>
             <NumberInput
@@ -246,7 +245,6 @@ export function ChoroplethLegend({
         ) : (
           <></>
         )}
-      </ScrollArea>
     </div>
   );
 }
