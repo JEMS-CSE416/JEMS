@@ -142,11 +142,11 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
       case "Color Label Map":
         return TemplateTypes.COLOR;
       case "Numeric Label":
-        return TemplateTypes.NONE;
+        return TemplateTypes.NUMERIC_LABEL_MAP;
       case "Choropleth Map":
         return TemplateTypes.CHOROPLETH;
       case "Pointer Label":
-        return TemplateTypes.NONE;
+        return TemplateTypes.POINT_LABEL_MAP;
       default:
         return TemplateTypes.NONE;
     }
@@ -154,7 +154,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 
   // This function gets the request body for JEMS JSON
   function getJemsRequest(jemsjson: any) {
-    console.debug("in here")
+    console.debug("in here");
     const content = jemsjson.map_file_content;
     console.log(form.values.visibility);
     // legacy format
@@ -164,7 +164,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         min: Number.MAX_SAFE_INTEGER,
         max: Number.MIN_SAFE_INTEGER,
         items: {},
-      }
+      };
 
     // Create the request body
     const req = {
@@ -174,10 +174,14 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         creationDate: new Date().toISOString(),
         public: form.values.visibility === "Public" ? true : false,
         template: content.template,
-        colorType: jemsjson.map_file_content.colorType != "NONE" ? jemsjson.map_file_content.colorType : getColorType(),
+        colorType:
+          jemsjson.map_file_content.colorType != "NONE"
+            ? jemsjson.map_file_content.colorType
+            : getColorType(),
         displayStrings:
           selectedValue == "String Label Map" ? true : content.displayStrings,
-        displayNumerics: content.displayNumerics,
+        displayNumerics:
+          selectedValue == "Numeric Label" ? true : content.displayNumerics,
         displayLegend: content.displayLegend,
         displayPointers: content.displayPointers,
         thumbnail: content.thumbnail,
@@ -270,7 +274,6 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         if (json_file.map_file_content) {
           // Handles getting request when file uploaded is a JEMS JSON
           req = getJemsRequest(json_file);
-          
         } else {
           // Handles getting request when file uploaded is converted to GeoJSON
           req = getGeoJsonRequest(json_file);
