@@ -15,21 +15,24 @@ import React from "react";
 import { EditPageAction, EditPageState, useEditContext, useEditDispatchContext } from "../../context/EditContextProvider";
 import { AddRegionModal } from "../modals/AddRegionModal";
 import { IconCheck } from "@tabler/icons-react";
+import { UndoableDeleteRegion, useUndoRedoContext } from "../../context/UndoRedo";
 
 export default function Regions() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+  const addToUndoRedo = useUndoRedoContext();
 
   function handleDeleteGroup(groupName: string) {
     console.log("delete group", groupName)
     console.log(editPageState.map.regions)
     let regions = editPageState.map.regions;
     //grab the groupName and delete it from the map regions
-    delete regions[groupName]
-    console.log(regions, "after delete")
-    editPageState.map.regions = regions;
+    //delete regions[groupName]
+    addToUndoRedo(new UndoableDeleteRegion(groupName, regions[groupName]))
+    //console.log(regions, "after delete")
+    //editPageState.map.regions = regions;
     // Update the edit page state
-    setEditPageState({ type: "update_map", map: editPageState.map });
+    //setEditPageState({ type: "update_map", map: editPageState.map });
 
     // Show a notification
     notifications.show({

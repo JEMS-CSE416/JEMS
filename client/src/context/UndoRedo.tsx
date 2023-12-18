@@ -67,8 +67,10 @@ export interface Undoable {
 
 export class UndoableAddRegion implements Undoable{
   regionInfo: {[key:string]: any}
-  constructor(regionInfo: {[key: string]: any}){
-    this.regionInfo = regionInfo
+
+  constructor(regionInfo: {[key: string]: any[]}){
+      this.regionInfo = regionInfo
+
   }
 
   firstTime(editState: EditPageState, setEditState: React.Dispatch<EditPageAction>){
@@ -91,6 +93,24 @@ export class UndoableAddRegion implements Undoable{
       ...this.regionInfo
     }
     setEditPageState({ type: "update_map", map: editPageState.map });
+  }
+}
+
+export class UndoableDeleteRegion extends UndoableAddRegion{
+  constructor(regionName: string, regions: any[]){
+    super({[regionName]: regions})
+  }
+
+  firstTime(editState: EditPageState, setEditState: React.Dispatch<EditPageAction>){
+    super.undo(editState, setEditState);
+  }
+
+  undo(editPageState: EditPageState, setEditPageState: React.Dispatch<EditPageAction>){
+    super.redo(editPageState, setEditPageState);
+  }
+
+  redo(editPageState: EditPageState, setEditPageState: React.Dispatch<EditPageAction>){
+    super.undo(editPageState, setEditPageState);
   }
 }
 
