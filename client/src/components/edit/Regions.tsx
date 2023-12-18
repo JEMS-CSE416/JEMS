@@ -61,6 +61,7 @@ export default function Regions() {
       <ScrollArea>
         <Stack align="flex-start" gap={10}>
           {
+            editPageState.map.regions ?
             Object.entries(editPageState.map.regions).map(
               ([groupName, regions]) => {
                 return (
@@ -85,8 +86,7 @@ export default function Regions() {
                   </>
                 )
               }
-            )
-          }
+            ) : (<></>)}
         </Stack>
       </ScrollArea>
 

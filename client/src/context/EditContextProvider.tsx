@@ -103,7 +103,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
       const newMap = res;
 
       // If choroplethlegend items is empty, then we need to populate it, otherwise use values stored
-      if (Object.keys(newMap.legend.choroplethLegend.items).length === 0) {
+      if (Object.keys(newMap.legend.choroplethLegend.items).length === 0 && newMap.regions) {
         console.log("choroplethLegend items is empty, populating it");
         // Append min/max and choropleth legend items to the newly created map
         const items = findChoroplethItems(
