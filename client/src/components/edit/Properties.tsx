@@ -212,20 +212,40 @@ export default function Properties() {
             />
           )}
 
-          <Switch
-            checked={editPageState.map.displayLegend}
-            onChange={(event) => {
-              setEditPageState({
-                type: "update_map",
-                map: {
-                  ...editPageState.map,
-                  displayLegend: event.currentTarget.checked,
-                },
-              });
-            }}
-            labelPosition="left"
-            label="Legend"
-          />
+          {legendSubmit ? (
+            <Tooltip label="Cannot change with active legend editing.">
+              <Switch
+                checked={editPageState.map.displayLegend}
+                onChange={(event) => {
+                  setEditPageState({
+                    type: "update_map",
+                    map: {
+                      ...editPageState.map,
+                      displayLegend: event.currentTarget.checked,
+                    },
+                  });
+                }}
+                labelPosition="left"
+                label="Legend"
+                disabled={true}
+              />
+            </Tooltip>
+          ) : (
+            <Switch
+              checked={editPageState.map.displayLegend}
+              onChange={(event) => {
+                setEditPageState({
+                  type: "update_map",
+                  map: {
+                    ...editPageState.map,
+                    displayLegend: event.currentTarget.checked,
+                  },
+                });
+              }}
+              labelPosition="left"
+              label="Legend"
+            />
+          )}
 
           <Switch
             checked={editPageState.map.displayNumerics}

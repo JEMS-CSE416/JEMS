@@ -212,41 +212,51 @@ function editReducer(state: EditPageState, action: any): EditPageState {
       };
     case "update_map":
       console.log("inside update_map 1");
+      let newMap2 = { ...state.map, ...action?.map };
+      
+      // So far two cases: when displayLegend is changed, and when region is deleted. 
+      // If displayLegend does not change then region was deleted, so update legend
+      if (action.map.displayLegend == state.map.displayLegend) {
+        let updatedChoroplethLegend3 = state.map.legend.choroplethLegend;
+        const choroItems3 = findChoroplethItems(
+          state,
+          updatedChoroplethLegend3.hue
+        );
+        updatedChoroplethLegend3 = {
+          ...updatedChoroplethLegend3,
+          items: choroItems3,
+        };
 
-      // When region is being deleted, update the choropleth legend information.
-      let updatedChoroplethLegend3 = state.map.legend.choroplethLegend;
-      const choroItems3 = findChoroplethItems(
-        state,
-        updatedChoroplethLegend3.hue
-      );
-      updatedChoroplethLegend3 = {
-        ...updatedChoroplethLegend3,
-        items: choroItems3,
-      };
+        // Get min/max values from choroItems
+        const min3 = Math.min(
+          ...Object.values(
+            updatedChoroplethLegend3.items as unknown as number[]
+          )
+        );
 
-      // Get min/max values from choroItems
-      const min3 = Math.min(
-        ...Object.values(updatedChoroplethLegend3.items as unknown as number[])
-      );
+        const max3 = Math.max(
+          ...Object.values(
+            updatedChoroplethLegend3.items as unknown as number[]
+          )
+        );
 
-      const max3 = Math.max(
-        ...Object.values(updatedChoroplethLegend3.items as unknown as number[])
-      );
+        updatedChoroplethLegend3 = {
+          ...updatedChoroplethLegend3,
+          min: min3,
+          max: max3,
+        };
 
-      updatedChoroplethLegend3 = {
-        ...updatedChoroplethLegend3,
-        min: min3,
-        max: max3,
-      };
+        newMap2 = {
+          ...newMap2,
+          legend: {
+            ...state.map.legend,
+            choroplethLegend: updatedChoroplethLegend3,
+          },
+        };
+      }
 
-      const newMap2 = {
-        ...state.map,
-        ...action.map,
-        legend: {
-          ...state.map.legend,
-          choroplethLegend: updatedChoroplethLegend3,
-        },
-      };
+      console.log(newMap2);
+
       return {
         ...state,
         map: newMap2 ?? ErrorMap,
@@ -340,31 +350,37 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         hue: action.map?.legend?.choroplethLegend.hue,
       };
 
-      // Add choropleth items
-      const choroItems = findChoroplethItems(
-        state,
-        updatedChoroplethLegend.hue
-      );
-      console.log(choroItems);
+      const oldRegions3 = state.map.regions;
+      const newRegions3 = action.map?.regions;
 
-      // Get min/max values from choroItems
-      const min = Math.min(...Object.values(choroItems));
-      const max = Math.max(...Object.values(choroItems));
-      updatedChoroplethLegend = {
-        ...updatedChoroplethLegend,
-        min: min,
-        max: max,
-        items: choroItems,
-      };
+      let newMap = { ...state.map, regions: newRegions };
+      // If regions are different, then update the choropleth legend information.
+      if (oldRegions3 != newRegions3) {
+        // Add choropleth items
+        const choroItems = findChoroplethItems(
+          state,
+          updatedChoroplethLegend.hue
+        );
+        console.log(choroItems);
 
-      const newMap = {
-        ...state.map,
-        regions: newRegions,
-        legend: {
-          ...state.map.legend,
-          choroplethLegend: updatedChoroplethLegend,
-        },
-      };
+        // Get min/max values from choroItems
+        const min = Math.min(...Object.values(choroItems));
+        const max = Math.max(...Object.values(choroItems));
+        updatedChoroplethLegend = {
+          ...updatedChoroplethLegend,
+          min: min,
+          max: max,
+          items: choroItems,
+        };
+
+        newMap = {
+          ...newMap,
+          legend: {
+            ...state.map.legend,
+            choroplethLegend: updatedChoroplethLegend,
+          },
+        };
+      }
 
       console.log("updated state: ", {
         ...state,
@@ -460,6 +476,8 @@ function findChoroplethItems(
 
   //Objects of {color, value} to be returned
   let newItems: { [key: string]: number } = {};
+  console.log(newItems);
+
   if (regions) {
     const filename = Object.keys(regions);
     let value = 0;
@@ -475,25 +493,38 @@ function findChoroplethItems(
         const numericLabelNumber = Number(numericLabel);
 
         //if numericLabel is an existing key in uniqueValues, skip
-        if (uniqueValues.some((value) => value.numericLabel === Number(numericLabel))) {
+        if (
+          uniqueValues.some(
+            (value) => value.numericLabel === Number(numericLabel)
+          )
+        ) {
           continue;
         }
-        if (numericLabel === "") continue; // Skip if numericLabel is empty, for legend editing case
-        else uniqueValues.push({ numericLabel: Number(numericLabel), numericLabelNumber });
+        // Skip if numericLabel is empty, for legend editing case
+        if (numericLabel === "") continue;
+        else
+          uniqueValues.push({
+            numericLabel: Number(numericLabel),
+            numericLabelNumber,
+          });
       }
     }
-    console.log(uniqueValues);
 
     //Sort the unique values in decreasing order
     uniqueValues.sort((a, b) => b.numericLabelNumber - a.numericLabelNumber);
-
+    console.log(uniqueValues);
+    console.log(newItems);
     uniqueValues.forEach((value, index) => {
+      console.log(value.numericLabelNumber + ", " + index);
       color = chroma(newHue)
         .brighten(index - 0.5)
         .hex();
       newItems[color] = value.numericLabelNumber;
+      console.log(newItems);
     });
   }
+
+  console.log(newItems);
   return newItems;
 }
 
