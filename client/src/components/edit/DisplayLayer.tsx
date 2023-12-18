@@ -225,9 +225,12 @@ function getRegionStyle(
   if (whichMap == TemplateTypes.CHOROPLETH) {
     style = {
       ...style,
-      fillColor: getChoroplethStyle(region, editPageState),
-      fillOpacity: 1,
-      opacity: 1,
+      fillColor:
+        getChoroplethStyle(region, editPageState) === "none"
+          ? region.properties.color
+          : getChoroplethStyle(region, editPageState),
+      fillOpacity:
+        getChoroplethStyle(region, editPageState) === "none" ? 0.6 : 1,
     };
   } else if (whichMap !== TemplateTypes.COLOR) {
     style = {
@@ -249,53 +252,16 @@ function getChoroplethStyle(
     editPageState.map.legend.choroplethLegend?.items || {}
   );
   const value = region.properties.numericLabel;
-  console.log("value: " + value);
-  if (items.length >= 5) {
-    return value >= items[0][1]
-      ? items[0][0]
-      : value >= items[1][1]
-      ? items[1][0]
-      : value >= items[2][1]
-      ? items[2][0]
-      : value >= items[3][1]
-      ? items[3][0]
-      : value >= items[4][1]
-      ? items[4][0]
-      : "#FFFFFF";
-  } else {
-    // Handle if there are 1, 2, 3, and/or 4 items in the legend
-    if (items.length == 1) {
-      return value == items[0][1] ? items[0][0] : "#FFFFFF";
-    } else if (items.length == 2) {
-      console.log("2");
-      return value >= items[0][1]
-        ? items[0][0]
-        : value >= items[1][1]
-        ? items[1][0]
-        : "#FFFFFF";
-    } else if (items.length == 3) {
-      console.log("3");
-      return value >= items[0][1]
-        ? items[0][0]
-        : value >= items[1][1]
-        ? items[1][0]
-        : value >= items[2][1]
-        ? items[2][0]
-        : "#FFFFFF";
-    } else if (items.length == 4) {
-      console.log("4");
-      return value >= items[0][1]
-        ? items[0][0]
-        : value >= items[1][1]
-        ? items[1][0]
-        : value >= items[2][1]
-        ? items[2][0]
-        : value >= items[3][1]
-        ? items[3][0]
-        : "#FFFFFF";
+
+  // Determines the color of the region based off the numeric value
+  if (items.length <= 7) { // Should only be max 7 items due to colorpicker
+    for (let i = 0; i < items.length; i++) {
+      if (value && value >= items[i][1]) {
+        return items[i][0];
+      }
     }
+    return "none";
   }
-  return "#FFFFFF";
 }
 
 function labelHTML(

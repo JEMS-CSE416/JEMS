@@ -1,0 +1,19 @@
+.invalidChoroplethLegend {
+    border-style: solid;
+    border-color: rgb(255, 51, 51);
+    border-width: 2px;
+}
+
+.choroplethLegendEditing {
+    border-style: solid;
+    border-color: #297cff;
+    border-width: 2px;
+}
+
+.choroplethLegend {
+    border-style: none;
+}
+
+.choroplethLegendNumberInput{
+    width: 5vw;
+}

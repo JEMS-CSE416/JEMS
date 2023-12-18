@@ -44,7 +44,7 @@ export const getRegions = (geojson: any) => {
                         coordinates: feature.geometry.coordinates[0],
                         stringLabel: "",
                         stringOffset: [0],
-                        numericLabel: 0,
+                        numericLabel: "",
                         numericUnit: "",
                         color: "#8eb8fa", // default color
                     })
@@ -56,7 +56,7 @@ export const getRegions = (geojson: any) => {
                             coordinates: coordinates[0],
                             stringLabel: "",
                             stringOffset: [0],
-                            numericLabel: 0,
+                            numericLabel: "",
                             numericUnit: "",
                             color: "#8eb8fa", // default color
                         })
@@ -69,7 +69,7 @@ export const getRegions = (geojson: any) => {
                             coordinates: geometry.coordinates[0],
                             stringLabel: "",
                             stringOffset: [0],
-                            numericLabel: 0,
+                            numericLabel: "",
                             numericUnit: "",
                             color: "#8eb8fa", // default color
                         })
