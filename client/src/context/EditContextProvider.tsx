@@ -166,11 +166,10 @@ export function EditContextProvider(props: EditContextProviderProps) {
     return Array.from(new Set(res));
   };
 
-
   if (!loaded) {
     return <>Loading Data</>;
   }
-  if(loaded && editPageState.map._id === "ERROR/TEST Map"){
+  if (loaded && editPageState.map._id === "ERROR/TEST Map") {
     return <>Loading Data</>;
   }
 
@@ -402,8 +401,12 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         items: action.map.legend.choroplethLegend?.items, // If items defined, then being called from Legend.tsx
       };
 
-      if (action.map.legend.choroplethLegend?.items === undefined) {
-        // If items undefined, then being called from Properties.tsx
+      if (
+        action.map.legend.choroplethLegend?.items === undefined ||
+        action.map.legend.choroplethLegend?.hue !=
+          state.map.legend.choroplethLegend?.hue
+      ) {
+        // If items undefined or hue change, then being called from Properties.tsx
         const choroItems2 = findChoroplethItems(
           state,
           updatedChoroplethLegend2.hue
@@ -454,7 +457,7 @@ function findChoroplethItems(
     // If newMap is undefined, means we are updating the map. Should be using the states.
     regions = state.map.regions;
   }
-  
+
   //Objects of {color, value} to be returned
   let newItems: { [key: string]: number } = {};
   if (regions) {
@@ -490,7 +493,7 @@ function findChoroplethItems(
       newItems[color] = value.numericLabelNumber;
     });
   }
-  return newItems ;
+  return newItems;
 }
 
 export function useLeafletMapContext() {
