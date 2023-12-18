@@ -466,7 +466,7 @@ function findChoroplethItems(
     let color = chroma(newHue).brighten(value).hex();
 
     //Get unique numeric label values
-    const uniqueValues: { numericLabel: string; numericLabelNumber: number }[] =
+    const uniqueValues: { numericLabel: Number; numericLabelNumber: number }[] =
       [];
     for (let i = 0; i < filename.length; i++) {
       const region = regions[filename[i]];
@@ -475,13 +475,14 @@ function findChoroplethItems(
         const numericLabelNumber = Number(numericLabel);
 
         //if numericLabel is an existing key in uniqueValues, skip
-        if (uniqueValues.some((value) => value.numericLabel === numericLabel)) {
+        if (uniqueValues.some((value) => value.numericLabel === Number(numericLabel))) {
           continue;
         }
-        if (numericLabel === "") continue;
-        else uniqueValues.push({ numericLabel, numericLabelNumber });
+        if (numericLabel === "") continue; // Skip if numericLabel is empty, for legend editing case
+        else uniqueValues.push({ numericLabel: Number(numericLabel), numericLabelNumber });
       }
     }
+    console.log(uniqueValues);
 
     //Sort the unique values in decreasing order
     uniqueValues.sort((a, b) => b.numericLabelNumber - a.numericLabelNumber);
