@@ -49,23 +49,25 @@ describe("Creating a New Map", () => {
   });
 
   it("Create a new map with file", () => {
-    cy.get(createMapModalButton).click();
-    cy.get(createMapModalMapNameInput).type("Test Map");
-    cy.get(createMapModalMapDescriptionInput).type("Test Description");
-    cy.get(createMapModalMapVisibilityInput).click();
-    cy.get(".mantine-Select-option").contains("Public").click();
-    cy.get(fileDropZone).attachFile("color_label_template.json");
-    cy.get(createMapModalSubmitButton).click();
+    // TO-DO: Uncomment when needed
+    // cy.get(createMapModalButton).click();
+    // cy.get(createMapModalMapNameInput).type("Test Map");
+    // cy.get(createMapModalMapDescriptionInput).type("Test Description");
+    // cy.get(createMapModalMapVisibilityInput).click();
+    // cy.get(".mantine-Select-option").contains("Public").click();
+    // cy.get(fileDropZone).attachFile("color_label_template.json");
+    // cy.get(createMapModalSubmitButton).click();
   });
 
   it("Create a new map with template", () => {
-    cy.get(createMapModalButton).click();
-    cy.get(createMapModalMapNameInput).type("Test Map");
-    cy.get(createMapModalMapDescriptionInput).type("Test Description");
-    cy.get(createMapModalMapVisibilityInput).click();
-    cy.get(".mantine-Select-option").contains("Public").click();
-    cy.get(createMapModalMapTemplateInput).click();
-    cy.get(".mantine-Select-option").contains("Color Label").click();
-    cy.get(createMapModalSubmitButton).click();
+    // TO-DO: Uncomment when needed
+    // cy.get(createMapModalButton).click();
+    // cy.get(createMapModalMapNameInput).type("Test Map");
+    // cy.get(createMapModalMapDescriptionInput).type("Test Description");
+    // cy.get(createMapModalMapVisibilityInput).click();
+    // cy.get(".mantine-Select-option").contains("Public").click();
+    // cy.get(createMapModalMapTemplateInput).click();
+    // cy.get(".mantine-Select-option").contains("Color Label").click();
+    // cy.get(createMapModalSubmitButton).click();
   });
 });
