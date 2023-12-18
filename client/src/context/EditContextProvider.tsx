@@ -213,8 +213,8 @@ function editReducer(state: EditPageState, action: any): EditPageState {
     case "update_map":
       console.log("inside update_map 1");
       let newMap2 = { ...state.map, ...action?.map };
-      
-      // So far two cases: when displayLegend is changed, and when region is deleted. 
+
+      // So far two cases: when displayLegend is changed, and when region is deleted.
       // If displayLegend does not change then region was deleted, so update legend
       if (action.map.displayLegend == state.map.displayLegend) {
         let updatedChoroplethLegend3 = state.map.legend.choroplethLegend;
@@ -350,37 +350,31 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         hue: action.map?.legend?.choroplethLegend.hue,
       };
 
-      const oldRegions3 = state.map.regions;
-      const newRegions3 = action.map?.regions;
+      // Add choropleth items
+      const choroItems = findChoroplethItems(
+        state,
+        updatedChoroplethLegend.hue
+      );
+      console.log(choroItems);
 
-      let newMap = { ...state.map, regions: newRegions };
-      // If regions are different, then update the choropleth legend information.
-      if (oldRegions3 != newRegions3) {
-        // Add choropleth items
-        const choroItems = findChoroplethItems(
-          state,
-          updatedChoroplethLegend.hue
-        );
-        console.log(choroItems);
+      // Get min/max values from choroItems
+      const min = Math.min(...Object.values(choroItems));
+      const max = Math.max(...Object.values(choroItems));
+      updatedChoroplethLegend = {
+        ...updatedChoroplethLegend,
+        min: min,
+        max: max,
+        items: choroItems,
+      };
 
-        // Get min/max values from choroItems
-        const min = Math.min(...Object.values(choroItems));
-        const max = Math.max(...Object.values(choroItems));
-        updatedChoroplethLegend = {
-          ...updatedChoroplethLegend,
-          min: min,
-          max: max,
-          items: choroItems,
-        };
-
-        newMap = {
-          ...newMap,
-          legend: {
-            ...state.map.legend,
-            choroplethLegend: updatedChoroplethLegend,
-          },
-        };
-      }
+      const newMap = {
+        ...state.map,
+        regions: newRegions,
+        legend: {
+          ...state.map.legend,
+          choroplethLegend: updatedChoroplethLegend,
+        },
+      };
 
       console.log("updated state: ", {
         ...state,
