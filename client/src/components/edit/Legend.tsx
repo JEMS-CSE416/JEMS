@@ -213,16 +213,12 @@ export function ChoroplethLegend({
               variant="unstyled"
               placeholder={value.toString()}
               value={value.toString()}
-              rightSectionWidth={"0px"}
               hideControls
               withErrorStyles={validChoroplethLegend}
               disabled={index == 0 || index == items.length - 1}
               onChange={(value) => {
-                console.log(index + " " + value);
-
                 setNewLegendInput(newLegendInput.set(index, value.toString()));
                 setLegendSubmit(true);
-                console.log(newLegendInput);
               }}
               onClick={() => setLegendSubmit(true)}
               className="choroplethLegendNumberInput"
@@ -303,8 +299,6 @@ function handleLegendItemsSubmit(
       }
     }
   });
-
-  console.log(items);
 
   if (!valid) {
     setvalidChoroplethLegend(false);

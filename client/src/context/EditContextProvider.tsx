@@ -444,8 +444,7 @@ function findChoroplethItems(
     // If newMap is undefined, means we are updating the map. Should be using the states.
     regions = state.map.regions;
   }
-  console.log(regions);
-
+  
   //Objects of {color, value} to be returned
   let newItems: { [key: string]: number } = {};
   if (regions) {
@@ -470,7 +469,6 @@ function findChoroplethItems(
         else uniqueValues.push({ numericLabel, numericLabelNumber });
       }
     }
-    console.log(uniqueValues);
 
     //Sort the unique values in decreasing order
     uniqueValues.sort((a, b) => b.numericLabelNumber - a.numericLabelNumber);
@@ -482,7 +480,6 @@ function findChoroplethItems(
       newItems[color] = value.numericLabelNumber;
     });
   }
-  console.log(newItems);
   return newItems ;
 }
 
