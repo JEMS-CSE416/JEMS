@@ -272,16 +272,29 @@ export default function Properties() {
             label="Allow Text Label Pointing"
           />
 
-          {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
-            <>
-              <ColorInput
-                label="Hue"
-                placeholder="#000000"
-                value={hueState}
-                onChange={setHueState}
-              />
-            </>
-          )}
+          {editPageState.map.colorType === TemplateTypes.CHOROPLETH &&
+            (legendSubmit ? (
+              <>
+                <Tooltip label="Cannot edit with active legend editing.">
+                  <ColorInput
+                    label="Hue"
+                    placeholder="#000000"
+                    value={hueState}
+                    onChange={setHueState}
+                    disabled={true}
+                  />
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                <ColorInput
+                  label="Hue"
+                  placeholder="#000000"
+                  value={hueState}
+                  onChange={setHueState}
+                />
+              </>
+            ))}
 
           {!editPageState.selectedRegion ? (
             <Button onClick={handleMapPropertyEditing} radius="xl">
