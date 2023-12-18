@@ -252,10 +252,6 @@ function getChoroplethStyle(
   );
   const value = region.properties.numericLabel;
 
-  console.log(value);
-  console.log(items[0][1]);
-
-  console.log(items);
   if (items.length >= 5) {
     return value
       ? value >= items[0][1]
