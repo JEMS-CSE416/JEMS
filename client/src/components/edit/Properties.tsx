@@ -26,6 +26,7 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { useEffect, useState } from "react";
 import { set } from "cypress/types/lodash";
+import { useLegendContext } from "../../context/LegendContextProvider";
 
 export default function Properties() {
   const editPageState = useEditContext();
@@ -53,7 +54,9 @@ export default function Properties() {
     editPageState.selectedRegion?.region.color
   );
 
-  const [hueState, setHueState] = useState(editPageState.map.legend.choroplethLegend.hue);
+  const [hueState, setHueState] = useState(
+    editPageState.map.legend.choroplethLegend.hue
+  );
 
   const [ChoroplethColorRange, setChoroplethColorRange] = useState<{
     min: { value: string; color: string };
@@ -62,6 +65,10 @@ export default function Properties() {
     min: { value: "", color: "#000000" },
     max: { value: "", color: "#FFFFFF" },
   });
+
+  const { legendSubmit, setLegendSubmit } = useLegendContext();
+  const { validChoroplethLegend, setvalidChoroplethLegend } =
+    useLegendContext();
 
   useEffect(() => {
     setGroupNameState(editPageState.selectedRegion?.groupName);
@@ -300,6 +307,7 @@ export default function Properties() {
                 />
 
                 <NumberInput
+                  disabled={legendSubmit}
                   hideControls
                   label="Numeric Label"
                   placeholder="100, 250, etc."

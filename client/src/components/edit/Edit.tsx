@@ -2,6 +2,7 @@ import { AppShell } from "@mantine/core";
 import {  useNavigate, useParams } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContextProvider";
 import { EditContextProvider, useEditContext } from '../../context/EditContextProvider';
+import { LegendContextProvider } from "../../context/LegendContextProvider";
 import Canvas from "./Canvas";
 import EditNavBar from "./EditNavbar";
 import Properties from "./Properties";
@@ -12,6 +13,7 @@ export default function Edit(){
   
   return (
     <EditContextProvider map_id={id}>
+      <LegendContextProvider>
       <ProtectEdit/>
       <AppShell
         header={{height: 60, offset:true}}
@@ -45,6 +47,7 @@ export default function Edit(){
           <Properties/>
         </AppShell.Aside>
       </AppShell>
+      </LegendContextProvider>
     </EditContextProvider>
   );
 }
