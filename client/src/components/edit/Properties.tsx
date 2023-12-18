@@ -68,8 +68,6 @@ export default function Properties() {
   });
 
   const { legendSubmit, setLegendSubmit } = useLegendContext();
-  const { validChoroplethLegend, setvalidChoroplethLegend } =
-    useLegendContext();
 
   useEffect(() => {
     setGroupNameState(editPageState.selectedRegion?.groupName);

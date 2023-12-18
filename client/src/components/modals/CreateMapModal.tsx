@@ -174,7 +174,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         creationDate: new Date().toISOString(),
         public: form.values.visibility === "Public" ? true : false,
         template: content.template,
-        colorType: jemsjson.map_file_content.colorType,
+        colorType: jemsjson.map_file_content.colorType != "NONE" ? jemsjson.map_file_content.colorType : getColorType(),
         displayStrings:
           selectedValue == "String Label Map" ? true : content.displayStrings,
         displayNumerics: content.displayNumerics,
