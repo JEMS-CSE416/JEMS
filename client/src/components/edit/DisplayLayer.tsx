@@ -12,6 +12,7 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { Layer, Map, divIcon } from "leaflet";
 import * as L from "leaflet";
+import * as turf from "@turf/turf";
 import {
   Feature,
   GeoJsonProperties,
@@ -22,7 +23,6 @@ import attachSelectionEvents from "./leaflet/selection";
 import { convertToGeoJSON } from "./utils/jemsconvert";
 import React, { useContext, useRef, useState, useEffect } from "react";
 import { SELECTED_STYLE, UNSELECTED_STYLE } from "./leaflet/styles";
-import { geoCentroid } from "d3-geo";
 import {
   onClickLabel,
   onDragEndLabel,
@@ -36,37 +36,6 @@ export default function DisplayLayer() {
   const convertedGeoJSON = convertToGeoJSON(editPageState.map);
   const map = useMap(); // get access to map object
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
-
-  const mapInstance = useMap();
-  const setLeafletMap = useContext(SetLeafletMapContext);
-  const setLeafletMapPrinter = useContext(setLeafletMapPrinterContext);
-  const leafletMapPrinter = useLeafLetMapPrinter();
-
-  useEffect(() => {
-    console.debug(
-      "MAP INSTANCE: ",
-      mapInstance,
-      "SET LEAFLET MAP",
-      setLeafletMap,
-      "SET LEAFLET MAP PRINTER",
-      setLeafletMapPrinter
-    );
-
-    if (mapInstance && setLeafletMap && setLeafletMapPrinter) {
-      setLeafletMap(mapInstance);
-
-      const printer = L.easyPrint({
-        sizeModes: ["Current", "A4Portrait", "A4Landscape"],
-        filename: "MyMap",
-        exportOnly: true,
-        hideControlContainer: true,
-      }).addTo(mapInstance);
-
-      setLeafletMapPrinter(printer);
-
-      console.warn("LEAFLET MAP: ", mapInstance);
-    }
-  }, [mapInstance, setLeafletMap]);
 
   return (
     <>
@@ -131,7 +100,8 @@ const RegionLabel = (props: {
   const markerRef = useRef(null);
   const [dragSetter, setDragSetter] = useState(() => {});
 
-  const centroid = geoCentroid(region);
+  const centroid = turf.centerMean(region).geometry.coordinates;
+
   if (
     region.properties &&
     ((editPageState.map.displayStrings &&
@@ -224,9 +194,12 @@ function getRegionStyle(
   if (whichMap == TemplateTypes.CHOROPLETH) {
     style = {
       ...style,
-      fillColor: getChoroplethStyle(region, editPageState),
-      fillOpacity: 1,
-      opacity: 1,
+      fillColor:
+        getChoroplethStyle(region, editPageState) === "none"
+          ? region.properties.color
+          : getChoroplethStyle(region, editPageState),
+      fillOpacity:
+        getChoroplethStyle(region, editPageState) === "none" ? 0.6 : 1,
     };
   } else if (whichMap !== TemplateTypes.COLOR) {
     style = {
@@ -248,53 +221,22 @@ function getChoroplethStyle(
     editPageState.map.legend.choroplethLegend?.items || {}
   );
   const value = region.properties.numericLabel;
-  console.log("value: " + value);
-  if (items.length >= 5) {
-    return value >= items[0][1]
-      ? items[0][0]
-      : value >= items[1][1]
-      ? items[1][0]
-      : value >= items[2][1]
-      ? items[2][0]
-      : value >= items[3][1]
-      ? items[3][0]
-      : value >= items[4][1]
-      ? items[4][0]
-      : "#FFFFFF";
-  } else {
-    // Handle if there are 1, 2, 3, and/or 4 items in the legend
-    if (items.length == 1) {
-      return value == items[0][1] ? items[0][0] : "#FFFFFF";
-    } else if (items.length == 2) {
-      console.log("2");
-      return value >= items[0][1]
-        ? items[0][0]
-        : value >= items[1][1]
-        ? items[1][0]
-        : "#FFFFFF";
-    } else if (items.length == 3) {
-      console.log("3");
-      return value >= items[0][1]
-        ? items[0][0]
-        : value >= items[1][1]
-        ? items[1][0]
-        : value >= items[2][1]
-        ? items[2][0]
-        : "#FFFFFF";
-    } else if (items.length == 4) {
-      console.log("4");
-      return value >= items[0][1]
-        ? items[0][0]
-        : value >= items[1][1]
-        ? items[1][0]
-        : value >= items[2][1]
-        ? items[2][0]
-        : value >= items[3][1]
-        ? items[3][0]
-        : "#FFFFFF";
+
+  // Determines the color of the region based off the numeric value
+  if (items.length <= 10) { // Should only be max 8 items due to colorpicker, but hardcoding 10 just in case
+    for (let i = 0; i < items.length; i++) {
+      console.log(value);
+      console.log(items[i][1]);
+
+      // If the value is a NUMBER (0, -1, 2, etc) and NOT a string and is less than the max value
+      if (typeof value === 'number' && value >= Number(items[i][1])) {
+        console.log(value);
+        console.log(items[i][1]);
+        return items[i][0];
+      }
     }
+    return "none";
   }
-  return "#8eb8fa";
 }
 
 function labelHTML(

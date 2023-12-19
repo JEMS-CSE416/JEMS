@@ -8,6 +8,8 @@ import {
   NumberInput,
   Group,
   ColorSwatch,
+  Button,
+  Text,
 } from "@mantine/core";
 import {
   EditPageAction,
@@ -16,18 +18,67 @@ import {
   useEditDispatchContext,
 } from "../../context/EditContextProvider";
 import { TemplateTypes } from "../../utils/enums";
-import { Map, Region, Legend as legend } from "../../utils/models/Map";
 import { useEffect, useState } from "react";
-import LegendItems from "./LegendItems";
+import { set } from "cypress/types/lodash";
+import { notifications } from "@mantine/notifications";
+import { IconX } from "@tabler/icons-react";
+import { valid } from "chroma-js";
+import "./css/Legend.css";
+import { useLegendContext } from "../../context/LegendContextProvider";
+import { use } from "chai";
 
 export default function Legend() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+  // User input for the choropleth legend
+  const [newLegendInput, setNewLegendInput] = useState<Map<number, string>>(
+    new Map<number, string>()
+  );
+  const { legendSubmit, setLegendSubmit } = useLegendContext();
+  const { validChoroplethLegend, setvalidChoroplethLegend } =
+    useLegendContext();
 
   useEffect(() => {
-    ChoroplethLegend({ editPageState: editPageState });
-  }, [editPageState]);
+    ChoroplethLegend({
+      editPageState: editPageState,
+      setEditPageState: setEditPageState,
+      legendSubmit: legendSubmit,
+      setLegendSubmit: setLegendSubmit,
+      newLegendInput: newLegendInput,
+      setNewLegendInput: setNewLegendInput,
+      validChoroplethLegend: validChoroplethLegend,
+      setvalidChoroplethLegend: setvalidChoroplethLegend,
+    });
+    <ChoroplethLegend
+      editPageState={editPageState}
+      setEditPageState={setEditPageState}
+      legendSubmit={legendSubmit}
+      setLegendSubmit={setLegendSubmit}
+      newLegendInput={newLegendInput}
+      setNewLegendInput={setNewLegendInput}
+      validChoroplethLegend={validChoroplethLegend}
+      setvalidChoroplethLegend={setvalidChoroplethLegend}
+    />;
+  }, [editPageState, validChoroplethLegend]);
 
+  // When user changes color type, reset legend to default
+  useEffect(() => {
+    setvalidChoroplethLegend(true);
+    setLegendSubmit(false);
+  }, [editPageState.map.colorType]);
+
+  let invalidLegendEditing =
+    editPageState.map.colorType === TemplateTypes.CHOROPLETH
+      ? "invalidChoroplethLegend"
+      : "invalidColorLegend";
+  let legendEditingClassName =
+    editPageState.map.colorType === TemplateTypes.CHOROPLETH
+      ? "choroplethLegendEditing"
+      : "colorLegendEditing";
+  let legendClassName =
+    editPageState.map.colorType === TemplateTypes.CHOROPLETH
+      ? "choroplethLegend"
+      : "colorLegend";
   return (
     <Box>
       {editPageState.map.displayLegend && (
@@ -40,6 +91,13 @@ export default function Legend() {
           bottom={15}
           style={{ zIndex: 1000000 }}
           radius="l"
+          className={
+            validChoroplethLegend
+              ? legendSubmit
+                ? legendEditingClassName
+                : legendClassName
+              : invalidLegendEditing
+          }
         >
           <Title order={3} style={{ textAlign: "left" }}>
             {" "}
@@ -48,7 +106,16 @@ export default function Legend() {
 
           <Stack pl={10} gap="xs" p="sm">
             {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
-              <ChoroplethLegend editPageState={editPageState} />
+              <ChoroplethLegend
+                editPageState={editPageState}
+                setEditPageState={setEditPageState}
+                legendSubmit={legendSubmit}
+                setLegendSubmit={setLegendSubmit}
+                newLegendInput={newLegendInput}
+                setNewLegendInput={setNewLegendInput}
+                validChoroplethLegend={validChoroplethLegend}
+                setvalidChoroplethLegend={setvalidChoroplethLegend}
+              />
             )}
             {editPageState.map.colorType === TemplateTypes.COLOR && (
               <ColorLegend />
@@ -114,8 +181,22 @@ export function ColorLegend() {
 
 export function ChoroplethLegend({
   editPageState,
+  setEditPageState,
+  legendSubmit,
+  setLegendSubmit,
+  newLegendInput,
+  setNewLegendInput,
+  validChoroplethLegend,
+  setvalidChoroplethLegend,
 }: {
   editPageState: EditPageState;
+  setEditPageState: React.Dispatch<EditPageAction>;
+  legendSubmit: boolean;
+  setLegendSubmit: React.Dispatch<React.SetStateAction<boolean>>;
+  newLegendInput: Map<number, string>;
+  setNewLegendInput: React.Dispatch<React.SetStateAction<Map<number, string>>>;
+  validChoroplethLegend: boolean;
+  setvalidChoroplethLegend: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const items = Object.entries(
     editPageState.map.legend.choroplethLegend?.items || {}
@@ -123,19 +204,123 @@ export function ChoroplethLegend({
 
   return (
     <div>
-      <ScrollArea style={{ maxHeight: 200, overflowY: "auto" }}>
         {items.map(([color, value], index) => (
-          <Group>
+          <Group wrap="nowrap">
             <ColorSwatch color={color} mr={20} radius={"5px"} />
+            <Text size="md">{">"}=</Text>
             <NumberInput
               variant="unstyled"
               placeholder={value.toString()}
-              rightSectionWidth={"0px"}
+              value={value.toString()}
               hideControls
+              withErrorStyles={validChoroplethLegend}
+              disabled={index == 0 || index == items.length - 1}
+              onChange={(value) => {
+                setNewLegendInput(newLegendInput.set(index, value.toString()));
+                setLegendSubmit(true);
+              }}
+              onClick={() => setLegendSubmit(true)}
+              className="choroplethLegendNumberInput"
             />
           </Group>
         ))}
-      </ScrollArea>
+        {legendSubmit ? (
+          <Button
+            type="submit"
+            onClick={() =>
+              handleLegendItemsSubmit(
+                editPageState,
+                setEditPageState,
+                legendSubmit,
+                setLegendSubmit,
+                newLegendInput,
+                setNewLegendInput,
+                validChoroplethLegend,
+                setvalidChoroplethLegend
+              )
+            }
+          >
+            Submit
+          </Button>
+        ) : (
+          <></>
+        )}
     </div>
   );
+}
+
+function handleLegendItemsSubmit(
+  editPageState: EditPageState,
+  setEditPageState: React.Dispatch<EditPageAction>,
+  legendSubmit: boolean,
+  setLegendSubmit: React.Dispatch<React.SetStateAction<boolean>>,
+  newLegendInput: Map<number, string>,
+  setNewLegendInput: React.Dispatch<React.SetStateAction<Map<number, string>>>,
+  validChoroplethLegend: boolean,
+  setvalidChoroplethLegend: React.Dispatch<React.SetStateAction<boolean>>
+) {
+  //Get choropleth legend items from editPageState
+  const items = Object.entries(
+    editPageState.map.legend.choroplethLegend?.items || {}
+  );
+
+  //Replace each index of legend items state with corresponding value from sortedNewLegend
+  let valid = true;
+  let prev: Number = 0;
+  items.forEach(([color, value], index) => {
+    let numberNewLegendInput = Number(newLegendInput.get(index));
+    if (
+      newLegendInput.get(index) === undefined ||
+      newLegendInput.get(index) === ""
+    ) {
+      // if user did not input a value for this index
+      if (index == 0) {
+        items[index][1] = value;
+        prev = items[index][1];
+      } else if (items[index][1] >= prev) {
+        valid = false;
+      } else if (valid) {
+        items[index][1] = value;
+        prev = items[index][1];
+      }
+    } else {
+      // if user did input a value for this index
+      if (index == 0) {
+        prev = numberNewLegendInput;
+        items[index][1] = numberNewLegendInput;
+      } else if (numberNewLegendInput >= Number(prev)) {
+        valid = false;
+      } else if (valid) {
+        // stop populating items if legend is invalid
+        prev = numberNewLegendInput;
+        items[index][1] = numberNewLegendInput;
+      }
+    }
+  });
+
+  if (!valid) {
+    setvalidChoroplethLegend(false);
+    notifications.show({
+      icon: <IconX />,
+      title: "Updating Legend failed :(",
+      message: "Legend values must be in DESCENDING order!",
+    });
+  } else {
+    setvalidChoroplethLegend(true);
+    setLegendSubmit(false);
+    setNewLegendInput(new Map<number, string>());
+    setEditPageState({
+      type: "update_choropleth_legend",
+      map: {
+        ...editPageState.map,
+        legend: {
+          ...editPageState.map.legend,
+          choroplethLegend: {
+            ...editPageState.map.legend.choroplethLegend,
+            items: Object.fromEntries(items),
+          },
+        },
+      },
+    });
+  }
 }

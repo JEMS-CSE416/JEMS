@@ -1,41 +1,30 @@
 import "./css/canvas.css";
-import { Image } from "@mantine/core";
 import { Map as JEMSMap } from "../../utils/models/Map";
-import { useSelectedMap } from "../hooks/useSelectedMap";
-import { MapContainer, TileLayer, GeoJSON, Marker} from "react-leaflet";
+import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet";
+import * as turf from "@turf/turf";
 import { convertToGeoJSON } from "../edit/utils/jemsconvert";
 import { TemplateTypes } from "../../utils/enums";
-import {
-  Feature,
-  GeoJsonProperties,
-  Geometry,
-  FeatureCollection,
-} from "geojson";
-import { Layer, Map, divIcon, marker } from "leaflet";
-import { geoCentroid } from "d3-geo";
-
+import { Feature, Geometry, FeatureCollection } from "geojson";
+import { NonInteractiveLabels as Labels } from "../CanvasComponents/NonInteractiveLabels";
+import { Canvas as CanvasBase } from "../CanvasComponents/Canvas";
+import EasyPrint from "../common/EasyPrint";
+import LeafletToImage from "../common/LeafletToImage";
 interface CanvasProps {
   map: JEMSMap;
 }
 const Canvas = ({ map }: CanvasProps) => {
   const convertedGeoJSON = convertToGeoJSON(map);
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
+
+  // calculates center of geojson data. if it can't then it defaults to a 0,0 center
+  const centerCoords =
+    data.features.length === 0
+      ? [0, 0]
+      : turf.centerMean(data).geometry.coordinates;
+
   return (
     <>
-      <MapContainer
-        center={[40.6482, -73.9442]}
-        zoom={12}
-        style={{
-          width: "100%",
-          height: "calc(100Vh - 60px)",
-          zIndex: 125,
-        }}
-      >
-        <TileLayer
-          noWrap={true}
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
+      <CanvasBase centerCoords={[centerCoords[0], centerCoords[1]]}>
         <GeoJSON
           data={data}
           style={(region: Feature<Geometry, any> | undefined) =>
@@ -43,7 +32,9 @@ const Canvas = ({ map }: CanvasProps) => {
           }
         />
         <Labels data={data} map={map} />
-      </MapContainer>
+        {/* <EasyPrint/> */}
+        <LeafletToImage/>
+      </CanvasBase>
     </>
   );
 };
@@ -57,8 +48,15 @@ function getRegionStyle(region: Feature<Geometry, any>, map: JEMSMap) {
 
   const whichMap = map.colorType;
   style = { ...style, weight: 2, color: "#6996db" };
-
-  if (whichMap !== TemplateTypes.COLOR) {
+  // console.debug(map)
+  if (whichMap == TemplateTypes.CHOROPLETH) {
+    style = {
+      ...style,
+      fillColor: getChoroplethStyle(region, map),
+      fillOpacity: 1,
+      opacity: 1,
+    };
+  } else if (whichMap !== TemplateTypes.COLOR) {
     style = {
       ...style,
       fillColor: "#8eb8fa",
@@ -78,21 +76,64 @@ function initStyleFunction(
   return getRegionStyle(region, map);
 }
 
-interface LabelsProps {
-  data: FeatureCollection;
-  map: JEMSMap;
-}
-function Labels({data, map}: LabelsProps) {
-  const labels = data.features.map(
-    (
-      region: Feature<Geometry, GeoJsonProperties>,
-      index: React.Key | null | undefined
-    ) => {
-      return <RegionLabel key={index} region={region} map={map} />;
-    }
+// function that defines the color of each region based off its numeric value and choropleth items
+function getChoroplethStyle(
+  region: Feature<Geometry, any>,
+  map: JEMSMap
+) {
+
+  console.debug(map)
+
+  const items = Object.entries(
+    map.legend.choroplethLegend?.items || {}
   );
 
-  return <>{labels}</>;
+  // console.debug(items)
+
+  const value = region.properties.numericLabel;
+  if (items.length >= 5) {
+    return value >= items[0][1]
+      ? items[0][0]
+      : value >= items[1][1]
+      ? items[1][0]
+      : value >= items[2][1]
+      ? items[2][0]
+      : value >= items[3][1]
+      ? items[3][0]
+      : value >= items[4][1]
+      ? items[4][0]
+      : "#FFFFFF";
+  } else {
+    // Handle if there are 1, 2, 3, and/or 4 items in the legend
+    if (items.length == 1) {
+      return value == items[0][1] ? items[0][0] : "#FFFFFF";
+    } else if (items.length == 2) {
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : "#FFFFFF";
+    } else if (items.length == 3) {
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : value >= items[2][1]
+        ? items[2][0]
+        : "#FFFFFF";
+    } else if (items.length == 4) {
+      return value >= items[0][1]
+        ? items[0][0]
+        : value >= items[1][1]
+        ? items[1][0]
+        : value >= items[2][1]
+        ? items[2][0]
+        : value >= items[3][1]
+        ? items[3][0]
+        : "#FFFFFF";
+    }
+  }
+  return "#FFFFFF";
 }
 
 interface RegionLabelProps {
@@ -123,25 +164,9 @@ function RegionLabel({key, region, map}: RegionLabelProps) {
       />
     );
   }
-  return <></>;
+  return<></>;
 }
 
-function labelHTML(region: Feature<Geometry, any>, map: JEMSMap) {
-  const displayStrings = map.displayStrings;
-  const displayNumerics = map.displayNumerics;
-  const StringsLabel = region.properties.stringLabel;
-  const NumericsLabel = region.properties.numericLabel;
-  const UnitsLabel = region.properties.numericUnit;
-  let contents = `
-  <div style="pointer-events: none;">
-    <p style="margin: 0;">${displayStrings ? StringsLabel : ""}</p>
-    <p style="margin: 0;">${
-      displayNumerics ? NumericsLabel + ` ${UnitsLabel}` : ""
-    }</p>
-  </div>
-`;
 
-  return contents;
-}
 
 export default Canvas;

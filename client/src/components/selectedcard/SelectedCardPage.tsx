@@ -24,7 +24,7 @@ const SelectedCardPage = ({}) => {
     loading: mapLoading,
     error: mapError,
   } = useLoadingData<Map>(getMap, [{ id }]);
-  const [mapUser, setMapUser] = useState<User>(); 
+  const [mapUser, setMapUser] = useState<User>();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,10 +35,10 @@ const SelectedCardPage = ({}) => {
         } catch (error) {
           console.error(error);
         }
-      }     };
+      }
+    };
 
-    if(!map && !mapLoading)
-      navigate('/home/', {state:{err401: true}})
+    if (!map && !mapLoading) navigate("/home/", { state: { err401: true } });
 
     fetchUser();
   }, [map, mapLoading, navigate]);
@@ -46,7 +46,7 @@ const SelectedCardPage = ({}) => {
   if (!isLoggedIn) {
     navigate("/login");
   }
-
+  console.debug("Rendering SelectedCardPage");
   return (
     <>
       {mapLoading ? (
@@ -60,7 +60,7 @@ const SelectedCardPage = ({}) => {
               <MapHeader map={map} mapUser={mapUser} />
               <Canvas map={map} />
               <MapAbout map={map} />
-              <Comments map={map}/>
+              <Comments map={map} />
             </div>
             <Footer />
           </>

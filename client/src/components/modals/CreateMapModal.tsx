@@ -144,11 +144,11 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
       case "Color Label Map":
         return TemplateTypes.COLOR;
       case "Numeric Label":
-        return TemplateTypes.NONE;
+        return TemplateTypes.NUMERIC_LABEL_MAP;
       case "Choropleth Map":
         return TemplateTypes.CHOROPLETH;
       case "Pointer Label":
-        return TemplateTypes.NONE;
+        return TemplateTypes.POINT_LABEL_MAP;
       default:
         return TemplateTypes.NONE;
     }
@@ -156,16 +156,18 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 
   // This function gets the request body for JEMS JSON
   function getJemsRequest(jemsjson: any) {
+    console.debug("in here");
     const content = jemsjson.map_file_content;
     console.log(form.values.visibility);
     // legacy format
     if (!content.legend.choroplethLegend?.hue)
       content.legend.choroplethLegend = {
-        hue: "#8eb8fa",
+        hue: "#297cff",
         min: Number.MAX_SAFE_INTEGER,
         max: Number.MIN_SAFE_INTEGER,
         items: {},
-      }
+      };
+
     // Create the request body
     const req = {
       map_file_content: {
@@ -174,10 +176,14 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
         creationDate: new Date().toISOString(),
         public: form.values.visibility === "Public" ? true : false,
         template: content.template,
-        colorType: getColorType(),
+        colorType:
+          jemsjson.map_file_content.colorType != "NONE"
+            ? jemsjson.map_file_content.colorType
+            : getColorType(),
         displayStrings:
           selectedValue == "String Label Map" ? true : content.displayStrings,
-        displayNumerics: content.displayNumerics,
+        displayNumerics:
+          selectedValue == "Numeric Label" ? true : content.displayNumerics,
         displayLegend: content.displayLegend,
         displayPointers: content.displayPointers,
         thumbnail: content.thumbnail,
@@ -216,7 +222,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
           legend: {
             colorLegend: {},
             choroplethLegend: {
-              hue: "#8eb8fa",
+              hue: "#297cff",
               min: Number.MAX_SAFE_INTEGER,
               max: Number.MIN_SAFE_INTEGER,
               items: {},
@@ -263,12 +269,10 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
 
       // Get the file extension
       let fileExtension = getFileType(file.name);
-
       // Check the file type and handle accordingly
       if (fileExtension === "json") {
         const file_content = await file.text();
         const json_file = JSON.parse(file_content);
-
         if (json_file.map_file_content) {
           // Handles getting request when file uploaded is a JEMS JSON
           req = getJemsRequest(json_file);
@@ -415,6 +419,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
             <Grid gutter="xl">
               <Grid.Col span={5}>
                 <TextInput
+                  id="create-map-modal-map-name-input"
                   label="Map Name"
                   description="Enter a name to describe your map"
                   placeholder="Map of Grand Line"
@@ -424,6 +429,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   {...form.getInputProps("mapName")}
                 />
                 <Textarea
+                  id="create-map-modal-map-description-input"
                   label="Map Description"
                   description="Enter a description to describe your map"
                   placeholder="This is a map of the Grand Line"
@@ -434,6 +440,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   {...form.getInputProps("description")}
                 />
                 <Select
+                  id="create-map-modal-map-visibility-input"
                   label="Visibility"
                   data={["Public", "Private"]}
                   style={{ width: "100%", marginBottom: "20px" }}
@@ -454,6 +461,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
                   style={{ margin: "10px 0" }}
                 />
                 <Select
+                  id="create-map-modal-map-template-input"
                   label="Template"
                   data={[
                     "String Label Map",
@@ -471,7 +479,7 @@ const CreateMapModalBase: React.FC<CreateMapModalProps> = ({
               </Grid.Col>
             </Grid>
             <Group justify="flex-end" mt="xl">
-              <Button type="submit">Submit</Button>
+              <Button type="submit" id="create-map-modal-submit-button">Submit</Button>
             </Group>
           </form>
         </Box>

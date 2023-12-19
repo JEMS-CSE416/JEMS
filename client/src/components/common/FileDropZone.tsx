@@ -21,6 +21,7 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ disabled, fileUploadType, o
 
   return (
     <Dropzone
+      id='file-dropzone'
       disabled={disabled? true : false}
       onDrop={(file) => onFilesDrop(file[0])}
       onReject={(file) => console.log('rejected file', file)}
