@@ -77,9 +77,15 @@ const MapCard: React.FC<MapCardProps> = ({
           alt="Norway"
         />
       </Card.Section>
-      <Text fw={700} ta="left" id="mapTitle">
-        {name}
-      </Text>
+      {name!.length > 26 ? (
+        <Text fw={700} ta="left" id="mapTitle">
+          {name?.slice(0, 27) + "..."}
+        </Text>
+      ) : (
+        <Text fw={700} ta="left" id="mapTitle">
+          {name}
+        </Text>
+      )}
       <Text size="9px" ta="left">
         {mapCreatorUser?.displayName} •{" "}
         {formatDate(map?.creationDate ?? "2023-11-20T02:57:13.344+00:00")}
