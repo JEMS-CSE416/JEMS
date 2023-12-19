@@ -105,6 +105,7 @@ const HomePage = () => {
                       <MapCard
                         id={map._id}
                         name={map.mapName}
+                        creatorId={map.creatorId}
                         description={map.description}
                         isPrivate={!map.public}
                         map={map}
@@ -156,6 +157,7 @@ const HomePage = () => {
                         id={map._id}
                         isPrivate={!map.public}
                         name={map["mapName"]}
+                        creatorId={map.creatorId}
                         description={map.description}
                         map={map}
                         duplicateAction={() => {

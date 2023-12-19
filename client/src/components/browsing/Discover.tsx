@@ -84,6 +84,7 @@ function Discover() {
                         id={map._id}
                         isPrivate={!map.public}
                         name={map["mapName"]}
+                        creatorId={map.creatorId}
                         description={map.description}
                         map={map}
                         duplicateAction={() => {
