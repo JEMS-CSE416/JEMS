@@ -237,49 +237,49 @@ describe("testing MAPS routes", () => {
   //   });
   // });
 
-  // // Test Deleting Map
-  // describe("DELETE /api/maps/:id", () => {
-  //   describe("when user is authenticated", () => {
-  //     test("with a valid map ID, it should successfully delete the map and return status code 204: No content", async () => {
-  //       const loginResponse = await login();
+  // Test Deleting Map
+  describe("DELETE /api/maps/:id", () => {
+    describe("when user is authenticated", () => {
+      test("with a valid map ID, it should successfully delete the map and return status code 204: No content", async () => {
+        const loginResponse = await login();
 
-  //       const id = "6570ae07e245dce73cc1acbe";
-  //       const response = await request(app)
-  //         .delete(`/api/maps/${id}`)
-  //         .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-  //         .expect(204);
-  //     });
+        const id = "6570ae07e245dce73cc1acbe";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(204);
+      });
 
-  //     test("with an invalid map ID, it should return a specific error and return status code 404: Not Found", async () => {
-  //       const loginResponse = await login();
+      test("with an invalid map ID, it should return a specific error and return status code 404: Not Found", async () => {
+        const loginResponse = await login();
 
-  //       const id = "6570ae07e242dce73cc1acde"; // an invalid non existing map id
-  //       const response = await request(app)
-  //         .delete(`/api/maps/${id}`)
-  //         .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-  //         .expect(404);
-  //     });
+        const id = "6570ae07e242dce73cc1acde"; // an invalid non existing map id
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(404);
+      });
 
-  //     test("with a valid map ID that does not belong to the user, it should return a specific error and return status code 401: Unauthorized", async () => {
-  //       const loginResponse = await login();
+      test("with a valid map ID that does not belong to the user, it should return a specific error and return status code 401: Unauthorized", async () => {
+        const loginResponse = await login();
 
-  //       const id = "656ff2283e72ed7d266574cb";
-  //       const response = await request(app)
-  //         .delete(`/api/maps/${id}`)
-  //         .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-  //         .expect(401);
-  //     });
-  //   });
+        const id = "656ff2283e72ed7d266574cb";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(401);
+      });
+    });
 
-  //   describe("when user is not authenticated", () => {
-  //     it("it should return status code 401: Unauthorized", async () => {
-  //       const id = "656ff2283e72ed7d266574cb";
-  //       const response = await request(app)
-  //         .delete(`/api/maps/${id}`)
-  //         .expect(401);
-  //     });
-  //   });
-  // });
+    describe("when user is not authenticated", () => {
+      it("it should return status code 401: Unauthorized", async () => {
+        const id = "656ff2283e72ed7d266574cb";
+        const response = await request(app)
+          .delete(`/api/maps/${id}`)
+          .expect(401);
+      });
+    });
+  });
 });
 
 async function login() {
