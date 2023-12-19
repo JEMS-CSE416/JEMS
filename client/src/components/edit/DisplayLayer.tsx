@@ -239,7 +239,7 @@ function getChoroplethStyle(
   }
 }
 
-function labelHTML(
+export function labelHTML(
   region: Feature<Geometry, any>,
   editPageState: EditPageState
 ) {

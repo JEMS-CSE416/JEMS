@@ -4,11 +4,15 @@ import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet";
 import * as turf from "@turf/turf";
 import { convertToGeoJSON } from "../edit/utils/jemsconvert";
 import { TemplateTypes } from "../../utils/enums";
-import { Feature, Geometry, FeatureCollection } from "geojson";
+import { Feature, Geometry, FeatureCollection, GeoJsonProperties } from "geojson";
 import { NonInteractiveLabels as Labels } from "../CanvasComponents/NonInteractiveLabels";
 import { Canvas as CanvasBase } from "../CanvasComponents/Canvas";
 import EasyPrint from "../common/EasyPrint";
 import LeafletToImage from "../common/LeafletToImage";
+import { geoCentroid } from "d3-geo";
+import { divIcon } from "leaflet";
+import { EditPageState } from "../../context/EditContextProvider";
+import { labelHTML } from "../edit/DisplayLayer";
 interface CanvasProps {
   map: JEMSMap;
 }
@@ -139,15 +143,15 @@ function getChoroplethStyle(
 interface RegionLabelProps {
   key: React.Key | null | undefined;
   region: Feature<Geometry, GeoJsonProperties>;
-  map: JEMSMap;
+  map: EditPageState;
 }
 function RegionLabel({key, region, map}: RegionLabelProps) {
   const centroid = geoCentroid(region);
   console.log(`CENTROID: ${centroid}`)
   if (
     region.properties &&
-    ((map.displayStrings && region.properties.stringLabel !== "") ||
-      (map.displayNumerics && region.properties.numericLabel !== ""))
+    ((map.map.displayStrings && region.properties.stringLabel !== "") ||
+      (map.map.displayNumerics && region.properties.numericLabel !== ""))
   ) {
     let labelIcon = divIcon({
       className: "map-label",
