@@ -8,6 +8,7 @@ import { Feature, Geometry, FeatureCollection } from "geojson";
 import { NonInteractiveLabels as Labels } from "../CanvasComponents/NonInteractiveLabels";
 import { Canvas as CanvasBase } from "../CanvasComponents/Canvas";
 import EasyPrint from "../common/EasyPrint";
+import LeafletToImage from "../common/LeafletToImage";
 interface CanvasProps {
   map: JEMSMap;
 }
@@ -31,7 +32,8 @@ const Canvas = ({ map }: CanvasProps) => {
           }
         />
         <Labels data={data} map={map} />
-        <EasyPrint/>
+        {/* <EasyPrint/> */}
+        <LeafletToImage/>
       </CanvasBase>
     </>
   );
