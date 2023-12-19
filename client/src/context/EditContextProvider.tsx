@@ -470,7 +470,6 @@ function findChoroplethItems(
 
   //Objects of {color, value} to be returned
   let newItems: { [key: string]: number } = {};
-  console.log(newItems);
 
   if (regions) {
     const filename = Object.keys(regions);
@@ -506,19 +505,14 @@ function findChoroplethItems(
 
     //Sort the unique values in decreasing order
     uniqueValues.sort((a, b) => b.numericLabelNumber - a.numericLabelNumber);
-    console.log(uniqueValues);
-    console.log(newItems);
     uniqueValues.forEach((value, index) => {
-      console.log(value.numericLabelNumber + ", " + index);
       color = chroma(newHue)
         .brighten(index - 0.5)
         .hex();
       newItems[color] = value.numericLabelNumber;
-      console.log(newItems);
     });
   }
 
-  console.log(newItems);
   return newItems;
 }
 
