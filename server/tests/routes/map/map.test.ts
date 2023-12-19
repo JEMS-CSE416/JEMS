@@ -140,41 +140,41 @@ describe("testing MAPS routes", () => {
   // Test Duplicating Map
   describe("POST /api/maps/duplicate", () => {
     describe("when user is authenticated", () => {
-      test("with a valid public map ID, it should successfully duplicate the map and return 201", async () => {
-        const loginResponse = await login();
-
-        // duplicate a map
-        const id = "656ff8a4f651eef41c74c9d3";
-        const response = await request(app)
-          .post(`/api/maps/duplicate/`)
-          .send({
-            map_id: id,
-            map_name: "Duplicate of Region Names 2",
-            description: "Duplicate Description of Region Names 2",
-            public: false,
-          })
-          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(201);
-
-          console.log(response.body)
-      });
-
-      // test("with a valid private map ID, it should fail to duplicate the map and return 401", async () => {
+      // test("with a valid public map ID, it should successfully duplicate the map and return 201", async () => {
       //   const loginResponse = await login();
 
       //   // duplicate a map
-      //   const id = "656ff90bfd27abc1d48a4226";
+      //   const id = "656ff8a4f651eef41c74c9d3";
       //   const response = await request(app)
       //     .post(`/api/maps/duplicate/`)
       //     .send({
       //       map_id: id,
-      //       map_name: "Duplicate of taiwan",
-      //       description: "Duplicate Description of 12",
+      //       map_name: "Duplicate of Region Names 2",
+      //       description: "Duplicate Description of Region Names 2",
       //       public: false,
       //     })
       //     .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-      //     .expect(401);
-      // },30000);
+      //     .expect(201);
+
+      //     console.log(response.body)
+      // });
+
+      test("with a valid private map ID, it should fail to duplicate the map and return 401", async () => {
+        const loginResponse = await login();
+
+        // duplicate a map
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .post(`/api/maps/duplicate/`)
+          .send({
+            map_id: id,
+            map_name: "Duplicate of taiwan",
+            description: "Duplicate Description of 12",
+            public: false,
+          })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(401);
+      },30000);
 
       // test("with an invalid map ID, it should return a specific error and return 400", async () => {
       //   const loginResponse = await login();
