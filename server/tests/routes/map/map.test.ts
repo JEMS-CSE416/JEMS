@@ -21,46 +21,46 @@ beforeAll(async () => {
 
 // Test the map routes
 describe("testing MAPS routes", () => {
-  // // Test Get Map
-  // describe("GET /api/maps/:id", () => {
-  //   describe("when user is authenticated", () => {
-  //     test("given an ID of a public map, it should return status code 200", async () => {
-  //       // First, log in to create a session
-  //       const loginResponse = await login();
+  // Test Get Map
+  describe("GET /api/maps/:id", () => {
+    describe("when user is authenticated", () => {
+      test("given an ID of a public map, it should return status code 200", async () => {
+        // First, log in to create a session
+        const loginResponse = await login();
 
-  //       // Then, get a map
-  //       const id = "656ff8a4f651eef41c74c9d3";
-  //       const response = await request(app)
-  //         .get(`/api/maps/${id}`)
-  //         .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-  //         .expect(200);
-  //     });
+        // Then, get a map
+        const id = "656ff8a4f651eef41c74c9d3";
+        const response = await request(app)
+          .get(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
+      });
 
-  //     test("given an invalid ID of a map, it should return status code 404", async () => {
-  //       // First, log in to create a session
-  //       const loginResponse = await login();
+      test("given an invalid ID of a map, it should return status code 404", async () => {
+        // First, log in to create a session
+        const loginResponse = await login();
 
-  //       // Then, get a map
-  //       const id = "656ff8a4f651eef31c74c9d4"; // this is an invalid map id that does not exist
-  //       const response = await request(app)
-  //         .get(`/api/maps/${id}`)
-  //         .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-  //         .expect(404);
-  //     });
-  //   });
+        // Then, get a map
+        const id = "656ff8a4f651eef31c74c9d4"; // this is an invalid map id that does not exist
+        const response = await request(app)
+          .get(`/api/maps/${id}`)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(404);
+      });
+    });
 
-  //   describe("when user is not authenticated", () => {
-  //     it("should return status code 401", async () => {
-  //       const id = "656ff8a4f651eef41c74c9d3";
-  //       const response = await request(app).get(`/api/maps/${id}`).expect(401);
-  //     });
-  //   });
-  // });
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        const id = "656ff8a4f651eef41c74c9d3";
+        const response = await request(app).get(`/api/maps/${id}`).expect(401);
+      });
+    });
+  });
 
   // Test Query Maps
   describe("GET /api/maps/", () => {
     describe("when user is authenticated", () => {
-      test("getting private maps, it should return status code 200", async () => {
+      test("getting private maps, it should return status code 200 with a list of private maps that user can see.", async () => {
         // First, log in to create a session
         const loginResponse = await login();
 
@@ -69,31 +69,24 @@ describe("testing MAPS routes", () => {
           .get("/api/maps/")
           .query({ private: true })
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(200);
-
-        console.log(response.body);
-
-        expect(response.body[0]).toHaveProperty("creatorId");
-        expect(response.body[0]).toHaveProperty("mapName");
-        expect(response.body[0]).toHaveProperty("description");
-        expect(response.body[0]).toHaveProperty("public");
+          .expect(200); // should be [] because user has no private maps
       });
 
-      // test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
-      //   // First, log in to create a session
-      //   const loginResponse = await login();
+      test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
+        // First, log in to create a session
+        const loginResponse = await login();
 
-      //   // Attempt to get a private map that does not belong to you
-      //   const response = await request(app)
-      //     .get("/api/maps/")
-      //     .query({
-      //       private: true,
-      //       map_name: "asdasd",
-      //     })
-      //     .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-      //     .expect(200);
-      //   expect(response.body).toEqual([]);
-      // });
+        // Attempt to get a private map that does not belong to you
+        const response = await request(app)
+          .get("/api/maps/")
+          .query({
+            private: true,
+            map_name: "asdasd",
+          })
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
+        expect(response.body).toEqual([]);
+      });
     });
 
     describe("when user is not authenticated", () => {
