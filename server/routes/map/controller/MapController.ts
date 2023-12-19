@@ -31,9 +31,13 @@ export async function getGrid(){
 */
 async function fillRegions(map: any){
   console.log("MAP IS: ", map)
-
-  if(!map.regionsFile)
+  console.log("MAP.REGIONSFILE IS: ", map.regionsFile)
+  if(!map.regionsFile){
+    console.log("MAP.REGIONSFILE IS NOT DEFINED")
     return map
+  }
+
+  console.log("MAP.REGIONSFILE IS DEFINED", map.regionsFile)
 
   const gfs = await getGrid() as any;
 
