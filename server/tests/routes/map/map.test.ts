@@ -174,37 +174,37 @@ describe("testing MAPS routes", () => {
   //   });
   // });
 
-  // // Test Update Map
-  // describe("PUT /api/maps/update/", () => {
-  //   describe("when user is authenticated", () => {
-  //     test("with valid JSON map data, it should successfully update a map and return 201", async () => {
-  //       const loginResponse = await login();
+  // Test Update Map
+  describe("PUT /api/maps/update/", () => {
+    describe("when user is authenticated", () => {
+      test("with valid JSON map data, it should successfully update a map and return 201", async () => {
+        const loginResponse = await login();
 
-  //       const updatedMapJSON = { ...mapjson };
-  //       updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION";
+        const updatedMapJSON = { ...mapjson };
+        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION";
 
-  //       const id = "656ff90bfd27abc1d48a4226";
-  //       const response = await request(app)
-  //         .put(`/api/maps/update/?id=${id}`)
-  //         .send(updatedMapJSON)
-  //         .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-  //         .expect(200);
-  //     });
-  //   });
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .put(`/api/maps/update/?id=${id}`)
+          .send(updatedMapJSON)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(200);
+      });
+    });
 
-  //   describe("when user is not authenticated", () => {
-  //     it("should return status code 401", async () => {
-  //       const updatedMapJSON = { ...mapjson };
-  //       updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION";
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        const updatedMapJSON = { ...mapjson };
+        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION";
 
-  //       const id = "656ff90bfd27abc1d48a4226";
-  //       const response = await request(app)
-  //         .put(`/api/maps/update/?id=${id}`)
-  //         .send(updatedMapJSON)
-  //         .expect(401);
-  //     });
-  //   });
-  // });
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .put(`/api/maps/update/?id=${id}`)
+          .send(updatedMapJSON)
+          .expect(401);
+      });
+    });
+  });
 
   // Test Creating Map
   describe("PUT /api/maps/", () => {
