@@ -177,7 +177,7 @@ describe("testing MAPS routes", () => {
   // Test Update Map
   describe("PUT /api/maps/update/", () => {
     describe("when user is authenticated", () => {
-      test("with valid JSON map data, it should successfully update a map and return 401", async () => {
+      test("with valid JSON map data, it should return 401", async () => {
         const loginResponse = await login();
 
         const updatedMapJSON = { ...mapjson };
@@ -188,7 +188,7 @@ describe("testing MAPS routes", () => {
           .put(`/api/maps/update/?id=${id}`)
           .send(updatedMapJSON)
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(200);
+          .expect(401); // because the map does not belong to the user
       });
     });
 
