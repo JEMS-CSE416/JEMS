@@ -174,7 +174,7 @@ describe("testing MAPS routes", () => {
           })
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(401);
-      },30000);
+      });
 
       // test("with an invalid map ID, it should return a specific error and return 400", async () => {
       //   const loginResponse = await login();

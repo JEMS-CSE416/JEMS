@@ -30,6 +30,8 @@ export async function getGrid(){
 * into maps of region objects
 */
 async function fillRegions(map: any){
+  console.log("MAP IS: ", map)
+
   if(!map.regionsFile)
     return map
 
