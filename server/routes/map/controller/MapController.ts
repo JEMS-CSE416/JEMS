@@ -38,14 +38,14 @@ async function fillRegions(map: any){
   var readStream = gfs.openDownloadStream(map.regionsFile);
 
   const chunks = [] as any[]
-  const regionsString = new Promise((resolve, reject) => {
+  const regionsString = await new Promise((resolve, reject) => {
     readStream.on('data', (chunk: any) => chunks.push(Buffer.from(chunk)));
     readStream.on('error', (err: any) => reject(err));
     readStream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
   })
 
-
-  map.regions = JSON.parse(await regionsString as string)
+  console.log(regionsString)
+  map.regions = JSON.parse(regionsString as string)
   return map;
 }
 
@@ -211,10 +211,10 @@ const duplicateMap = async (req: Request, res: Response) => {
 
   /* Check if the map exists */
   let map = await mapModel.findById(map_id);
-  map = await fillRegions(map);
   if (!map) {
     return res.status(404).send("Error 404: Map not found");
   }
+  map = await fillRegions(map);
 
   /* Is this private map? If so can this user duplicate this map? */
   if (!map.public) {
