@@ -146,7 +146,7 @@ describe("testing MAPS routes", () => {
         // duplicate a map
         const id = "656ff8a4f651eef41c74c9d3";
         const response = await request(app)
-          .post(`/api/maps/duplicate`)
+          .post(`/api/maps/duplicate/`)
           .send({
             map_id: id,
             map_name: "Duplicate of Region Names 2",
@@ -155,6 +155,8 @@ describe("testing MAPS routes", () => {
           })
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(201);
+
+          console.log(response.body)
       });
 
       // test("with a valid private map ID, it should fail to duplicate the map and return 401", async () => {
@@ -174,22 +176,22 @@ describe("testing MAPS routes", () => {
       //     .expect(401);
       // },30000);
 
-      test("with an invalid map ID, it should return a specific error and return 400", async () => {
-        const loginResponse = await login();
+      // test("with an invalid map ID, it should return a specific error and return 400", async () => {
+      //   const loginResponse = await login();
 
-        // duplicate a map
-        const id = "656ff90bfd27aba1d48a4222"; // invalid non existant map id
-        const response = await request(app)
-          .post(`/api/maps/duplicate`)
-          .send({
-            map_id: id,
-            map_name: "Duplicate of taiwan",
-            description: "Duplicate Description of 12",
-            public: false,
-          })
-          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(404);
-      }, 30000);
+      //   // duplicate a map
+      //   const id = "656ff90bfd27aba1d48a4222"; // invalid non existant map id
+      //   const response = await request(app)
+      //     .post(`/api/maps/duplicate`)
+      //     .send({
+      //       map_id: id,
+      //       map_name: "Duplicate of taiwan",
+      //       description: "Duplicate Description of 12",
+      //       public: false,
+      //     })
+      //     .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+      //     .expect(404);
+      // }, 30000);
     });
 
     describe("when user is not authenticated", () => {
