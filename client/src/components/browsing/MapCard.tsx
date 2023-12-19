@@ -87,7 +87,7 @@ const MapCard: React.FC<MapCardProps> = ({
         </Text>
       )}
       <Text size="9px" ta="left">
-        {mapCreatorUser?.displayName} •{" "}
+        {mapCreatorUser?.displayName} • {" "}
         {formatDate(map?.creationDate ?? "2023-11-20T02:57:13.344+00:00")}
       </Text>
       <Text size="10px" ta="left" id="mapDescription" lineClamp={3}>

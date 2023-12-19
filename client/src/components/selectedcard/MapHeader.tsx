@@ -6,8 +6,8 @@ import DeleteMapModal from "../modals/DeleteMapModal";
 import { Text, Group, Avatar, Button } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import {Map} from "../../utils/models/Map";
-import {User} from "../../utils/models/User";
+import { Map } from "../../utils/models/Map";
+import { User } from "../../utils/models/User";
 import {
   IconEdit,
   IconDownload,
@@ -15,12 +15,13 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
+import { formatDate } from "../../utils/global_utils";
 
 interface MapHeaderProps {
-  map: Map,
-  mapUser: User
+  map: Map;
+  mapUser: User;
 }
-const MapHeader = ({map, mapUser}: MapHeaderProps) => {
+const MapHeader = ({ map, mapUser }: MapHeaderProps) => {
   const { isLoggedIn, user } = useAuth();
 
   // the duplicate modal state
@@ -45,35 +46,34 @@ const MapHeader = ({map, mapUser}: MapHeaderProps) => {
       )}
 
       <Text fw={500} size="sm" id="creationDate">
-        {map.creationDate}
+        {formatDate(map?.creationDate ?? "2023-11-20T02:57:13.344+00:00")}
       </Text>
       <Text fw={700} size="xl" id="title">
         {map.mapName}
       </Text>
-      {
-        user && map.creatorId === user._id && 
-      <Group id="edit">
-        <Link to={`/edit/${map._id}`} style={{ marginLeft: "auto" }}>
+      {user && map.creatorId === user._id && (
+        <Group id="edit">
+          <Link to={`/edit/${map._id}`} style={{ marginLeft: "auto" }}>
+            <Button
+              leftSection={<IconEdit size={14} />}
+              variant="subtle"
+              color="gray"
+              id="edit-button"
+            >
+              Edit Map
+            </Button>
+          </Link>
           <Button
-            leftSection={<IconEdit size={14} />}
+            leftSection={<IconTrash size={14} />}
             variant="subtle"
             color="gray"
-            id="edit-button"
+            onClick={setDeleteModal.open}
+            id="delete-button"
           >
-            Edit Map
+            Delete
           </Button>
-        </Link>
-        <Button
-          leftSection={<IconTrash size={14} />}
-          variant="subtle"
-          color="gray"
-          onClick={setDeleteModal.open}
-          id="delete-button"
-        >
-          Delete
-        </Button>
-      </Group>
-        }
+        </Group>
+      )}
 
       <Group>
         <Group>
@@ -91,7 +91,7 @@ const MapHeader = ({map, mapUser}: MapHeaderProps) => {
             leftSection={<IconDownload size={14} />}
             variant="subtle"
             color="gray"
-            onClick={()=>downloadAsJEMS(map)}
+            onClick={() => downloadAsJEMS(map)}
             id="download-button"
           >
             Download JEMS Project
