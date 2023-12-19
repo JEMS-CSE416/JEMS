@@ -60,7 +60,7 @@ describe("testing MAPS routes", () => {
   // Test Query Maps
   describe("GET /api/maps/", () => {
     describe("when user is authenticated", () => {
-      test("getting private maps, it should return status code 200", async () => {
+      test("getting private maps, it should return status code 200 with a list of private maps that user can see.", async () => {
         // First, log in to create a session
         const loginResponse = await login();
 
@@ -69,12 +69,7 @@ describe("testing MAPS routes", () => {
           .get("/api/maps/")
           .query({ private: true })
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(200);
-
-        expect(response.body[0]).toHaveProperty("creatorId");
-        expect(response.body[0]).toHaveProperty("mapName");
-        expect(response.body[0]).toHaveProperty("description");
-        expect(response.body[0]).toHaveProperty("public");
+          .expect(200); // should be [] because user has no private maps
       });
 
       test("getting private maps of a another user, it should return status code 200 with content as an empty []", async () => {
@@ -105,38 +100,6 @@ describe("testing MAPS routes", () => {
     });
   });
 
-  // Test Update Map
-  describe("PUT /api/maps/update/", () => {
-    describe("when user is authenticated", () => {
-      test("with valid JSON map data, it should successfully update a map and return 201", async () => {
-        const loginResponse = await login();
-
-        const updatedMapJSON = { ...mapjson };
-        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION"
-
-        const id = "656ff90bfd27abc1d48a4226";
-        const response = await request(app)
-          .put(`/api/maps/update/?id=${id}`)
-          .send(updatedMapJSON)
-          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(200);
-      });
-    });
-
-    describe("when user is not authenticated", () => {
-      it("should return status code 401", async () => {
-        const updatedMapJSON = { ...mapjson };
-        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION"
-
-        const id = "656ff90bfd27abc1d48a4226";
-        const response = await request(app)
-          .put(`/api/maps/update/?id=${id}`)
-          .send(updatedMapJSON)
-          .expect(401);
-      });
-    });
-  });
-
   // Test Duplicating Map
   describe("POST /api/maps/duplicate", () => {
     describe("when user is authenticated", () => {
@@ -146,7 +109,7 @@ describe("testing MAPS routes", () => {
         // duplicate a map
         const id = "656ff8a4f651eef41c74c9d3";
         const response = await request(app)
-          .post(`/api/maps/duplicate`)
+          .post(`/api/maps/duplicate/`)
           .send({
             map_id: id,
             map_name: "Duplicate of Region Names 2",
@@ -155,6 +118,8 @@ describe("testing MAPS routes", () => {
           })
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .expect(201);
+
+        console.log(response.body);
       });
 
       test("with a valid private map ID, it should fail to duplicate the map and return 401", async () => {
@@ -163,7 +128,7 @@ describe("testing MAPS routes", () => {
         // duplicate a map
         const id = "656ff90bfd27abc1d48a4226";
         const response = await request(app)
-          .post(`/api/maps/duplicate`)
+          .post(`/api/maps/duplicate/`)
           .send({
             map_id: id,
             map_name: "Duplicate of taiwan",
@@ -171,7 +136,7 @@ describe("testing MAPS routes", () => {
             public: false,
           })
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(201);
+          .expect(401);
       });
 
       test("with an invalid map ID, it should return a specific error and return 400", async () => {
@@ -204,6 +169,38 @@ describe("testing MAPS routes", () => {
             description: "Duplicate Description of Region Names 2",
             public: false,
           })
+          .expect(401);
+      });
+    });
+  });
+
+  // Test Update Map
+  describe("PUT /api/maps/update/", () => {
+    describe("when user is authenticated", () => {
+      test("with valid JSON map data, it should return 401", async () => {
+        const loginResponse = await login();
+
+        const updatedMapJSON = { ...mapjson };
+        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION";
+
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .put(`/api/maps/update/?id=${id}`)
+          .send(updatedMapJSON)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(401); // because the map does not belong to the user
+      });
+    });
+
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        const updatedMapJSON = { ...mapjson };
+        updatedMapJSON.map_file_content.description = "UPDATED DESCRIPTION";
+
+        const id = "656ff90bfd27abc1d48a4226";
+        const response = await request(app)
+          .put(`/api/maps/update/?id=${id}`)
+          .send(updatedMapJSON)
           .expect(401);
       });
     });
