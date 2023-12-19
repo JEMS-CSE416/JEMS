@@ -48,7 +48,7 @@ async function fillRegions(map: any){
     readStream.on('error', (err: any) => reject(err));
     readStream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
   })
-  
+
   
   map.regions = JSON.parse(regionsString as string)
   return map;
@@ -224,6 +224,7 @@ const duplicateMap = async (req: Request, res: Response) => {
   /* Is this private map? If so can this user duplicate this map? */
   if (!map.public) {
     // check if this map belongs to this user.
+    console.log(map.creatorId.toString(), creator_id);
     if (map.creatorId.toString() !== creator_id) {
       return res
         .status(401)
