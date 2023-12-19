@@ -77,7 +77,7 @@ const MapCard: React.FC<MapCardProps> = ({
           alt="Norway"
         />
       </Card.Section>
-      {name!.length > 26 ? (
+      {name!.length > 26 ? (    // If name is too long, slice it and add ellipses
         <Text fw={700} ta="left" id="mapTitle">
           {name?.slice(0, 27) + "..."}
         </Text>
@@ -129,7 +129,6 @@ const MapCard: React.FC<MapCardProps> = ({
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
-              {/* <Menu.Label>Application</Menu.Label> */}
               <Menu.Item
                 onClick={(e) => {
                   e.preventDefault();
