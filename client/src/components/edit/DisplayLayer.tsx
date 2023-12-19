@@ -223,9 +223,15 @@ function getChoroplethStyle(
   const value = region.properties.numericLabel;
 
   // Determines the color of the region based off the numeric value
-  if (items.length <= 7) { // Should only be max 7 items due to colorpicker
+  if (items.length <= 10) { // Should only be max 8 items due to colorpicker, but hardcoding 10 just in case
     for (let i = 0; i < items.length; i++) {
-      if (value && value >= items[i][1]) {
+      console.log(value);
+      console.log(items[i][1]);
+
+      // If the value is a NUMBER (0, -1, 2, etc) and NOT a string and is less than the max value
+      if (typeof value === 'number' && value >= Number(items[i][1])) {
+        console.log(value);
+        console.log(items[i][1]);
         return items[i][0];
       }
     }
