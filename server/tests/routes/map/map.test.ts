@@ -206,36 +206,36 @@ describe("testing MAPS routes", () => {
   //   });
   // });
 
-  // // Test Creating Map
-  // describe("PUT /api/maps/", () => {
-  //   describe("when user is authenticated", () => {
-  //     test("with valid JSON map data, it should successfully create a map and return 201", async () => {
-  //       const loginResponse = await login();
+  // Test Creating Map
+  describe("PUT /api/maps/", () => {
+    describe("when user is authenticated", () => {
+      test("with valid JSON map data, it should successfully create a map and return 201", async () => {
+        const loginResponse = await login();
 
-  //       const response = await request(app)
-  //         .put(`/api/maps/`)
-  //         .send(mapjson)
-  //         .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-  //         .expect(201);
-  //     });
+        const response = await request(app)
+          .put(`/api/maps/`)
+          .send(mapjson)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(201);
+      });
 
-  //     test("with invalid JSON map data, it should return a specific error and return 400", async () => {
-  //       const loginResponse = await login();
+      test("with invalid JSON map data, it should return a specific error and return 400", async () => {
+        const loginResponse = await login();
 
-  //       const response = await request(app)
-  //         .put(`/api/maps/`)
-  //         .send(mapjson_invalid)
-  //         .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-  //         .expect(400);
-  //     });
-  //   });
+        const response = await request(app)
+          .put(`/api/maps/`)
+          .send(mapjson_invalid)
+          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+          .expect(400);
+      });
+    });
 
-  //   describe("when user is not authenticated", () => {
-  //     it("should return status code 401", async () => {
-  //       // Test logic for an unauthenticated user
-  //     });
-  //   });
-  // });
+    describe("when user is not authenticated", () => {
+      it("should return status code 401", async () => {
+        // Test logic for an unauthenticated user
+      });
+    });
+  });
 
   // Test Deleting Map
   describe("DELETE /api/maps/:id", () => {
