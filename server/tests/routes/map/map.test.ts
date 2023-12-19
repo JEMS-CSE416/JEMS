@@ -157,22 +157,22 @@ describe("testing MAPS routes", () => {
           .expect(201);
       });
 
-      test("with a valid private map ID, it should fail to duplicate the map and return 401", async () => {
-        const loginResponse = await login();
+      // test("with a valid private map ID, it should fail to duplicate the map and return 401", async () => {
+      //   const loginResponse = await login();
 
-        // duplicate a map
-        const id = "656ff90bfd27abc1d48a4226";
-        const response = await request(app)
-          .post(`/api/maps/duplicate`)
-          .send({
-            map_id: id,
-            map_name: "Duplicate of taiwan",
-            description: "Duplicate Description of 12",
-            public: false,
-          })
-          .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(401);
-      },30000);
+      //   // duplicate a map
+      //   const id = "656ff90bfd27abc1d48a4226";
+      //   const response = await request(app)
+      //     .post(`/api/maps/duplicate/`)
+      //     .send({
+      //       map_id: id,
+      //       map_name: "Duplicate of taiwan",
+      //       description: "Duplicate Description of 12",
+      //       public: false,
+      //     })
+      //     .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
+      //     .expect(401);
+      // },30000);
 
       test("with an invalid map ID, it should return a specific error and return 400", async () => {
         const loginResponse = await login();

@@ -44,7 +44,7 @@ async function fillRegions(map: any){
     readStream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
   })
 
-  console.log(regionsString)
+  
   map.regions = JSON.parse(regionsString as string)
   return map;
 }

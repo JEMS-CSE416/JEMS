@@ -367,7 +367,7 @@ mapRouter.put("/update/", isAuthMiddleWare, updateMap);
  *             schema:
  *               type: string
  */
-mapRouter.post("/duplicate",isAuthMiddleWare, duplicateMap);
+mapRouter.post("/duplicate/",isAuthMiddleWare, duplicateMap);
 
 /**
  * @swagger
