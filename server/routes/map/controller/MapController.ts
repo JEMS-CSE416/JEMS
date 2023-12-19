@@ -30,22 +30,27 @@ export async function getGrid(){
 * into maps of region objects
 */
 async function fillRegions(map: any){
-  if(!map.regionsFile)
+  console.log("MAP IS: ", map)
+  if(!map.regionsFile){
+    console.log("MAP.REGIONSFILE IS NOT DEFINED")
     return map
+  }
+
+  console.log("MAP.REGIONSFILE IS DEFINED")
 
   const gfs = await getGrid() as any;
 
   var readStream = gfs.openDownloadStream(map.regionsFile);
 
   const chunks = [] as any[]
-  const regionsString = new Promise((resolve, reject) => {
+  const regionsString = await new Promise((resolve, reject) => {
     readStream.on('data', (chunk: any) => chunks.push(Buffer.from(chunk)));
     readStream.on('error', (err: any) => reject(err));
     readStream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
   })
 
-
-  map.regions = JSON.parse(await regionsString as string)
+  
+  map.regions = JSON.parse(regionsString as string)
   return map;
 }
 
@@ -211,14 +216,15 @@ const duplicateMap = async (req: Request, res: Response) => {
 
   /* Check if the map exists */
   let map = await mapModel.findById(map_id);
-  map = await fillRegions(map);
   if (!map) {
     return res.status(404).send("Error 404: Map not found");
   }
+  map = await fillRegions(map);
 
   /* Is this private map? If so can this user duplicate this map? */
   if (!map.public) {
     // check if this map belongs to this user.
+    console.log(map.creatorId.toString(), creator_id);
     if (map.creatorId.toString() !== creator_id) {
       return res
         .status(401)
