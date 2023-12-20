@@ -46,7 +46,7 @@ export const getRegions = (geojson: any) => {
                 type: feature.geometry.type,
                 stringLabel: "",
                 stringOffset: [0],
-                numericLabel: 0,
+                numericLabel: "",
                 numericUnit: "",
                 color: "#8eb8fa", // default color
             })
