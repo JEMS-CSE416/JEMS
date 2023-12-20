@@ -239,8 +239,6 @@ function getChoroplethStyle(
     editPageState.map.legend.choroplethLegend?.items || {}
   );
   const value = region.properties.numericLabel;
-  //console.log(region);
-  //console.log(editPageState);
 
   // Determines the color of the region based off the numeric value
   if (items.length <= 10) { // Should only be max 8 items due to colorpicker, but hardcoding 10 just in case

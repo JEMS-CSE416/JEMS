@@ -187,9 +187,7 @@ export function EditContextProvider(props: EditContextProviderProps) {
               <setLeafletMapPrinterContext.Provider
                 value={setLeafletMapPrinter}
               >
-                <UndoRedo>
-                  {props.children}
-                </UndoRedo>
+                <UndoRedo>{props.children}</UndoRedo>
               </setLeafletMapPrinterContext.Provider>
             </leafletMapPrinterContext.Provider>
           </SetLeafletMapContext.Provider>
@@ -280,11 +278,10 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         selectedRegion: selectedRegion,
       };
     case "update_selected_region_info":
-      let oldGroupName
-      if(action.oldGroupDetails)
+      let oldGroupName;
+      if (action.oldGroupDetails)
         oldGroupName = action.oldGroupDetails.groupName;
-      else
-        oldGroupName = state.selectedRegion!.groupName;
+      else oldGroupName = state.selectedRegion!.groupName;
       const newGroupName = action.selectedRegion.groupName;
       const newRegions = { ...state.map.regions };
 
@@ -295,18 +292,24 @@ function editReducer(state: EditPageState, action: any): EditPageState {
       };
 
       // Update region info first then move groups if necessary
-      newRegions[oldGroupName][action.oldGroupDetails?.i ?? state.selectedRegion!.i].regionName =
-        action.selectedRegion.region.regionName;
-      newRegions[oldGroupName][action.oldGroupDetails?.i ?? state.selectedRegion!.i].stringLabel =
-        action.selectedRegion.region.stringLabel;
-      newRegions[oldGroupName][action.oldGroupDetails?.i ?? state.selectedRegion!.i].stringOffset =
-        action.selectedRegion.region.stringOffset;
-      newRegions[oldGroupName][action.oldGroupDetails?.i ?? state.selectedRegion!.i].numericLabel =
-        action.selectedRegion.region.numericLabel;
-      newRegions[oldGroupName][action.oldGroupDetails?.i ?? state.selectedRegion!.i].numericUnit =
-        action.selectedRegion.region.numericUnit;
-      newRegions[oldGroupName][action.oldGroupDetails?.i ?? state.selectedRegion!.i].color =
-        action.selectedRegion.region.color;
+      newRegions[oldGroupName][
+        action.oldGroupDetails?.i ?? state.selectedRegion!.i
+      ].regionName = action.selectedRegion.region.regionName;
+      newRegions[oldGroupName][
+        action.oldGroupDetails?.i ?? state.selectedRegion!.i
+      ].stringLabel = action.selectedRegion.region.stringLabel;
+      newRegions[oldGroupName][
+        action.oldGroupDetails?.i ?? state.selectedRegion!.i
+      ].stringOffset = action.selectedRegion.region.stringOffset;
+      newRegions[oldGroupName][
+        action.oldGroupDetails?.i ?? state.selectedRegion!.i
+      ].numericLabel = action.selectedRegion.region.numericLabel;
+      newRegions[oldGroupName][
+        action.oldGroupDetails?.i ?? state.selectedRegion!.i
+      ].numericUnit = action.selectedRegion.region.numericUnit;
+      newRegions[oldGroupName][
+        action.oldGroupDetails?.i ?? state.selectedRegion!.i
+      ].color = action.selectedRegion.region.color;
 
       // If the group name has changed then move the region to the new group
       if (newGroupName !== oldGroupName) {
@@ -446,6 +449,9 @@ function editReducer(state: EditPageState, action: any): EditPageState {
         max: max2,
       };
 
+      console.log("ajsdhasdhjaaaaaaaaaaaa");
+      console.log(updatedChoroplethLegend2);
+
       return {
         ...state,
         map: {
@@ -537,8 +543,3 @@ export function useEditContext() {
 export function useEditDispatchContext() {
   return useContext(EditDispatchContext);
 }
-
-
-
-
-
