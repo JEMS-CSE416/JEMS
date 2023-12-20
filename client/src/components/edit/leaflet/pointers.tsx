@@ -148,7 +148,8 @@ export function PointerConnection(
       ref={polyLineRef}
         eventHandlers={{
           add: (e) => {
-            props.appendRef(e)
+            if(props.appendRef)
+                props.appendRef(e)
             //e.target.bringToFront();
           },
         }}
