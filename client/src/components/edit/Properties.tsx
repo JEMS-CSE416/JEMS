@@ -27,7 +27,7 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { useEffect, useState } from "react";
 import { set } from "cypress/types/lodash";
-import { UndoableChangeMapProp, useUndoRedoContext } from "../../context/UndoRedo";
+import { UndoableChangeMapProp, UndoableHue, UndoableRegionProperty, useUndoRedoContext } from "../../context/UndoRedo";
 import { useLegendContext } from "../../context/LegendContextProvider";
 
 export default function Properties() {
@@ -98,57 +98,111 @@ export default function Properties() {
     }
   }, [editPageState]);
 
+
   const handleRegionPropertyEditing = () => {
-    setEditPageState({
-      type: "update_selected_region_info",
-      map: {
-        ...editPageState.map,
-        legend: {
-          ...editPageState.map.legend,
-          choroplethLegend: {
-            ...editPageState.map.legend.choroplethLegend,
-            hue: hueState,
-          },
-        },
+
+  
+    const doesGroupNameChange = 
+      (groupNameState === "")
+        ? false
+        : (editPageState.selectedRegion?.groupName !== groupNameState);
+
+    const isGroupNameNew =
+      doesGroupNameChange
+        ? editPageState.map.regions[groupNameState!] === undefined
+        : false
+
+    console.warn(`IS IT NEW${editPageState.map.regions[groupNameState!]}`)
+    addToUndoStack(new UndoableRegionProperty(
+      editPageState.map.legend.choroplethLegend.hue,
+      editPageState.selectedRegion?.i ?? -1,
+      editPageState.selectedRegion?.groupName ?? "shouldn't be here",
+      {
+        regionName: editPageState.selectedRegion?.region.regionName,
+        stringLabel: editPageState.selectedRegion?.region.stringLabel,
+        numericLabel: editPageState.selectedRegion?.region.numericLabel,
+        numericUnit: editPageState.selectedRegion?.region.numericLabel,
+        color: editPageState.selectedRegion?.region.color,
+        ...editPageState.selectedRegion?.region
       },
-      selectedRegion: {
-        ...editPageState.selectedRegion!,
-        region: {
-          ...editPageState.selectedRegion!.region,
-          regionName: regionNameState === "" ? "Untitled" : regionNameState!,
-          stringLabel: stringLabelState!,
-          numericLabel: numericLabelState.toString(),
-          numericUnit: unitsState,
-          color:
-            colorState === ""
-              ? editPageState.selectedRegion!.region.color
-              : colorState!,
-        },
-        groupName:
-          groupNameState === ""
-            ? editPageState.selectedRegion!.groupName
-            : groupNameState!,
-      },
-    });
+
+      hueState,
+      doesGroupNameChange
+        ? isGroupNameNew
+          ? 0
+          : editPageState.map.regions[groupNameState!].length
+        : editPageState.selectedRegion?.i ?? -1,
+      doesGroupNameChange
+        ? groupNameState!
+        : editPageState.selectedRegion!.groupName,
+      {
+        ...editPageState.selectedRegion!.region,
+        regionName: regionNameState === "" ? "Untitled" : regionNameState!,
+        stringLabel: stringLabelState!,
+        numericLabel: numericLabelState.toString(),
+        numericUnit: unitsState,
+        color:
+          colorState === ""
+            ? editPageState.selectedRegion!.region.color
+            : colorState!,
+      }
+    ))
+
+    //setEditPageState({
+      //type: "update_selected_region_info",
+      //map: {
+        //...editPageState.map,
+        //legend: {
+          //...editPageState.map.legend,
+          //choroplethLegend: {
+            //...editPageState.map.legend.choroplethLegend,
+            //hue: hueState,
+          //},
+        //},
+      //},
+      //selectedRegion: {
+        //...editPageState.selectedRegion!,
+        //region: {
+          //...editPageState.selectedRegion!.region,
+          //regionName: regionNameState === "" ? "Untitled" : regionNameState!,
+          //stringLabel: stringLabelState!,
+          //numericLabel: numericLabelState.toString(),
+          //numericUnit: unitsState,
+          //color:
+            //colorState === ""
+              //? editPageState.selectedRegion!.region.color
+              //: colorState!,
+        //},
+        //groupName:
+          //groupNameState === ""
+            //? editPageState.selectedRegion!.groupName
+            //: groupNameState!,
+      //},
+    //});
 
     console.log(editPageState);
   };
 
   // Function that updates state for Map Properties
   const handleMapPropertyEditing = () => {
-    setEditPageState({
-      type: "update_choropleth_legend",
-      map: {
-        ...editPageState.map,
-        legend: {
-          ...editPageState.map.legend,
-          choroplethLegend: {
-            ...editPageState.map.legend.choroplethLegend,
-            hue: hueState,
-          },
-        },
-      },
-    });
+    addToUndoStack(new UndoableHue(
+      editPageState.map.legend.choroplethLegend.hue,
+      hueState
+    ))
+
+    //setEditPageState({
+      //type: "update_choropleth_legend",
+      //map: {
+        //...editPageState.map,
+        //legend: {
+          //...editPageState.map.legend,
+          //choroplethLegend: {
+            //...editPageState.map.legend.choroplethLegend,
+            //hue: hueState,
+          //},
+        //},
+      //},
+    //});
 
     console.log(editPageState);
   };
