@@ -30,49 +30,54 @@ const SignupModal: React.FC<SignupModalProps> = ({
 
   const form = useForm({
     initialValues: {
-      email: '',
-      displayName: '',
-      password: '',
-      confirmPass: ''
+      email: "",
+      displayName: "",
+      password: "",
+      confirmPass: "",
     },
 
     validate: {
-      email: isEmail('Invalid email'),
-      displayName: isNotEmpty('Invalid displayName'),
-      password: isNotEmpty('Password Cannot be empty'),
-      confirmPass: (value) => ( form.values.password === value) 
-        ? null
-        : 'Passwords do not match'
-    }
-
+      email: isEmail("Invalid email"),
+      displayName: isNotEmpty("Invalid displayName"),
+      password: isNotEmpty("Password Cannot be empty"),
+      confirmPass: (value) =>
+        form.values.password === value ? null : "Passwords do not match",
+    },
   }) as any;
 
   function handleSignUp(values: any) {
-
-    signup({
-      email: values.email,
-      password: values.password,
-      displayName: values.displayName
-    })
-      .then(
-        (json) => {
-          console.log("attempting to close")
+    if (values.displayName.length > 16) {
+      form.setFieldError(
+        "displayName",
+        "Display name cannot be longer than 16 characters"
+      );
+    } else {
+      signup({
+        email: values.email,
+        password: values.password,
+        displayName: values.displayName,
+      })
+        .then((json) => {
+          console.log("attempting to close");
           notifications.show({
             icon: <IconCheck />,
-            title: 'Your account has been created!',
-            message: 'Please log in!',
+            title: "Your account has been created!",
+            message: "Please log in!",
           });
-          handleCloseSignupOpenLoginModal()
-          }
-      ).catch(
-        (err) => {
-          if(err as string !== undefined && ((err as string).includes('duplicate'))){
-            form.setFieldError("email", "An account with this email exists already");
-          } else
-            console.log(err)
-        }
-        
-      )
+          handleCloseSignupOpenLoginModal();
+        })
+        .catch((err) => {
+          if (
+            (err as string) !== undefined &&
+            (err as string).includes("duplicate")
+          ) {
+            form.setFieldError(
+              "email",
+              "An account with this email exists already"
+            );
+          } else console.log(err);
+        });
+    }
   }
 
   return (
@@ -83,16 +88,19 @@ const SignupModal: React.FC<SignupModalProps> = ({
           Signup!
         </Text>
         <br />
-        
-        <form onSubmit={form.onSubmit((values: any) => {handleSignUp(values)})}>
+
+        <form
+          onSubmit={form.onSubmit((values: any) => {
+            handleSignUp(values);
+          })}
+        >
           <TextInput
             label="Email"
             required
             className="splashScreenInput"
             id="signUpEmailInput"
             ta={"left"}
-            {...form.getInputProps('email')}
-
+            {...form.getInputProps("email")}
           />
           <br />
 
@@ -102,7 +110,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             className="splashScreenInput"
             id="signupDisplayNameInput"
             ta={"left"}
-            {...form.getInputProps('displayName')}
+            {...form.getInputProps("displayName")}
           />
           <br />
 
@@ -112,7 +120,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             className="splashScreenInput"
             id="signupPasswordInput"
             ta={"left"}
-            {...form.getInputProps('password')}
+            {...form.getInputProps("password")}
           />
           <br />
 
@@ -122,7 +130,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             className="splashScreenInput"
             id="signupConfirmPasswordInput"
             ta={"left"}
-            {...form.getInputProps('confirmPass')}
+            {...form.getInputProps("confirmPass")}
           />
           <br />
 
@@ -139,7 +147,10 @@ const SignupModal: React.FC<SignupModalProps> = ({
             </div>
 
             <div className="loginButtonDiv">
-                <Button type="submit" id="signUpSubmitButton"> Signup </Button>
+              <Button type="submit" id="signUpSubmitButton">
+                {" "}
+                Signup{" "}
+              </Button>
             </div>
           </Group>
         </form>

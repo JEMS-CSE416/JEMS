@@ -2,7 +2,7 @@ import { Button, Flex, Text } from "@mantine/core";
 import {
   useEditContext,
   useEditDispatchContext,
-  useLeafletMapContext
+  useLeafletMapContext,
 } from "../../context/EditContextProvider";
 import { BaseNavbar } from "../common/Navbar";
 import {
@@ -15,9 +15,8 @@ import { SettingsMapModal } from "../modals/SettingsMapModal";
 import { updateMap } from "../../api/MapApiAccessor";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
-import L from 'leaflet';
-import 'leaflet-easyprint';
-
+import L from "leaflet";
+import "leaflet-easyprint";
 
 /*
  * Edit navbar
@@ -40,6 +39,14 @@ export default function EditNavBar() {
 }
 
 function MapTitle(props: { name: string }) {
+  if (props.name.length >= 45) {
+    const mapName = props.name.slice(0, 46);
+    return (
+      <Text fw={700} size="xl" id="homePageHeader">
+        {mapName + "..."}
+      </Text>
+    );
+  }
   return (
     <Text fw={700} size="xl" id="homePageHeader">
       {props.name}

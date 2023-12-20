@@ -10,10 +10,11 @@ import {
 import React from "react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import { useSelectedMap } from "../hooks/useSelectedMap";
 import { Map } from "../../utils/models/Map";
 import { duplicateMap } from "../../api/MapApiAccessor";
+import { useNavigate } from "react-router-dom";
 
 interface DuplicateMapModalProps {
   opened: boolean;
@@ -49,6 +50,8 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
     },
   });
 
+  const navigate = useNavigate();
+
   const handleMakeCopy = async (map: Map) => {
     try {
       const data = {
@@ -59,20 +62,22 @@ const DuplicateMapModalBase: React.FC<DuplicateMapModalProps> = ({
           form.values.visibility.toString() == "Public" ? "true" : "false",
       };
       await duplicateMap(data);
+      notifications.show({
+        icon: <IconCheck />,
+        title: "Your map has been duplicated!",
+        message: "Horray a new map :)",
+      });
+      navigate("/home");
     } catch (error) {
       console.error("Error duplicating map:", error);
+      notifications.show({
+        icon: <IconX />,
+        title: "Error duplicating map!",
+        message: "Please try again!",
+      });
     }
 
-    /*
-    REPLACE THIS LOGIC WITH API ACCESSOR FOR DUPLICATION
-    */
-
     onClose();
-    notifications.show({
-      icon: <IconCheck />,
-      title: "Your map has been duplicated!",
-      message: "Horray a new map! Click Edit!",
-    });
   };
 
   return (
@@ -137,11 +142,7 @@ const DuplicateMapModal: React.FC<DuplicateMapModalProps> = ({
   onClose,
 }) => {
   return (
-    <>
-      {opened && (
-        <DuplicateMapModalBase opened={opened} onClose={onClose}/>
-      )}
-    </>
+    <>{opened && <DuplicateMapModalBase opened={opened} onClose={onClose} />}</>
   );
 };
 

@@ -87,6 +87,7 @@ function MyMaps() {
                         <MapCard
                           id={map._id}
                           name={map.mapName}
+                          creatorId={map.creatorId}
                           description={map.description}
                           isPrivate={!map.public}
                           map={map}

@@ -57,6 +57,9 @@ export function BaseNavbar(props: NavbarProps) {
         console.log(`ERROR WHEN LOGGING OUT: ${err}`);
       });
   };
+  // console.log("Aasdasd");
+  // console.log(typeof props.center_component);
+  // console.log((props.center_component as React.ReactElement).props.name);
 
   return (
     <div id="navBar">
@@ -74,7 +77,7 @@ export function BaseNavbar(props: NavbarProps) {
         </Grid.Col>
 
         {/* Spacing componenet*/}
-        <Grid.Col span={2.5} />
+        <Grid.Col span={1.5} />
 
         {/* search bar  or center_component*/}
         <Grid.Col span="auto">
@@ -178,7 +181,6 @@ function SearchBar() {
       navigate(searchFor);
     }
   };
-
 
   // creates the search bar
   return (
