@@ -3,22 +3,6 @@ import app from "../../../app";
 import { mapjson } from "../../fakeCreateMaps/map";
 import { mapjson_invalid } from "../../fakeCreateMaps/map_invalid";
 
-beforeAll(async () => {
-  // populate the database with fake data
-  const Fixtures = require("node-mongodb-fixtures");
-  const fixtures = new Fixtures({
-    dir: "tests/fakeDB",
-    filter: /\.(json|js)$/,
-    mute: true,
-  });
-
-  await fixtures
-    .connect("mongodb://localhost:27017")
-    .then(() => fixtures.unload())
-    .then(() => fixtures.load())
-    .then(() => fixtures.disconnect());
-});
-
 // Test the map routes
 describe("testing MAPS routes", () => {
   // Test Get Map
