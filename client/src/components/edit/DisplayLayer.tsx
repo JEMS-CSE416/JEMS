@@ -37,37 +37,6 @@ export default function DisplayLayer() {
   const map = useMap(); // get access to map object
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
 
-  // const mapInstance = useMap();
-  // const setLeafletMap = useContext(SetLeafletMapContext);
-  // const setLeafletMapPrinter = useContext(setLeafletMapPrinterContext);
-  // const leafletMapPrinter = useLeafLetMapPrinter();
-
-  // useEffect(() => {
-  //   // console.debug(
-  //   //   "MAP INSTANCE: ",
-  //   //   mapInstance,
-  //   //   "SET LEAFLET MAP",
-  //   //   setLeafletMap,
-  //   //   "SET LEAFLET MAP PRINTER",
-  //   //   setLeafletMapPrinter
-  //   // );
-
-  //   if (mapInstance && setLeafletMap && setLeafletMapPrinter) {
-  //     setLeafletMap(mapInstance);
-
-  //     const printer = L.easyPrint({
-  //       sizeModes: ["Current", "A4Portrait", "A4Landscape"],
-  //       filename: "MyMap",
-  //       exportOnly: true,
-  //       hideControlContainer: true,
-  //     }).addTo(mapInstance);
-
-  //     setLeafletMapPrinter(printer);
-
-  //     console.warn("LEAFLET MAP: ", mapInstance);
-  //   }
-  // }, [mapInstance, setLeafletMap]);
-
   return (
     <>
       <GeoJSON
@@ -254,9 +223,15 @@ function getChoroplethStyle(
   const value = region.properties.numericLabel;
 
   // Determines the color of the region based off the numeric value
-  if (items.length <= 7) { // Should only be max 7 items due to colorpicker
+  if (items.length <= 10) { // Should only be max 8 items due to colorpicker, but hardcoding 10 just in case
     for (let i = 0; i < items.length; i++) {
-      if (value && value >= items[i][1]) {
+      console.log(value);
+      console.log(items[i][1]);
+
+      // If the value is a NUMBER (0, -1, 2, etc) and NOT a string and is less than the max value
+      if (typeof value === 'number' && value >= Number(items[i][1])) {
+        console.log(value);
+        console.log(items[i][1]);
         return items[i][0];
       }
     }
@@ -264,7 +239,7 @@ function getChoroplethStyle(
   }
 }
 
-function labelHTML(
+export function labelHTML(
   region: Feature<Geometry, any>,
   editPageState: EditPageState
 ) {

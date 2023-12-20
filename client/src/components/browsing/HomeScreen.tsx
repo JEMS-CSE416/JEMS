@@ -15,22 +15,23 @@ import { IconX } from "@tabler/icons-react";
 import { useEffect } from "react";
 
 const HomePage = () => {
+  const [toggle, setToggle] = useDisclosure(false);
   const location = useLocation();
   const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
   const { data: maps, loading: discoverLoading } = useLoadingData<Map[]>(
     getMaps,
-    [{ isPrivate: false }]
+    [{ isPrivate: false }],[toggle]
   );
   const { data: yourMaps, loading: yourMapsLoading } = useLoadingData<Map[]>(
     getMaps,
-    [{ ownedMaps: true }]
+    [{ ownedMaps: true }],[toggle]
   );
-  useEffect( () => {
-    if(location.state?.err401)
+  useEffect(() => {
+    if (location.state?.err401)
       notifications.show({
         icon: <IconX />,
-        title: 'Error 401! You aren\'t Authenicated!',
-        message: 'Not authenticated to see that map!',
+        title: "Error 401! You aren't Authenicated!",
+        message: "Not authenticated to see that map!",
       });
   }, []); // eslint-disable-line
 
@@ -50,15 +51,16 @@ const HomePage = () => {
     setDuplicateModal.open();
   };
 
-
-
   const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
   const totalMaps = 8;
   return (
     <>
       <DuplicateMapModal
         opened={duplicateModalOpened}
-        onClose={setDuplicateModal.close}
+        onClose={() => {
+          setToggle.toggle();
+          setDuplicateModal.close();
+        }}
       />
       <NavBar></NavBar>
       <div id="content">
