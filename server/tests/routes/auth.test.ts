@@ -1,5 +1,21 @@
 import request from "supertest"
 
+beforeAll(async () => {
+  // populate the database with fake data
+  const Fixtures = require("node-mongodb-fixtures");
+  const fixtures = new Fixtures({
+    dir: "tests/fakeDB",
+    filter: /\.(json|js)$/,
+    mute: true,
+  });
+
+  await fixtures
+    .connect("mongodb://localhost:27017")
+    .then(() => fixtures.unload())
+    .then(() => fixtures.load())
+    .then(() => fixtures.disconnect());
+});
+
 // Test the auth routes
 describe("testing the auth routes", () => {
   describe("GET /loggedIn", () => {
