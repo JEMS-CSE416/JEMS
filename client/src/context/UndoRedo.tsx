@@ -331,14 +331,6 @@ export class UndoableRegionProperty implements Undoable{
     this.newGroupName = newGroupName
     this.newRegion = newRegion
 
-    console.warn("INIT: old  -> new ")
-    console.log(this.oldI)
-    console.log(this.newI)
-    console.log(this.oldGroupName)
-    console.log(this.newGroupName)
-    console.log(this.oldRegion)
-    console.log(this.newRegion)
-    console.warn("sandwich")
 
   }
 
@@ -361,16 +353,6 @@ export class UndoableRegionProperty implements Undoable{
         this.oldI = 0
     }
 
-    console.warn("UNDO: old  -> new ")
-    console.warn(`bool isOldGroupNameNew ${isOldGroupNameNew}`)
-    console.warn(`check editPagey ${editPageState.map.regions[this.oldGroupName!]}`)
-    console.log(this.oldI)
-    console.log(this.newI)
-    console.log(this.oldGroupName)
-    console.log(this.newGroupName)
-    console.log(this.oldRegion)
-    console.log(this.newRegion)
-    console.warn("sandwich")
 
     setEditPageState({
       type: "update_selected_region_info",
@@ -415,14 +397,6 @@ export class UndoableRegionProperty implements Undoable{
         this.newI = 0
     }
 
-    console.warn("REDO: old  -> new ")
-    console.log(this.oldI)
-    console.log(this.newI)
-    console.log(this.oldGroupName)
-    console.log(this.newGroupName)
-    console.log(this.oldRegion)
-    console.log(this.newRegion)
-    console.warn("sandwich")
     setEditPageState({
       type: "update_selected_region_info",
       map:{

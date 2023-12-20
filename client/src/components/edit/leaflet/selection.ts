@@ -8,15 +8,16 @@ export default function attachSelectionEvents(
   region: Feature,
   layer: Layer,
   editPageState: EditPageState,
-  setEditPageState: React.Dispatch<EditPageAction>
+  setEditPageState: React.Dispatch<EditPageAction>,
+  refs: any,
 ){
-  layer.on('mouseover', (e) => onHover(e, editPageState))
-  layer.on('click', (e) => onSelect(e, editPageState, setEditPageState))
-  layer.on('mouseout', (e) => clearFormat(e, editPageState))
+  layer.on('mouseover', (e) => onHover(e, editPageState, refs))
+  layer.on('click', (e) => onSelect(e, editPageState, setEditPageState, refs))
+  layer.on('mouseout', (e) => clearFormat(e, editPageState, refs))
 }
 
 // slight highlight on hover
-function onHover(e: LeafletMouseEvent, editPageState: EditPageState){
+function onHover(e: LeafletMouseEvent, editPageState: EditPageState, refs: any){
   const region = e.target
   if(region.feature.properties.i === editPageState.selectedRegion?.i &&
      region.feature.properties.groupName === editPageState.selectedRegion?.groupName
@@ -28,10 +29,19 @@ function onHover(e: LeafletMouseEvent, editPageState: EditPageState){
     region.bringToFront();
   }
   //region.bringToFront();
+
+  const allRefs = refs.current as any
+  if(allRefs !== undefined){
+    allRefs.forEach((ref:any )=> {
+      if(ref)
+        ref.target.bringToFront();
+    });
+  }
+
 }
 
 // heavier region and update page state
-function onSelect(e: LeafletMouseEvent, editPageState: EditPageState,setEditPageState: React.Dispatch<EditPageAction>){
+function onSelect(e: LeafletMouseEvent, editPageState: EditPageState,setEditPageState: React.Dispatch<EditPageAction>, refs: any){
   // apply 
   const region = e.target
   region.setStyle(SELECTED_STYLE)
@@ -40,6 +50,13 @@ function onSelect(e: LeafletMouseEvent, editPageState: EditPageState,setEditPage
   const i = region.feature.properties.i as number
   const groupName = region.feature.properties.groupName as string
   // actually set the state
+  const allRefs = refs.current as any
+  if(allRefs !== undefined){
+    allRefs.forEach((ref:any )=> {
+      if(ref)
+        ref.target.bringToFront();
+    });
+  }
   setEditPageState({
     type: 'select_region',
     selectedRegion: {
@@ -52,7 +69,7 @@ function onSelect(e: LeafletMouseEvent, editPageState: EditPageState,setEditPage
 }
 
 // clear formatting on mouseOff
-function clearFormat(e: LeafletMouseEvent, editPageState: EditPageState){
+function clearFormat(e: LeafletMouseEvent, editPageState: EditPageState, refs: any){
   const region = e.target
   // checks to see if the region is currently selected
   if(region.feature.properties.i === editPageState.selectedRegion?.i &&
@@ -63,5 +80,12 @@ function clearFormat(e: LeafletMouseEvent, editPageState: EditPageState){
   }else {
     region.setStyle(UNSELECTED_STYLE)
     //editPageState.selectedRegion?.layer.setStyle(SELECTED_STYLE)
+  }
+  const allRefs = refs.current as any
+  if(allRefs !== undefined){
+    allRefs.forEach((ref:any )=> {
+      if(ref)
+        ref.target.bringToFront();
+    });
   }
 }

@@ -112,7 +112,6 @@ export default function Properties() {
         ? editPageState.map.regions[groupNameState!] === undefined
         : false
 
-    console.warn(`IS IT NEW${editPageState.map.regions[groupNameState!]}`)
     addToUndoStack(new UndoableRegionProperty(
       editPageState.map.legend.choroplethLegend.hue,
       editPageState.selectedRegion?.i ?? -1,
