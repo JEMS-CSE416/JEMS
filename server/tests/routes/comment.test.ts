@@ -10,7 +10,7 @@ describe("testing the comment routes", () => {
         const loginResponse = await login();
 
         // Get comments for a map
-        const mapId = "657e02f381cf0ba4460ce31e"
+        const mapId = "656ff8a4f651eef41c74c9d3"
         const response = await request(app)
           .get(`/api/comment/`)
           .set("id", mapId)
@@ -32,7 +32,7 @@ describe("testing the comment routes", () => {
         // First, log in to create a session
         const loginResponse = await login();
 
-        const mapId = "6580b226e22d1b683816d0a0" // Private map under a different user
+        const mapId = "656ff2283e72ed7d266574cb" // Private map under a different user
         const response = await request(app)
           .get(`/api/comment/`)
           .set("id", mapId)
@@ -60,7 +60,7 @@ describe("testing the comment routes", () => {
           .put('/api/comment/create')
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .send({
-            "mapId": "657e02f381cf0ba4460ce31e",
+            "mapId": "656ff8a4f651eef41c74c9d3",
             "content": "Test comment"
           })
           .expect(200);
@@ -74,7 +74,7 @@ describe("testing the comment routes", () => {
           .put('/api/comment/create')
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .send({
-            mapId: '657e02f381cf0ba4460ce31e',
+            mapId: '656ff8a4f651eef41c74c9d3',
             comment: ''
           })
           .expect(400);
@@ -88,7 +88,7 @@ describe("testing the comment routes", () => {
           .put('/api/comment/create')
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
           .send({
-            mapId: '6580b226e22d1b683816d0a0',
+            mapId: '656ff2283e72ed7d266574cb',
             comment: 'Test comment which should fail'
           })
           .expect(401);
