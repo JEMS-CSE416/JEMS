@@ -22,6 +22,7 @@ import NothingHere from "../common/NothingHere";
 
 const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 function MyMaps() {
+  const [toggle, setToggle] = useDisclosure(false);
   const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
   const [page, setPage] = useState(1);
   const [pageTotal, setPageTotal] = useState(8);
@@ -30,7 +31,7 @@ function MyMaps() {
     data: yourMaps,
     error,
     loading,
-  } = useLoadingData<Map[]>(getMaps, [{ownedMaps: true}]);
+  } = useLoadingData<Map[]>(getMaps, [{ownedMaps: true}], [toggle]);
 
   const handleSelectMapToDuplicate = (map: Map) => {
     location.state = map;
@@ -47,7 +48,7 @@ function MyMaps() {
     <>
       <DuplicateMapModal
         opened={duplicateModalOpened}
-        onClose={setDuplicateModal.close}
+        onClose={() => {setToggle.toggle();setDuplicateModal.close();}}
       />
       <NavBar />
       <div id="content">
@@ -86,6 +87,7 @@ function MyMaps() {
                         <MapCard
                           id={map._id}
                           name={map.mapName}
+                          creatorId={map.creatorId}
                           description={map.description}
                           isPrivate={!map.public}
                           map={map}

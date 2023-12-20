@@ -1,13 +1,13 @@
-#commentText {
+.commentText {
   text-align: left;
 }
 
-#commentsContainer {
+.commentsContainer {
   background-color: white;
   padding-left: 3%;
 }
 
-#commentSpoiler {
+.commentSpoiler {
   color: black;
   font-size: 12px;
 }

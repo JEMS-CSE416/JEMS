@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./css/searchedMapsScreen.css";
@@ -117,6 +116,7 @@ const SearchedMapsScreen = () => {
                 <MapCard
                   id={map._id}
                   name={map.mapName}
+                  creatorId={map.creatorId}
                   description={map.description}
                   isPrivate={!map.public}
                   map={map}

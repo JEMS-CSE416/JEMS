@@ -6,6 +6,7 @@ import { convertToGeoJSON } from "./utils/jemsconvert";
 import { FeatureCollection } from "geojson";
 import * as turf from "@turf/turf";
 import { Canvas as CanvasBase } from "../CanvasComponents/Canvas";
+import LeafletToImage from "../common/LeafletToImage";
 
 export default function Canvas() {
   const editPageState = useEditContext();
@@ -24,6 +25,7 @@ export default function Canvas() {
   return (
     <>
       <CanvasBase centerCoords={[centerCoords[0], centerCoords[1]]} noWrap>
+        <LeafletToImage/>
         <DisplayLayer />
         <Legend />
       </CanvasBase>

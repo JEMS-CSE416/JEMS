@@ -1,61 +1,38 @@
 /// <reference types="cypress" />
-import { splashGetStartedButton } from "./id";
+import { login } from "./utils";
 
-const loginEmailInput = "#loginEmailInput";
-const loginPasswordInput = "#loginPasswordInput";
-const loginSubmitButton = "#loginButton";
+const settingsButton = "#settings-button";
+const settingsModalTitle = "#settings-modal-title";
+const exportButton = "#export-button";
+const exportModalTitle = "#export-modal-title";
 
-const settingsButton = '#settings-button';
-const settingsModalTitle = '#settings-modal-title';
-const exportButton = '#export-button';
-const exportModalTitle = '#export-modal-title';
-
-const editButton = '#edit-button';
-
-function login() {
-  cy.visit("/");
-
-  // click on the get started button
-  cy.get(splashGetStartedButton).click();
-
-  cy.get(loginEmailInput).type("jendyren@gmail.com");
-  cy.get(loginPasswordInput).type("12345678");
-
-  // clicks on the login button
-  cy.get(loginSubmitButton).click();
-
-  // checks if the url includes /home
-  cy.url().should("include", "/home");
-}
-
+const editButton = "#edit-button";
 
 beforeEach(() => {
   login();
-  cy.get("#6570831f904450313965d9a5").click();
+  // click on the first card in the home page
+  cy.get(".card.cursor-pointer").first().click();
 });
 
 describe("Routed to Edit Screen", () => {
   it("Successfully displays edit", () => {
     cy.get(editButton).click();
-    cy.url().should("include", "6570831f904450313965d9a5");
+    cy.url().should("include", "edit");
   });
 });
-
 
 describe("Modal Checking", () => {
   it("Checks if the settings modal is visible", () => {
     cy.get(editButton).click();
-    cy.url().should("include", "6570831f904450313965d9a5");
+    cy.url().should("include", "edit");
     // Click on the settings button to open the duplicate modal
     cy.get(settingsButton).click();
-
   });
 
   it("Checks if the export modal is visible", () => {
     cy.get(editButton).click();
-    cy.url().should("include", "6570831f904450313965d9a5");
+    cy.url().should("include", "edit");
     // Click on the button to open the duplicate modal
     cy.get(exportButton).click();
   });
 });
-

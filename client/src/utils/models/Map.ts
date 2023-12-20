@@ -18,7 +18,9 @@ export interface Legend {
 
 export interface Region {
   regionName: string;
-  coordinates: Number[][];
+  coordinates: Number[][] | Number[] | Number[][][];
+  geoemtries?: any;
+  type?: string; 
   stringLabel: string;
   stringOffset: Number[];
   numericLabel: string;

@@ -24,8 +24,8 @@ app.use(cors({
 }))
 
 // Setup Map router
-app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb'}));
+app.use(express.json({limit: '256mb'}));
+app.use(express.urlencoded({limit: '256mb'}));
 
 const sess = {
   secret: process.env["SESSION_SECRET"],

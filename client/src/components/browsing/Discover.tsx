@@ -23,9 +23,10 @@ import { useLoadingData } from "../hooks/useLoadingData";
 const cardSpan = { base: 12, sm: 6, md: 6, lg: 4, xl: 3 };
 
 function Discover() {
+  const [toggle, setToggle] = useDisclosure(false);
   const location = useLocation();
   const [duplicateModalOpened, setDuplicateModal] = useDisclosure(false);
-  const {data:maps, error, loading} = useLoadingData<Map[]>(getMaps, [{ isPrivate: false }]);
+  const {data:maps, error, loading} = useLoadingData<Map[]>(getMaps, [{ isPrivate: false }],[toggle]);
   const [page, setPage] = useState(1);
   const [pageTotal, setPageTotal] = useState(8);
 
@@ -45,7 +46,7 @@ function Discover() {
     <>
       <DuplicateMapModal
         opened={duplicateModalOpened}
-        onClose={setDuplicateModal.close}
+        onClose={() => {setToggle.toggle();setDuplicateModal.close();}}
       />
       <NavBar />
 
@@ -83,6 +84,7 @@ function Discover() {
                         id={map._id}
                         isPrivate={!map.public}
                         name={map["mapName"]}
+                        creatorId={map.creatorId}
                         description={map.description}
                         map={map}
                         duplicateAction={() => {

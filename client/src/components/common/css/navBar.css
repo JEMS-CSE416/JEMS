@@ -7,8 +7,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
 }
+
+
 
 #jemsLogo {
   margin-right: auto;
@@ -36,6 +37,8 @@
   border: 1px solid #228be6;
   outline: none;
 }
+
+
 
 ::placeholder {
   color: #c9cacc;

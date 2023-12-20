@@ -8,7 +8,7 @@ import React, {
 import { ErrorMap, Map as JemsMap, Region } from "../utils/models/Map";
 import { BACKEND_URL } from "../utils/constants";
 import { create, update } from "cypress/types/lodash";
-import { getMap } from "../api/MapApiAccessor";
+import { getMap, updateMap } from "../api/MapApiAccessor";
 import { EditModalEnum } from "../utils/enums";
 import chroma from "chroma-js";
 import { Map as LeafletMap } from "leaflet";
@@ -109,22 +109,39 @@ export function EditContextProvider(props: EditContextProviderProps) {
       const res = await getMap({ id: mapId as string });
       const newMap = res;
 
-      // Append min/max and choropleth legend items to the newly created map
-      const items = findChoroplethItems(
-        editPageState,
-        newMap.legend.choroplethLegend.hue,
-        newMap
-      );
-      // Get min/max values from choroItems
-      const min = Math.min(...Object.values(items));
-      const max = Math.max(...Object.values(items));
-      const hue = newMap.legend.choroplethLegend.hue;
-      newMap.legend.choroplethLegend = {
-        hue: hue,
-        min: min,
-        max: max,
-        items: items,
-      };
+      // If choroplethlegend items is empty, then we need to populate it, otherwise use values stored
+      if (
+        Object.keys(newMap.legend.choroplethLegend.items).length === 0 &&
+        newMap.regions
+      ) {
+        console.log("choroplethLegend items is empty, populating it");
+        // Append min/max and choropleth legend items to the newly created map
+        const items = findChoroplethItems(
+          editPageState,
+          newMap.legend.choroplethLegend.hue,
+          newMap
+        );
+        // Get min/max values from choroItems
+        const min = Math.min(...Object.values(items))
+          ? Math.min(...Object.values(items))
+          : Number.MAX_SAFE_INTEGER;
+        const max = Math.max(...Object.values(items))
+          ? Math.max(...Object.values(items))
+          : Number.MIN_SAFE_INTEGER;
+        const hue = newMap.legend.choroplethLegend.hue;
+        newMap.legend.choroplethLegend = {
+          hue: hue,
+          min: min,
+          max: max,
+          items: items,
+        };
+
+        try {
+          const map = updateMap({ map: newMap });
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
       console.log("newMap", newMap);
       dispatch({
@@ -154,11 +171,10 @@ export function EditContextProvider(props: EditContextProviderProps) {
     return Array.from(new Set(res));
   };
 
-
   if (!loaded) {
     return <>Loading Data</>;
   }
-  if(loaded && editPageState.map._id === "ERROR/TEST Map"){
+  if (loaded && editPageState.map._id === "ERROR/TEST Map") {
     return <>Loading Data</>;
   }
 
@@ -202,9 +218,55 @@ function editReducer(state: EditPageState, action: any): EditPageState {
           : "NONE",
       };
     case "update_map":
+      console.log("inside update_map 1");
+      let newMap2 = { ...state.map, ...action?.map };
+
+      // So far two cases: when displayLegend is changed, and when region is deleted.
+      // If displayLegend does not change then region was deleted, so update legend
+      if (action.map.displayLegend == state.map.displayLegend) {
+        let updatedChoroplethLegend3 = state.map.legend.choroplethLegend;
+        const choroItems3 = findChoroplethItems(
+          state,
+          updatedChoroplethLegend3.hue
+        );
+        updatedChoroplethLegend3 = {
+          ...updatedChoroplethLegend3,
+          items: choroItems3,
+        };
+
+        // Get min/max values from choroItems
+        const min3 = Math.min(
+          ...Object.values(
+            updatedChoroplethLegend3.items as unknown as number[]
+          )
+        );
+
+        const max3 = Math.max(
+          ...Object.values(
+            updatedChoroplethLegend3.items as unknown as number[]
+          )
+        );
+
+        updatedChoroplethLegend3 = {
+          ...updatedChoroplethLegend3,
+          min: min3,
+          max: max3,
+        };
+
+        newMap2 = {
+          ...newMap2,
+          legend: {
+            ...state.map.legend,
+            choroplethLegend: updatedChoroplethLegend3,
+          },
+        };
+      }
+
+      console.log(newMap2);
+
       return {
         ...state,
-        map: action.map ?? ErrorMap,
+        map: newMap2 ?? ErrorMap,
       };
     case "select_region":
       const selectedRegion = {
@@ -351,16 +413,37 @@ function editReducer(state: EditPageState, action: any): EditPageState {
       const oldChoroplethLegend2 = state.map.legend.choroplethLegend;
       let updatedChoroplethLegend2 = {
         ...oldChoroplethLegend2,
-        hue: action.map.legend.choroplethLegend.hue,
+        hue: action.map.legend.choroplethLegend?.hue,
+        items: action.map.legend.choroplethLegend?.items, // If items defined, then being called from Legend.tsx
       };
 
-      const choroItems2 = findChoroplethItems(
-        state,
-        updatedChoroplethLegend2.hue
+      if (
+        action.map.legend.choroplethLegend?.items === undefined ||
+        action.map.legend.choroplethLegend?.hue !=
+          state.map.legend.choroplethLegend?.hue
+      ) {
+        // If items undefined or hue change, then being called from Properties.tsx
+        const choroItems2 = findChoroplethItems(
+          state,
+          updatedChoroplethLegend2.hue
+        );
+        updatedChoroplethLegend2 = {
+          ...updatedChoroplethLegend2,
+          items: choroItems2,
+        };
+      }
+
+      // Get min/max values from choroItems
+      const min2 = Math.min(
+        ...Object.values(updatedChoroplethLegend2.items as number[])
+      );
+      const max2 = Math.max(
+        ...Object.values(updatedChoroplethLegend2.items as number[])
       );
       updatedChoroplethLegend2 = {
         ...updatedChoroplethLegend2,
-        items: choroItems2,
+        min: min2,
+        max: max2,
       };
 
       return {
@@ -390,43 +473,52 @@ function findChoroplethItems(
     // If newMap is undefined, means we are updating the map. Should be using the states.
     regions = state.map.regions;
   }
-  const filename = Object.keys(regions);
-  let value = 0;
-  let color = chroma(newHue).brighten(value).hex();
 
-  //Get unique numeric label values
-  const uniqueValues: { numericLabel: string; numericLabelNumber: number }[] =
-    [];
-  for (let i = 0; i < filename.length; i++) {
-    const region = regions[filename[i]];
-    for (let j = 0; j < region.length; j++) {
-      const numericLabel: string = region[j].numericLabel;
-      const numericLabelNumber = Number(numericLabel);
+  //Objects of {color, value} to be returned
+  let newItems: { [key: string]: number } = {};
 
-      //if numericLabel is an existing key in uniqueValues, skip
-      if (uniqueValues.some((value) => value.numericLabel === numericLabel)) {
-        console.log("continued: " + numericLabel);
-        continue;
+  if (regions) {
+    const filename = Object.keys(regions);
+    let value = 0;
+    let color = chroma(newHue).brighten(value).hex();
+
+    //Get unique numeric label values
+    const uniqueValues: { numericLabel: Number; numericLabelNumber: number }[] =
+      [];
+    for (let i = 0; i < filename.length; i++) {
+      const region = regions[filename[i]];
+      for (let j = 0; j < region.length; j++) {
+        const numericLabel: string = region[j].numericLabel;
+        const numericLabelNumber = Number(numericLabel);
+
+        //if numericLabel is an existing key in uniqueValues, skip
+        if (
+          uniqueValues.some(
+            (value) => value.numericLabel === Number(numericLabel)
+          )
+        ) {
+          continue;
+        }
+        // Skip if numericLabel is empty, for legend editing case
+        if (numericLabel === "") continue;
+        else
+          uniqueValues.push({
+            numericLabel: Number(numericLabel),
+            numericLabelNumber,
+          });
       }
-      if (numericLabel === "") continue;
-      else uniqueValues.push({ numericLabel, numericLabelNumber });
     }
+
+    //Sort the unique values in decreasing order
+    uniqueValues.sort((a, b) => b.numericLabelNumber - a.numericLabelNumber);
+    uniqueValues.forEach((value, index) => {
+      color = chroma(newHue)
+        .brighten(index - 0.5)
+        .hex();
+      newItems[color] = value.numericLabelNumber;
+    });
   }
-  console.log(uniqueValues);
 
-  //Sort the unique values in decreasing order
-  uniqueValues.sort((a, b) => b.numericLabelNumber - a.numericLabelNumber);
-
-  const newItems: { [key: string]: number } = {};
-  uniqueValues.forEach((value, index) => {
-    color = chroma(newHue)
-      .brighten(index - 0.5)
-      .hex();
-    newItems[color] = value.numericLabelNumber;
-  });
-
-  console.log(uniqueValues);
-  console.log(newItems);
   return newItems;
 }
 

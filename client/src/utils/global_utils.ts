@@ -32,11 +32,28 @@ export const MAP_TYPES = {
 // This function parses and grabs regions properties from GeoJSON
 export const getRegions = (geojson: any) => {
     let regions = [] as any[];
+    console.log("CONVERTED GEOJSON")
+    console.log(geojson)
     if (geojson && geojson.features) {
         let counter = 0;
 
+
         geojson.features.forEach((feature: any) => {
+            regions.push({
+                regionName: feature.properties.name || feature.properties.NAME,
+                coordinates: feature.geometry.coordinates,
+                geometries: feature.geometry.geometries,
+                type: feature.geometry.type,
+                stringLabel: "",
+                stringOffset: [0],
+                numericLabel: 0,
+                numericUnit: "",
+                color: "#8eb8fa", // default color
+            })
+
+            // legacy system
             // switchcase that will convert different features in different ways
+            /*
             switch (feature.geometry.type) {
                 case "Polygon":
                     regions.push({
@@ -44,7 +61,7 @@ export const getRegions = (geojson: any) => {
                         coordinates: feature.geometry.coordinates[0],
                         stringLabel: "",
                         stringOffset: [0],
-                        numericLabel: 0,
+                        numericLabel: "",
                         numericUnit: "",
                         color: "#8eb8fa", // default color
                     })
@@ -56,7 +73,7 @@ export const getRegions = (geojson: any) => {
                             coordinates: coordinates[0],
                             stringLabel: "",
                             stringOffset: [0],
-                            numericLabel: 0,
+                            numericLabel: "",
                             numericUnit: "",
                             color: "#8eb8fa", // default color
                         })
@@ -69,7 +86,7 @@ export const getRegions = (geojson: any) => {
                             coordinates: geometry.coordinates[0],
                             stringLabel: "",
                             stringOffset: [0],
-                            numericLabel: 0,
+                            numericLabel: "",
                             numericUnit: "",
                             color: "#8eb8fa", // default color
                         })
@@ -79,6 +96,7 @@ export const getRegions = (geojson: any) => {
                 default:
                     console.log("unsupported type:", feature);
             }
+            */
 
         });
     }

@@ -4,10 +4,15 @@ import { MapContainer, TileLayer, GeoJSON, Marker } from "react-leaflet";
 import * as turf from "@turf/turf";
 import { convertToGeoJSON } from "../edit/utils/jemsconvert";
 import { TemplateTypes } from "../../utils/enums";
-import { Feature, Geometry, FeatureCollection } from "geojson";
+import { Feature, Geometry, FeatureCollection, GeoJsonProperties } from "geojson";
 import { NonInteractiveLabels as Labels } from "../CanvasComponents/NonInteractiveLabels";
 import { Canvas as CanvasBase } from "../CanvasComponents/Canvas";
-
+import EasyPrint from "../common/EasyPrint";
+import LeafletToImage from "../common/LeafletToImage";
+import { geoCentroid } from "d3-geo";
+import { divIcon } from "leaflet";
+import { EditPageState } from "../../context/EditContextProvider";
+import { labelHTML } from "../edit/DisplayLayer";
 interface CanvasProps {
   map: JEMSMap;
 }
@@ -31,6 +36,8 @@ const Canvas = ({ map }: CanvasProps) => {
           }
         />
         <Labels data={data} map={map} />
+        {/* <EasyPrint/> */}
+        <LeafletToImage/>
       </CanvasBase>
     </>
   );
@@ -131,6 +138,37 @@ function getChoroplethStyle(
     }
   }
   return "#FFFFFF";
+}
+
+interface RegionLabelProps {
+  key: React.Key | null | undefined;
+  region: Feature<Geometry, GeoJsonProperties>;
+  map: EditPageState;
+}
+function RegionLabel({key, region, map}: RegionLabelProps) {
+  const centroid = geoCentroid(region);
+  console.log(`CENTROID: ${centroid}`)
+  if (
+    region.properties &&
+    ((map.map.displayStrings && region.properties.stringLabel !== "") ||
+      (map.map.displayNumerics && region.properties.numericLabel !== ""))
+  ) {
+    let labelIcon = divIcon({
+      className: "map-label",
+      html: `<div>${labelHTML(region, map)}</div>`,
+      iconSize: [100, 40],
+      iconAnchor: [50, 20],
+    });
+    return (
+      <Marker
+        key={key}
+        position={[centroid[1], centroid[0]]}
+        icon={labelIcon}
+        interactive={false}
+      />
+    );
+  }
+  return<></>;
 }
 
 

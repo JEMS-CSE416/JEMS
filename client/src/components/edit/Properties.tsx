@@ -16,6 +16,7 @@ import {
   Select,
   Group,
   ScrollArea,
+  Tooltip,
 } from "@mantine/core";
 import {
   EditPageAction,
@@ -27,6 +28,7 @@ import { TemplateTypes } from "../../utils/enums";
 import { useEffect, useState } from "react";
 import { set } from "cypress/types/lodash";
 import { UndoableChangeMapProp, useUndoRedoContext } from "../../context/UndoRedo";
+import { useLegendContext } from "../../context/LegendContextProvider";
 
 export default function Properties() {
   const editPageState = useEditContext();
@@ -55,7 +57,9 @@ export default function Properties() {
     editPageState.selectedRegion?.region.color
   );
 
-  const [hueState, setHueState] = useState(editPageState.map.legend.choroplethLegend.hue);
+  const [hueState, setHueState] = useState(
+    editPageState.map.legend.choroplethLegend.hue
+  );
 
   const [ChoroplethColorRange, setChoroplethColorRange] = useState<{
     min: { value: string; color: string };
@@ -64,6 +68,8 @@ export default function Properties() {
     min: { value: "", color: "#000000" },
     max: { value: "", color: "#FFFFFF" },
   });
+
+  const { legendSubmit, setLegendSubmit } = useLegendContext();
 
   useEffect(() => {
     setGroupNameState(editPageState.selectedRegion?.groupName);
@@ -157,51 +163,85 @@ export default function Properties() {
         <Title order={3}> Map Properties </Title>
 
         <Stack pl={10} gap="sm" p="sm" className="mapProperties">
-          <Select
-            label="Map Style"
-            placeholder="Select a map type"
-            value={editPageState.map.colorType}
-            data={[
-              TemplateTypes.NONE,
-              TemplateTypes.COLOR,
-              TemplateTypes.CHOROPLETH,
-            ]}
-            allowDeselect={false}
-            onChange={(value) => {
-              if (value !== null) {
-                addToUndoStack(new UndoableChangeMapProp(
-                  { colorType: value as TemplateTypes},
-                  { colorType: editPageState.map.colorType},
-                ));
-                setEditPageState({
-                  type: "update_map",
-                  map: {
-                    ...editPageState.map,
-                    colorType: value as TemplateTypes,
-                  },
-                });
-              }
-            }}
-          />
+          {legendSubmit ? (
+            <Tooltip label="Cannot change with active legend editing.">
+              <Select
+                label="Map Style"
+                placeholder="Select a map type"
+                value={editPageState.map.colorType}
+                data={[
+                  TemplateTypes.NONE,
+                  TemplateTypes.COLOR,
+                  TemplateTypes.CHOROPLETH,
+                ]}
+                allowDeselect={false}
+                onChange={(value) => {
+                  if (value !== null) {
+                    setEditPageState({
+                      type: "update_map",
+                      map: {
+                        ...editPageState.map,
+                        colorType: value as TemplateTypes,
+                      },
+                    });
+                  }
+                }}
+                disabled={true}
+              />
+            </Tooltip>
+          ) : (
+            <Select
+              label="Map Style"
+              placeholder="Select a map type"
+              value={editPageState.map.colorType}
+              data={[
+                TemplateTypes.NONE,
+                TemplateTypes.COLOR,
+                TemplateTypes.CHOROPLETH,
+              ]}
+              allowDeselect={false}
+              onChange={(value) => {
+                if (value !== null) {
+                  addToUndoStack(new UndoableChangeMapProp(
+                    { colorType: value as TemplateTypes},
+                    { colorType: editPageState.map.colorType},
+                  ));
+                }
+              }}
+            />
+          )}
 
-          <Switch
-            checked={editPageState.map.displayLegend}
-            onChange={(event) => {
-              addToUndoStack(new UndoableChangeMapProp(
-                { displayLegend: event.currentTarget.checked},
-                { displayLegend: editPageState.map.displayLegend},
-              ));
-              //setEditPageState({
-                //type: "update_map",
-                //map: {
-                  //...editPageState.map,
-                  //displayLegend: event.currentTarget.checked,
-                //},
-              //});
-            }}
-            labelPosition="left"
-            label="Legend"
-          />
+          {legendSubmit ? (
+            <Tooltip label="Cannot change with active legend editing.">
+              <Switch
+                checked={editPageState.map.displayLegend}
+                onChange={(event) => {
+                  setEditPageState({
+                    type: "update_map",
+                    map: {
+                      ...editPageState.map,
+                      displayLegend: event.currentTarget.checked,
+                    },
+                  });
+                }}
+                labelPosition="left"
+                label="Legend"
+                disabled={true}
+              />
+            </Tooltip>
+          ) : (
+            <Switch
+              checked={editPageState.map.displayLegend}
+              onChange={(event) => {
+                addToUndoStack(new UndoableChangeMapProp(
+                  { displayLegend: event.currentTarget.checked},
+                  { displayLegend: editPageState.map.displayLegend},
+                ));
+              }}
+              labelPosition="left"
+              label="Legend"
+            />
+          )}
 
           <Switch
             checked={editPageState.map.displayNumerics}
@@ -260,16 +300,29 @@ export default function Properties() {
             label="Allow Text Label Pointing"
           />
 
-          {editPageState.map.colorType === TemplateTypes.CHOROPLETH && (
-            <>
-              <ColorInput
-                label="Hue"
-                placeholder="#000000"
-                value={hueState}
-                onChange={setHueState}
-              />
-            </>
-          )}
+          {editPageState.map.colorType === TemplateTypes.CHOROPLETH &&
+            (legendSubmit ? (
+              <>
+                <Tooltip label="Cannot edit with active legend editing.">
+                  <ColorInput
+                    label="Hue"
+                    placeholder="#000000"
+                    value={hueState}
+                    onChange={setHueState}
+                    disabled={true}
+                  />
+                </Tooltip>
+              </>
+            ) : (
+              <>
+                <ColorInput
+                  label="Hue"
+                  placeholder="#000000"
+                  value={hueState}
+                  onChange={setHueState}
+                />
+              </>
+            ))}
 
           {!editPageState.selectedRegion ? (
             <Button onClick={handleMapPropertyEditing} radius="xl">
@@ -321,16 +374,32 @@ export default function Properties() {
                   }}
                 />
 
-                <NumberInput
-                  hideControls
-                  label="Numeric Label"
-                  placeholder="100, 250, etc."
-                  value={numericLabelState}
-                  onChange={(value) => {
-                    console.log(value);
-                    setNumericLabelState(value);
-                  }}
-                />
+                {legendSubmit ? (
+                  <Tooltip label="Cannot edit with active legend editing.">
+                    <NumberInput
+                      disabled={legendSubmit}
+                      hideControls
+                      label="Numeric Label"
+                      placeholder="100, 250, etc."
+                      value={numericLabelState}
+                      onChange={(value) => {
+                        console.log(value);
+                        setNumericLabelState(value);
+                      }}
+                    />
+                  </Tooltip>
+                ) : (
+                  <NumberInput
+                    hideControls
+                    label="Numeric Label"
+                    placeholder="100, 250, etc."
+                    value={numericLabelState}
+                    onChange={(value) => {
+                      console.log(value);
+                      setNumericLabelState(value);
+                    }}
+                  />
+                )}
 
                 <TextInput
                   label="Units"
