@@ -1,11 +1,13 @@
 import { Map } from "./models/Map";
 import { MapToJEMS } from "./jemsConvert";
 import { saveAs } from 'file-saver';
+import { getMap } from "../api/MapApiAccessor";
 
 // This function will take a Map object and set up for download as a JEMS file
-export function downloadAsJEMS(map: Map) {
+export async function downloadAsJEMS(map: Map) {
   // Convert the map object to a JEMS object
-  const JEMS = MapToJEMS(map);
+  const newMap = await getMap({ id: map._id});
+  const JEMS = MapToJEMS(newMap);
   const fileName = map.mapName.trim().replace(/ /g, "_") + ".json";
   console.debug(JEMS);
   console.debug(map);
