@@ -165,7 +165,7 @@ export function ColorLegend() {
               marginBottom: "10px",
             }}
           >
-            <ColorSwatch color={color} mr={20} />
+            <ColorSwatch color={color} mr={20} radius={"5px"} />
             <TextInput
               value={editPageState.map.legend.colorLegend[color] ?? ""}
               onChange={(event) =>
@@ -204,47 +204,47 @@ export function ChoroplethLegend({
 
   return (
     <div>
-        {items.map(([color, value], index) => (
-          <Group wrap="nowrap">
-            <ColorSwatch color={color} mr={20} radius={"5px"} />
-            <Text size="md">{">"}=</Text>
-            <NumberInput
-              variant="unstyled"
-              placeholder={value.toString()}
-              value={value.toString()}
-              hideControls
-              withErrorStyles={validChoroplethLegend}
-              disabled={index == 0 || index == items.length - 1}
-              onChange={(value) => {
-                setNewLegendInput(newLegendInput.set(index, value.toString()));
-                setLegendSubmit(true);
-              }}
-              onClick={() => setLegendSubmit(true)}
-              className="choroplethLegendNumberInput"
-            />
-          </Group>
-        ))}
-        {legendSubmit ? (
-          <Button
-            type="submit"
-            onClick={() =>
-              handleLegendItemsSubmit(
-                editPageState,
-                setEditPageState,
-                legendSubmit,
-                setLegendSubmit,
-                newLegendInput,
-                setNewLegendInput,
-                validChoroplethLegend,
-                setvalidChoroplethLegend
-              )
-            }
-          >
-            Submit
-          </Button>
-        ) : (
-          <></>
-        )}
+      {items.map(([color, value], index) => (
+        <Group wrap="nowrap">
+          <ColorSwatch color={color} mr={20} radius={"5px"} />
+          <Text size="md">{">"}=</Text>
+          <NumberInput
+            variant="unstyled"
+            placeholder={value.toString()}
+            value={value.toString()}
+            hideControls
+            withErrorStyles={validChoroplethLegend}
+            disabled={index == 0 || index == items.length - 1}
+            onChange={(value) => {
+              setNewLegendInput(newLegendInput.set(index, value.toString()));
+              setLegendSubmit(true);
+            }}
+            onClick={() => setLegendSubmit(true)}
+            className="choroplethLegendNumberInput"
+          />
+        </Group>
+      ))}
+      {legendSubmit ? (
+        <Button
+          type="submit"
+          onClick={() =>
+            handleLegendItemsSubmit(
+              editPageState,
+              setEditPageState,
+              legendSubmit,
+              setLegendSubmit,
+              newLegendInput,
+              setNewLegendInput,
+              validChoroplethLegend,
+              setvalidChoroplethLegend
+            )
+          }
+        >
+          Submit
+        </Button>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
