@@ -79,9 +79,16 @@ export function PointerConnection(
   const groupName = props.region.properties?.groupName
   const i = props.region.properties?.i
 
+
+  let initState;
+  try{
+    initState = editPageState.map.regions[groupName][i].stringOffset as LatLngTuple
+  } catch (e){
+    initState = props.region.properties?.stringOffset as LatLngTuple
+  }
   const [mousePos, setMousePos] = useState(
     props.region.properties?.stringOffset?.length !== 1
-      ? editPageState.map.regions[groupName][i].stringOffset as LatLngTuple
+      ? initState
       : props.centroid
   );
   useEffect(() =>{
@@ -91,12 +98,17 @@ export function PointerConnection(
   }, []) // eslint-disable-line
 
   useEffect( () =>{
-    if(editPageState.map.regions[groupName][i].stringOffset !== null
-      && props.region.properties?.stringOffset?.length !== 1
-      )
-      setMousePos( editPageState.map.regions[groupName][i].stringOffset as LatLngTuple)
-    else
-      setMousePos(props.centroid)
+    try{
+        if(editPageState.map.regions[groupName][i].stringOffset !== null
+          && props.region.properties?.stringOffset?.length !== 1
+          )
+          setMousePos( editPageState.map.regions[groupName][i].stringOffset as LatLngTuple)
+        else
+          setMousePos(props.centroid)
+    } catch (e){
+        // just continue
+
+    }
   },[editPageState, groupName, i, props]);
 
   return <Polyline
