@@ -5,7 +5,7 @@ import app from "../../app";
 describe("testing the comment routes", () => {
   describe("GET /api/comment/", () => {
     describe("when user is authenticated", () => {
-      test("with a valid map ID, it should return status code 200", async () => {
+      test("with a valid map ID but no comments, it should return status code 404", async () => {
         // First, log in to create a session
         const loginResponse = await login();
 
@@ -15,7 +15,7 @@ describe("testing the comment routes", () => {
           .get(`/api/comment/`)
           .set("id", mapId)
           .set("Cookie", loginResponse.headers["set-cookie"]) // Pass the session cookie
-          .expect(200);
+          .expect(404);
       });
 
       test("without a map ID, it should return status code 404", async () => {
