@@ -27,11 +27,13 @@ import {
 import { TemplateTypes } from "../../utils/enums";
 import { useEffect, useState } from "react";
 import { set } from "cypress/types/lodash";
+import { UndoableChangeMapProp, UndoableHue, UndoableRegionProperty, useUndoRedoContext } from "../../context/UndoRedo";
 import { useLegendContext } from "../../context/LegendContextProvider";
 
 export default function Properties() {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
+  const addToUndoStack = useUndoRedoContext();
   console.log(editPageState);
   const [groupNameState, setGroupNameState] = useState(
     editPageState.selectedRegion?.groupName
@@ -96,57 +98,110 @@ export default function Properties() {
     }
   }, [editPageState]);
 
+
   const handleRegionPropertyEditing = () => {
-    setEditPageState({
-      type: "update_selected_region_info",
-      map: {
-        ...editPageState.map,
-        legend: {
-          ...editPageState.map.legend,
-          choroplethLegend: {
-            ...editPageState.map.legend.choroplethLegend,
-            hue: hueState,
-          },
-        },
+
+  
+    const doesGroupNameChange = 
+      (groupNameState === "")
+        ? false
+        : (editPageState.selectedRegion?.groupName !== groupNameState);
+
+    const isGroupNameNew =
+      doesGroupNameChange
+        ? editPageState.map.regions[groupNameState!] === undefined
+        : false
+
+    addToUndoStack(new UndoableRegionProperty(
+      editPageState.map.legend.choroplethLegend.hue,
+      editPageState.selectedRegion?.i ?? -1,
+      editPageState.selectedRegion?.groupName ?? "shouldn't be here",
+      {
+        regionName: editPageState.selectedRegion?.region.regionName,
+        stringLabel: editPageState.selectedRegion?.region.stringLabel,
+        numericLabel: editPageState.selectedRegion?.region.numericLabel,
+        numericUnit: editPageState.selectedRegion?.region.numericLabel,
+        color: editPageState.selectedRegion?.region.color,
+        ...editPageState.selectedRegion?.region
       },
-      selectedRegion: {
-        ...editPageState.selectedRegion!,
-        region: {
-          ...editPageState.selectedRegion!.region,
-          regionName: regionNameState === "" ? "Untitled" : regionNameState!,
-          stringLabel: stringLabelState!,
-          numericLabel: numericLabelState.toString(),
-          numericUnit: unitsState,
-          color:
-            colorState === ""
-              ? editPageState.selectedRegion!.region.color
-              : colorState!,
-        },
-        groupName:
-          groupNameState === ""
-            ? editPageState.selectedRegion!.groupName
-            : groupNameState!,
-      },
-    });
+
+      hueState,
+      doesGroupNameChange
+        ? isGroupNameNew
+          ? 0
+          : editPageState.map.regions[groupNameState!].length
+        : editPageState.selectedRegion?.i ?? -1,
+      doesGroupNameChange
+        ? groupNameState!
+        : editPageState.selectedRegion!.groupName,
+      {
+        ...editPageState.selectedRegion!.region,
+        regionName: regionNameState === "" ? "Untitled" : regionNameState!,
+        stringLabel: stringLabelState!,
+        numericLabel: numericLabelState.toString(),
+        numericUnit: unitsState,
+        color:
+          colorState === ""
+            ? editPageState.selectedRegion!.region.color
+            : colorState!,
+      }
+    ))
+
+    //setEditPageState({
+      //type: "update_selected_region_info",
+      //map: {
+        //...editPageState.map,
+        //legend: {
+          //...editPageState.map.legend,
+          //choroplethLegend: {
+            //...editPageState.map.legend.choroplethLegend,
+            //hue: hueState,
+          //},
+        //},
+      //},
+      //selectedRegion: {
+        //...editPageState.selectedRegion!,
+        //region: {
+          //...editPageState.selectedRegion!.region,
+          //regionName: regionNameState === "" ? "Untitled" : regionNameState!,
+          //stringLabel: stringLabelState!,
+          //numericLabel: numericLabelState.toString(),
+          //numericUnit: unitsState,
+          //color:
+            //colorState === ""
+              //? editPageState.selectedRegion!.region.color
+              //: colorState!,
+        //},
+        //groupName:
+          //groupNameState === ""
+            //? editPageState.selectedRegion!.groupName
+            //: groupNameState!,
+      //},
+    //});
 
     console.log(editPageState);
   };
 
   // Function that updates state for Map Properties
   const handleMapPropertyEditing = () => {
-    setEditPageState({
-      type: "update_choropleth_legend",
-      map: {
-        ...editPageState.map,
-        legend: {
-          ...editPageState.map.legend,
-          choroplethLegend: {
-            ...editPageState.map.legend.choroplethLegend,
-            hue: hueState,
-          },
-        },
-      },
-    });
+    addToUndoStack(new UndoableHue(
+      editPageState.map.legend.choroplethLegend.hue,
+      hueState
+    ))
+
+    //setEditPageState({
+      //type: "update_choropleth_legend",
+      //map: {
+        //...editPageState.map,
+        //legend: {
+          //...editPageState.map.legend,
+          //choroplethLegend: {
+            //...editPageState.map.legend.choroplethLegend,
+            //hue: hueState,
+          //},
+        //},
+      //},
+    //});
 
     console.log(editPageState);
   };
@@ -200,13 +255,10 @@ export default function Properties() {
               allowDeselect={false}
               onChange={(value) => {
                 if (value !== null) {
-                  setEditPageState({
-                    type: "update_map",
-                    map: {
-                      ...editPageState.map,
-                      colorType: value as TemplateTypes,
-                    },
-                  });
+                  addToUndoStack(new UndoableChangeMapProp(
+                    { colorType: value as TemplateTypes},
+                    { colorType: editPageState.map.colorType},
+                  ));
                 }
               }}
             />
@@ -234,13 +286,10 @@ export default function Properties() {
             <Switch
               checked={editPageState.map.displayLegend}
               onChange={(event) => {
-                setEditPageState({
-                  type: "update_map",
-                  map: {
-                    ...editPageState.map,
-                    displayLegend: event.currentTarget.checked,
-                  },
-                });
+                addToUndoStack(new UndoableChangeMapProp(
+                  { displayLegend: event.currentTarget.checked},
+                  { displayLegend: editPageState.map.displayLegend},
+                ));
               }}
               labelPosition="left"
               label="Legend"
@@ -250,13 +299,17 @@ export default function Properties() {
           <Switch
             checked={editPageState.map.displayNumerics}
             onChange={(event) => {
-              setEditPageState({
-                type: "update_map",
-                map: {
-                  ...editPageState.map,
-                  displayNumerics: event.currentTarget.checked,
-                },
-              });
+              addToUndoStack(new UndoableChangeMapProp(
+                { displayNumerics: event.currentTarget.checked},
+                { displayNumerics: editPageState.map.displayNumerics},
+              ));
+              //setEditPageState({
+                //type: "update_map",
+                //map: {
+                  //...editPageState.map,
+                  //displayNumerics: event.currentTarget.checked,
+                //},
+              //});
             }}
             labelPosition="left"
             label="Show Numeric Label"
@@ -265,13 +318,17 @@ export default function Properties() {
           <Switch
             checked={editPageState.map.displayStrings}
             onChange={(event) => {
-              setEditPageState({
-                type: "update_map",
-                map: {
-                  ...editPageState.map,
-                  displayStrings: event.currentTarget.checked,
-                },
-              });
+              addToUndoStack(new UndoableChangeMapProp(
+                { displayStrings: event.currentTarget.checked},
+                { displayStrings: editPageState.map.displayStrings},
+              ));
+              //setEditPageState({
+                //type: "update_map",
+                //map: {
+                  //...editPageState.map,
+                  //displayStrings: event.currentTarget.checked,
+                //},
+              //});
             }}
             labelPosition="left"
             label="Show Text Label"
@@ -280,13 +337,17 @@ export default function Properties() {
           <Switch
             checked={editPageState.map.displayPointers}
             onChange={(event) => {
-              setEditPageState({
-                type: "update_map",
-                map: {
-                  ...editPageState.map,
-                  displayPointers: event.currentTarget.checked,
-                },
-              });
+              addToUndoStack(new UndoableChangeMapProp(
+                { displayPointers: event.currentTarget.checked},
+                { displayPointers: editPageState.map.displayPointers},
+              ));
+              //setEditPageState({
+                //type: "update_map",
+                //map: {
+                  //...editPageState.map,
+                  //displayPointers: event.currentTarget.checked,
+                //},
+              //});
             }}
             labelPosition="left"
             label="Allow Text Label Pointing"

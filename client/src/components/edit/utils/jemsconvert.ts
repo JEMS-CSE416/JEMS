@@ -32,7 +32,7 @@ export function convertToGeoJSON(jemsJSON: any): string {
         geoJSON.features.push(feature);
       }
       else {
-        console.log(`LEGACY_TYPE ${region.regionName}`)
+        //console.log(`LEGACY_TYPE ${region.regionName}`)
         // legacy type
         const feature: any = {
           type: "Feature",

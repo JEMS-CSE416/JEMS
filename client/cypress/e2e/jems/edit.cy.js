@@ -11,6 +11,7 @@ const editButton = "#edit-button";
 beforeEach(() => {
   login();
   // click on the first card in the home page
+  cy.wait(1500);
   cy.get(".card.cursor-pointer").first().click();
 });
 

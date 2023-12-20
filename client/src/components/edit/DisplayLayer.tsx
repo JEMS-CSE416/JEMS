@@ -29,6 +29,7 @@ import {
   onDragLabel,
   PointerConnection,
 } from "./leaflet/pointers";
+import { useUndoRedoContext } from "../../context/UndoRedo";
 
 export default function DisplayLayer() {
   const editPageState = useEditContext();
@@ -37,19 +38,27 @@ export default function DisplayLayer() {
   const map = useMap(); // get access to map object
   const data: FeatureCollection = JSON.parse(convertedGeoJSON);
 
+  const refs = useRef([])
+  //refs.current = []
+  function appendRefs(ref: any){
+      //console.error(refs)
+      //console.error((refs.current as any).push(ref))
+      (refs.current as any).push(ref)
+  }
+
   return (
     <>
       <GeoJSON
         key={JSON.stringify(editPageState)}
         data={data}
         onEachFeature={(region, layer) =>
-          onEachRegion(region, layer, editPageState, setEditPageState, map)
+          onEachRegion(region, layer, editPageState, setEditPageState, map, refs)
         }
         style={(region: Feature<Geometry, any> | undefined) =>
           initStyleFunction(region, editPageState)
         }
       />
-      <Labels data={data} editPageState={editPageState} />
+      <Labels data={data} editPageState={editPageState} appendRef={appendRefs} refs={refs}/>
     </>
   );
 }
@@ -61,15 +70,18 @@ function onEachRegion(
   layer: Layer,
   editPageState: EditPageState,
   setEditPageState: React.Dispatch<EditPageAction>,
-  map: Map
+  map: Map,
+  refs: any
 ) {
   // attach selection functionality to each region
-  attachSelectionEvents(region, layer, editPageState, setEditPageState);
+  attachSelectionEvents(region, layer, editPageState, setEditPageState, refs);
 }
 
 const Labels = (props: {
   data: FeatureCollection;
   editPageState: EditPageState;
+  appendRef?: any;
+  refs?: any;
 }) => {
   const data = props.data;
   const editPageState = props.editPageState;
@@ -79,7 +91,7 @@ const Labels = (props: {
       region: Feature<Geometry, GeoJsonProperties>,
       index: React.Key | null | undefined
     ) => {
-      return <RegionLabel key={index} region={region} />;
+      return <RegionLabel key={index} region={region} appendRef={props.appendRef} refs={props.refs}/>;
     }
   );
 
@@ -90,11 +102,14 @@ const Labels = (props: {
 const RegionLabel = (props: {
   key: React.Key | null | undefined;
   region: Feature;
+  appendRef?: any;
+  refs?: any;
 }) => {
   const editPageState = useEditContext();
   const setEditPageState = useEditDispatchContext();
   const region = props.region;
   const index = props.key;
+  const addToUndoStack = useUndoRedoContext()
 
   // useRef allows a ReactLeaflet child component to be accessible
   const markerRef = useRef(null);
@@ -117,13 +132,6 @@ const RegionLabel = (props: {
     });
     return (
       <>
-        {editPageState.map.displayPointers && (
-          <PointerConnection
-            centroid={[centroid[1], centroid[0]]}
-            setDragStateSetter={(fxn: any) => setDragSetter(fxn)}
-            region={region}
-          />
-        )}
 
         <Marker
           key={index}
@@ -142,17 +150,27 @@ const RegionLabel = (props: {
           draggable={isDraggable(region, editPageState)}
           eventHandlers={{
             click: () => {
-              onClickLabel(region, editPageState, setEditPageState);
+              onClickLabel(region, editPageState, setEditPageState, props.refs);
             },
             dragend: () => {
-              onDragEndLabel(markerRef, editPageState, setEditPageState);
+              onDragEndLabel(markerRef, editPageState, setEditPageState, addToUndoStack, props.refs);
             },
             drag: (e) => {
-              onDragLabel(e, markerRef, dragSetter);
+              onDragLabel(e, markerRef, dragSetter, props.refs);
             },
           }}
           ref={markerRef}
-        ></Marker>
+        >
+        {editPageState.map.displayPointers && (
+          <PointerConnection
+            centroid={[centroid[1], centroid[0]]}
+            setDragStateSetter={(fxn: any) => setDragSetter(fxn)}
+            region={region}
+            appendRef={props.appendRef}
+          />
+        )}
+
+        </Marker>
       </>
     );
   }
@@ -221,8 +239,8 @@ function getChoroplethStyle(
     editPageState.map.legend.choroplethLegend?.items || {}
   );
   const value = region.properties.numericLabel;
-  console.log(region);
-  console.log(editPageState);
+  //console.log(region);
+  //console.log(editPageState);
 
   // Determines the color of the region based off the numeric value
   if (items.length <= 10) { // Should only be max 8 items due to colorpicker, but hardcoding 10 just in case
